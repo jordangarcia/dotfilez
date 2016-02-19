@@ -1,0 +1,8 @@
+.DS_Store
+.svn
+.tissues
+*~
+*.swp
+*.rbc
+
+.ropeproject

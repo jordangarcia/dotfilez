@@ -1,0 +1,1 @@
+ack $1 $OPTIMIZELY/src/www --ignore-dir=js_lib --ignore-dir=js_out $2

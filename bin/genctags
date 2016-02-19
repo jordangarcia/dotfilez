@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -f $PWD/.gitignore ]; then
+  exclude="--exclude=@${PWD}/.gitignore"
+fi
+
+loc=$1
+if [ -z $loc ]; then
+  loc="${PWD}"
+fi
+
+ctags -R $loc --sort=yes --python-kinds=-iv --languages=+Python,+JavaScript --verbose=yes $exclude
