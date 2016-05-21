@@ -8,14 +8,28 @@ unbind C-s
 set -sg escape-time 0
 set -sg repeat-time 600
 
-# Mouse
-set -g mode-mouse on
-setw -g mouse-select-window on
-setw -g mouse-select-pane on
+# Mouse (tmux >= 2.1)
+set -g -q mouse on
+bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
+bind -n WheelDownPane select-pane -t= \; send-keys -M
+bind -t vi-copy WheelUpPane halfpage-up
+bind -t vi-copy WheelDownPane halfpage-down
 
-# This is hilariously absurd.  How many nerds use tmux on OS X every day and
-# it's still fundamentally broken?
-#set -g default-command "reattach-to-user-namespace -l zsh"
+# PageUp (tmux >= 2.1)
+bind-key -T root PPage if-shell -F "#{alternate_on}" "send-keys PPage" "copy-mode -e; send-keys PPage"
+bind-key -t vi-copy PPage page-up
+bind-key -t vi-copy NPage page-down
+
+# Window Style (highlights active window)
+set-window-option -g window-style 'bg=colour0'
+set-window-option -g window-active-style 'bg=colour8'
+set-window-option -g pane-active-border-style ''
+
+# Send correct key sequences to emacs
+setw -g xterm-keys on
+
+# Copy-Paste Sanity
+set -g default-command "reattach-to-user-namespace -l zsh"
 
 # Less stretching to get to the first item.
 set -g base-index 1
@@ -28,8 +42,8 @@ bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
 bind R run "renum_tmux > /dev/null 2>&1"
 
 # Saner splitting.
-bind v split-window -h
-bind s split-window -v
+bind v split-window -h -c "#{pane_current_path}"
+bind s split-window -v -c "#{pane_current_path}"
 bind S choose-session
 
 # Pane movement
@@ -50,16 +64,13 @@ bind l select-pane -R
 ## bind 9 select-pane -t 9
 
 # Pane resizing
-bind -r C-Left  resize-pane -L 5
-bind -r C-Right resize-pane -R 5
-bind -r C-Down  resize-pane -D 5
-bind -r C-Up    resize-pane -U 5
+bind -r C-Left  resize-pane -L 10
+bind -r C-Right resize-pane -R 10
+bind -r C-Down  resize-pane -D 10
+bind -r C-Up    resize-pane -U 10
 
 # 256 colors please
-set -g default-terminal "xterm-256color"
-
-# use ZSH
-set -g default-shell /bin/zsh
+set -g default-terminal "xterm"
 
 # Bad Wolf
 set -g status-fg white
@@ -71,22 +82,22 @@ set -g message-fg colour16
 set -g message-bg colour221
 set -g message-attr bold
 
+# Layouts
+set -g main-pane-width 260
+bind M select-layout main-vertical
+bind E select-layout even-horizontal
+
 # Custom status bar
 # Powerline symbols: ⮂ ⮃ ⮀ ⮁ ⭤
+# Powerline symbols:  ±  ➦ ✘ ⚡ ⚙       
 set -g status-left-length 32
 set -g status-right-length 150
 set -g status-interval 5
 
-# set -g status-left '#[fg=colour16,bg=colour254,bold] #S #[fg=colour254,bg=colour238,nobold]⮀#[fg=colour15,bg=colour238,bold] #(ls ~/.mail/steve-stevelosh.com/INBOX/cur  ~/.mail/steve-stevelosh.com/INBOX/new | wc -l | tr -d " ") #[fg=colour238,bg=colour234,nobold]⮀'
-# set -g status-left '#[fg=colour16,bg=colour254,bold] #S #[fg=colour254,colour=238,nobold]⮀ #[fg=colour15,bg=colour238,bold] stuff #[fg=colour238,bg=colour234,nobold]⮀'
-set -g status-left '#[fg=colour16,bg=colour254,bold] #S #[fg=colour254,colour=238,nobold]'
-
-# set -g status-right '#[fg=colour245]⮃ %R ⮃ %d %b #[fg=colour254,bg=colour234,nobold]#(rdio-current-track-tmux)⮂#[fg=colour16,bg=colour254,bold] #h '
-# set -g status-right '#[fg=colour245]⮃ %R ⮃ %d %b #[fg=colour254,bg=colour234,nobold]rdio-current-track-tmux⮂#[fg=colour16,bg=colour254,bold] #h '
-set -g status-right '#[fg=colour245]⮃ %R ⮃ %d %b #[fg=colour254,bg=colour234,nobold]⮂#[fg=colour16,bg=colour254,bold] #h '
-
+set -g status-left '#[fg=colour16,bg=colour254,bold] #S #[fg=colour254,bg=colour234,nobold]'
+set -g status-right '#[fg=colour245] %R  %d %b #[fg=colour254,bg=colour234,nobold]#[fg=colour16,bg=colour254,bold] #h '
 set -g window-status-format "#[fg=white,bg=colour234] #I #W "
-set -g window-status-current-format "#[fg=colour234,bg=colour39]⮀ #[fg=colour16,bg=colour39,noreverse,bold] #I ⮁ #W #[fg=colour39,bg=colour234,nobold]⮀"
+set -g window-status-current-format "#[fg=colour234,bg=colour39] #[fg=colour16,bg=colour39,noreverse,bold]#I  #W #[fg=colour39,bg=colour234,nobold]"
 
 # Activity
 setw -g monitor-activity on
@@ -96,7 +107,7 @@ set -g visual-activity off
 setw -g automatic-rename on
 
 # Better name management
-bind c new-window \; command-prompt "rename-window '%%'"
+bind c new-window \; command-prompt -p "project:" "rename-window '%1' ; send-keys -R 'c %1 ; clear' C-m"
 bind C new-window
 bind , command-prompt "rename-window '%%'"
 
@@ -115,5 +126,3 @@ bind y run "tmux save-buffer - | reattach-to-user-namespace pbcopy"
 bind \; last-window
 bind -r ] next-window
 bind -r [ previous-window
-
-set-option -g default-command "reattach-to-user-namespace -l zsh"

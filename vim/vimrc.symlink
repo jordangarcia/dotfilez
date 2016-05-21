@@ -19,6 +19,8 @@ call vundle#rc()
   Bundle 'kien/ctrlp.vim'
   Bundle 'Raimondi/delimitMate'
   Bundle 'Lokaltog/vim-powerline'
+  "Bundle 'vim-airline/vim-airline-themes'
+  "Bundle 'vim-airline/vim-airline'
   Bundle 'stephenmckinney/vim-solarized-powerline'
   Bundle 'godlygeek/csapprox'
   Bundle 'flazz/vim-colorschemes'
@@ -70,7 +72,6 @@ call vundle#rc()
 " }
 
 " Vim UI {
-
   if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
     let g:solarized_termcolors=256
     color solarized                 " Load a colorscheme
@@ -254,8 +255,11 @@ let delimitMate_quotes = "\" \'"
 let delimitMate_smart_quotes = 0
 
 " Powerline
-let g:Powerline_symbols='fancy'
+"let g:Powerline_symbols='fancy'
 "let g:Powerline_colorscheme='solarized256_light'
+"let g:airline_powerline_fonts = 1
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline_theme='powerlineish'
 
 " Python-Mode
 " Don't autofold code
