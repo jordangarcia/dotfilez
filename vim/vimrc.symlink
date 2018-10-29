@@ -4,6 +4,7 @@ set nocompatible        " Must be first line
 filetype on
 filetype off
 set rtp+=~/.vim/bundle/vundle
+set rtp+=/usr/local/opt/fzf
 call vundle#rc()
 
 " Load bundles
@@ -217,7 +218,16 @@ call vundle#rc()
   map <leader>et :tabe %%
 
   " leader - q closes all buffers in tab
-  map <leader>q :tabclose
+  map <leader>q :tabclose<cr>
+
+  " make open file better for JS dev
+  map <leader>f :call OpenFile(expand('<cfile>'))<CR>
+  nnoremap gf :call OpenFile(expand('<cfile>'))<CR>
+
+  " show git diff files in fzf
+  "map <leader>gf :call fzf#run({'source': '{git diff --name-only  -- "*.js"; git diff --name-only origin/devel... -- "*.js";} | cat', 'dir': '~/code/optimizely', 'sink': 'tabe', 'options': '--multi --reverse'})<CR>
+  map <leader>gf :call fzf#run({'source': 'git diff --name-only  -- "*.js"; git diff --name-only origin/devel... "*.js"', 'dir': '~/code/optimizely', 'sink': 'tabe', 'options': '--multi --reverse'})<CR>
+  map <leader>r :source ~/.vimrc<CR>
 
   " leader - c toggles paste mode
   map <f12> :set invpaste paste?<CR>
@@ -293,6 +303,10 @@ let g:jsx_ext_required = 0
 " NerdTree shortcut
 nnoremap <leader>d :NERDTreeToggle<cr>
 let NERDTreeIgnore = ['\.pyc$']
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI = 1
+
+
 
 " Tabularize {
   nmap <Leader>a& :Tabularize /&<CR>
@@ -371,4 +385,86 @@ if exists("+showtabline")
   set stal=2
   set tabline=%!MyTabLine()
 endif
+
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+function! OpenFile(file)
+  let f = a:file
+  let f = simplify(expand('%:p:h') .'/' . a:file . '.js')
+  "echo('trying: ' . f)
+  if filereadable(f)
+    execute "edit " . f
+    return
+  endif
+
+  let f = simplify(expand('%:p:h') .'/' . a:file . '/index.js')
+  "echo('trying: ' . f)
+  if filereadable(f)
+    execute "edit " . f
+    return
+  endif
+
+  let f = $OPTIMIZELY . '/src/www/frontend/src/js/' . a:file . '.js'
+  "echo('trying: ' . f)
+  if filereadable(f)
+    execute "edit " . f
+    return
+  endif
+
+  let f = $OPTIMIZELY . '/src/www/frontend/src/js/' . a:file . '/index.js'
+  "echo('trying: ' . f)
+  if (filereadable(f))
+    execute "edit " . f
+    return
+  endif
+endfunction
+
+
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - down / up / left / right
+"let g:fzf_layout = { 'down': '~40%' }
+
+" You can set up fzf window using a Vim command (Neovim or latest Vim 8 required)
+"let g:fzf_layout = { 'window': 'enew' }
+"let g:fzf_layout = { 'window': '-tabnew' }
+let g:fzf_layout = { 'window': '10split enew' }
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 

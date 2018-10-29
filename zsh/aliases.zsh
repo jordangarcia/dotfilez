@@ -44,3 +44,5 @@ alias evaldocker='eval $(docker-machine env default)'
 alias dockersaml='docker run -d --name=aws_cred_server -v $HOME/.aws:/app/.aws -p 2700:2700 --restart=always quay.io/optimizely/aws-cred-server:latest'
 
 alias cbdd='cd ~/code/optimizely/src/www/test/bdd'
+
+alias gdf='vim `git diff origin/devel... --name-only --relative -- "*.js" | fzf`'

@@ -18,7 +18,7 @@ do
   source $file
 done
 
-source /Users/jgarcia/code/optimizely/.source_this.sh
+#source /Users/jgarcia/code/optimizely/.source_this.sh
 
 # load everything but the path and completion files
 for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
@@ -66,4 +66,10 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 
-source /Users/$USER/tools/arcanist/resources/shell/bash-completion
+eval "$(rbenv init -)"
+eval "$(pyenv init -)"
+eval "$(docker-machine env -u)"
+
+#source /Users/$USER/tools/arcanist/resources/shell/bash-completion
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
