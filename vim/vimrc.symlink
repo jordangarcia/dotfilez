@@ -221,8 +221,29 @@ call vundle#rc()
   map <leader>q :tabclose<cr>
 
   " make open file better for JS dev
-  map <leader>f :call OpenFile(expand('<cfile>'))<CR>
-  nnoremap gf :call OpenFile(expand('<cfile>'))<CR>
+  nnoremap gf :call OpenOptimizelyFile(expand('<cfile>'), 'edit')<CR>
+  nnoremap gr :call OpenOptimizelyFile(expand('<cfile>'), 'tabe')<CR>
+  function! OpenOptimizelyFile(file, cmd)
+    let cmd = a:cmd
+    let l:found = 0
+    let to_try = [
+          \simplify(expand('%:p:h') .'/' . a:file . '.js'),
+          \simplify(expand('%:p:h') .'/' . a:file . '/index.js'),
+          \simplify($OPTIMIZELY . '/src/www/frontend/src/js/' . a:file . '.js'),
+          \simplify($OPTIMIZELY . '/src/www/frontend/src/js/' . a:file .  '/index.js'),
+          \]
+
+    for f in to_try
+      if filereadable(f)
+        let l:found = f
+        break
+      endif
+    endfor
+
+    if !empty(l:found)
+      execute cmd . ' ' . found
+    endif
+  endfunction
 
   " show git diff files in fzf
   "map <leader>gf :call fzf#run({'source': '{git diff --name-only  -- "*.js"; git diff --name-only origin/devel... -- "*.js";} | cat', 'dir': '~/code/optimizely', 'sink': 'tabe', 'options': '--multi --reverse'})<CR>
@@ -255,7 +276,7 @@ call vundle#rc()
 "-------------------------------------------------------------------------------
 " FileType Settings
 "-------------------------------------------------------------------------------
-autocmd FileType python setlocal sw=2 ts=2 sts=2 tw=79 expandtab wrap
+autocmd FileType python setlocal sw=4 ts=4 sts=4 tw=79 expandtab wrap
 
 "-------------------------------------------------------------------------------
 " Plugin Settings
@@ -392,36 +413,6 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-function! OpenFile(file)
-  let f = a:file
-  let f = simplify(expand('%:p:h') .'/' . a:file . '.js')
-  "echo('trying: ' . f)
-  if filereadable(f)
-    execute "edit " . f
-    return
-  endif
-
-  let f = simplify(expand('%:p:h') .'/' . a:file . '/index.js')
-  "echo('trying: ' . f)
-  if filereadable(f)
-    execute "edit " . f
-    return
-  endif
-
-  let f = $OPTIMIZELY . '/src/www/frontend/src/js/' . a:file . '.js'
-  "echo('trying: ' . f)
-  if filereadable(f)
-    execute "edit " . f
-    return
-  endif
-
-  let f = $OPTIMIZELY . '/src/www/frontend/src/js/' . a:file . '/index.js'
-  "echo('trying: ' . f)
-  if (filereadable(f))
-    execute "edit " . f
-    return
-  endif
-endfunction
 
 
 " An action can be a reference to a function that processes selected lines

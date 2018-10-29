@@ -79,5 +79,6 @@ add-zsh-hook chpwd load-nvmrc
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 eval "$(direnv hook zsh)"
+#eval "$(docker-machine env -u)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
