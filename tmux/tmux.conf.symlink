@@ -12,13 +12,13 @@ set -sg repeat-time 600
 set -g -q mouse on
 bind -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
 bind -n WheelDownPane select-pane -t= \; send-keys -M
-bind -t vi-copy WheelUpPane halfpage-up
-bind -t vi-copy WheelDownPane halfpage-down
+#bind -t vi-copy WheelUpPane halfpage-up
+#bind -t vi-copy WheelDownPane halfpage-down
 
 # PageUp (tmux >= 2.1)
 bind-key -T root PPage if-shell -F "#{alternate_on}" "send-keys PPage" "copy-mode -e; send-keys PPage"
-bind-key -t vi-copy PPage page-up
-bind-key -t vi-copy NPage page-down
+#bind-key -t vi-copy PPage page-up
+#bind-key -t vi-copy NPage page-down
 
 # Window Style (highlights active window)
 set-window-option -g window-style 'bg=colour0'
@@ -117,9 +117,12 @@ bind ` copy-mode
 unbind [
 unbind p
 bind p paste-buffer
-bind -t vi-copy v begin-selection
-bind -t vi-copy y copy-selection
-bind -t vi-copy Escape cancel
+bind-key -T copy-mode-vi 'v' send -X begin-selection
+bind-key -T copy-mode-vi 'V' send -X select-line
+bind-key -T copy-mode-vi 'r' send -X rectangle-toggle
+bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel "xclip -in -selection clipboard"
+
+# Update default binding of `Enter` to also use copy-pipe
 bind y run "tmux save-buffer - | reattach-to-user-namespace pbcopy"
 
 # Window movement

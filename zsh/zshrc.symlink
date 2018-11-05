@@ -45,18 +45,27 @@ done
 
 unset config_files
 
-# The next line updates PATH for the Google Cloud SDK.
-# source '/Users/jordan/.google-cloud-sdk/path.zsh.inc'
+lazynvm() {
+  unset -f nvm node npm
+  export NVM_DIR=~/.nvm
+  . "$(brew --prefix nvm)/nvm.sh"
+  #[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+}
 
-# The next line enables shell command completion for gcloud.
-# source '/Users/jordan/.google-cloud-sdk/completion.zsh.inc'
-#
-# setup pip and virtualenvwrapper
-#export WORKON_HOME=$HOME/.virtualenvs
-#export PROJECT_HOME=$HOME/Devel
-#source /usr/local/bin/virtualenvwrapper.sh
-export NVM_DIR="$HOME/.nvm"
-. "$(brew --prefix nvm)/nvm.sh"
+nvm() {
+  lazynvm
+  nvm $@
+}
+
+node() {
+  lazynvm
+  node $@
+}
+
+npm() {
+  lazynvm
+  npm $@
+}
 
 autoload -U add-zsh-hook
 load-nvmrc() {
@@ -64,12 +73,11 @@ load-nvmrc() {
     nvm use
   fi
 }
+
 add-zsh-hook chpwd load-nvmrc
 
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
-eval "$(docker-machine env -u)"
-
-#source /Users/$USER/tools/arcanist/resources/shell/bash-completion
+eval "$(direnv hook zsh)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
