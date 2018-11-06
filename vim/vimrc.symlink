@@ -26,7 +26,7 @@ call vundle#rc()
   Bundle 'godlygeek/csapprox'
   Bundle 'flazz/vim-colorschemes'
   Bundle 'myusuf3/numbers.vim'
-  Bundle 'marijnh/tern_for_vim'
+  "Bundle 'marijnh/tern_for_vim'
 
   " General Programming
   Bundle 'scrooloose/syntastic'

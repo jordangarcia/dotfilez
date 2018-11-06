@@ -45,7 +45,7 @@ alias dockersaml='docker run -d --name=aws_cred_server -v $HOME/.aws:/app/.aws -
 
 alias cbdd='cd ~/code/optimizely/src/www/test/bdd'
 
-alias gdf='vim `git diff origin/devel... --name-only --relative -- "*.js" | fzf`'
+alias gdf='vim `{git diff origin/devel... --name-only --relative -- "*.js"; git diff --name-only --relative -- "*.js"} | cat | fzf`'
 
 # Changing/making/removing directory
 setopt auto_pushd
@@ -77,3 +77,4 @@ alias lsa='ls -lah'
 alias l='ls -lah'
 alias ll='ls -lh'
 alias la='ls -lAh'
+
