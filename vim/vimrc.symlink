@@ -48,6 +48,7 @@ call vundle#rc()
 
 " Typescript
   Bundle 'leafgarland/typescript-vim'
+  Bundle 'Quramy/tsuquyomi'
 
 
 " General
@@ -299,6 +300,10 @@ let g:ctrlp_user_command = {
 
 " jsx
 let g:jsx_ext_required = 0
+
+" TypeScript
+let g:tsuquyomi_completion_detail = 1
+
 
 " NerdTree shortcut
 nnoremap <leader>d :NERDTreeToggle<cr>
