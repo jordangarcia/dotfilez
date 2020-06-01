@@ -25,6 +25,7 @@
   excludesfile = ~/.gitignore
   editor = vim
 	precomposeunicode = true
+	ignorecase = false
 [push]
 	default = current
 [apply]
