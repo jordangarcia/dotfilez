@@ -45,8 +45,4 @@ done
 
 unset config_files
 
-eval "$(rbenv init -)"
-eval "$(pyenv init -)"
-eval "$(direnv hook zsh)"
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

@@ -37,18 +37,18 @@ call vundle#rc()
   Bundle "mxw/vim-jsx"
   Bundle 'scrooloose/nerdtree'
   Bundle 'mattn/emmet-vim'
-  Bundle 'kchmck/vim-coffee-script'
-  Bundle 'klen/python-mode'
-  Bundle 'IN3D/vim-raml'
+ "Bundle 'kchmck/vim-coffee-script'
+ "Bundle 'klen/python-mode'
+ "Bundle 'IN3D/vim-raml'
 
 " Clojure
-  Bundle 'guns/vim-clojure-static'
-  Bundle 'tpope/vim-fireplace'
-  Bundle 'vim-scripts/paredit.vim'
+  " Bundle 'guns/vim-clojure-static'
+  " Bundle 'tpope/vim-fireplace'
+  "  Bundle 'vim-scripts/paredit.vim'
 
 " Typescript
-  Bundle 'leafgarland/typescript-vim'
-  Bundle 'Quramy/tsuquyomi'
+" Bundle 'leafgarland/typescript-vim'
+" Bundle 'Quramy/tsuquyomi'
 
 
 " General
