@@ -1,6 +1,4 @@
 # handles all node / nvm setup
-export PATH="/Users/jordan/.nvm/versions/node/v10.13.0/bin:$PATH"
-
 lazynvm() {
   unset -f nvm
   export NVM_DIR=~/.nvm

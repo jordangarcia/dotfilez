@@ -89,6 +89,7 @@ alias envstaging="rm .env && ln -s ../.env-staging ./.env"
 alias sshprod1="ssh ubuntu@52.9.8.149"
 alias sshprod2="ssh ubuntu@54.183.105.11"
 alias sshstaging="ssh -i ~/.ssh/id_menskin ubuntu@54.153.11.224"
+alias sshqueueworker="ssh -i ~/.ssh/id_menskin ubuntu@52.8.90.224"
 
 alias pangaea-free-trial="curl --location --request POST 'http://app.luminskin.local/api/checkout' --header 'content-type: application/x-www-form-urlencoded; charset=UTF-8' --header 'Cookie: XSRF-TOKEN=eyJpdiI6IldPMzZrQnhCZU0zWmdSN3JuN2dLbHc9PSIsInZhbHVlIjoiN1wvbnRkeHBEZVNcL3dqbWVnVkdnNlFFaWpkWit0d3JFVVg2cGVnZVhtTTh6T01hSjNLdkVJbit4SDhxSWdSMnNZIiwibWFjIjoiOTc4M2Y1OWQ4ZDY1ZGE3Y2I3NzZlYzcxMTc5YjU0MGMzNmJlY2RiM2E1Y2VjMTQ2YmI5ZjJhMzcxZTNlYjBkYSJ9; local_session=eyJpdiI6IkJTSVpQSkNJM2ZpcXhQd1d2MkI2bmc9PSIsInZhbHVlIjoiYVdlRVlRNVYyVlwvTFArSE1mZW1iVUpnNEdGRjlSQWl6SzBNS1BId2Y4U01OSG1kSHBna2FmdGNEMFwvUThsaThVIiwibWFjIjoiMzBmZmNiODU2YzY1MTIwZDE5ZDBmN2EyNzQ1MmI4NzRmMzQxZGEzY2U1NzYyMDE4NDViNTdlZTkzYjZiZmVjMiJ9' --data-raw 'currency=USD&coupon=FREE_TRIAL&products%5B0%5D%5Blabel_display_text%5D=jordan+garcia&products%5B0%5D%5Bproduct_option_value_ids%5D%5B%5D=48&products%5B0%5D%5Bproduct_option_value_ids%5D%5B%5D=51&products%5B0%5D%5Bproduct_option_value_ids%5D%5B%5D=56&products%5B0%5D%5Bquantity%5D=1&products%5B0%5D%5Binterval%5D=2month' | jq '.data[0].cart_url' | xargs open"
 

@@ -1,4 +1,4 @@
-export PATH="/usr/local/Cellar/bin:/usr/local/bin:$ZSH/bin:/Users/jordan/.nvm/versions/node/v10.13.0/bin:$PATH"
+export PATH="/Users/jordan/.nvm/versions/node/v14.15.4/bin:/usr/local/Cellar/bin:/usr/local/bin:$ZSH/bin:$PATH"
 export PATH="/Users/jordan/code/flutter/bin:$PATH"
 export PATH="/Users/jordan/.composer/vendor/bin:$PATH"
 
