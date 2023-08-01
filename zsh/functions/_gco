@@ -1,0 +1,16 @@
+#compdef gco
+
+_git_branch() {
+  if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+    # Not in a Git directory, display an error message
+    return 0
+  fi
+
+  local branches
+  branches=($(git for-each-ref --count=20 --sort=-committerdate refs/heads/ --format="%(refname:short)"))
+
+  # Complete `git branch` with the last 20 accessed branch names (displayed as newlines)
+  _describe -t branches 'git branches' branches
+}
+
+_git_branch

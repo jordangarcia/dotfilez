@@ -8,8 +8,8 @@
 # install this to the correct location by running the project's main `rake`
 # task.
 [user]
-	name = jordan68
-	email = jordan@menskin.co
+	name = jordangarcia
+	email = jordan.garcia@gmail.com
 [alias]
   co = checkout
   promote = !$ZSH/bin/git-promote

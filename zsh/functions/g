@@ -1,0 +1,5 @@
+if [[ -z "$1" ]]; then
+  cd $GAMMA;
+else
+  cd $GAMMA/packages/$1;
+fi
