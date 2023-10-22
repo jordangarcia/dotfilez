@@ -9,6 +9,7 @@ call vundle#rc()
 
 " Load bundles
   " DEPS
+  Bundle "rebelot/kanagawa.nvim"
   Bundle 'gmarik/vundle'
   Bundle 'MarcWeber/vim-addon-mw-utils'
   Bundle 'tomtom/tlib_vim'

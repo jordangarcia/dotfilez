@@ -26,6 +26,7 @@
   editor = vim
 	precomposeunicode = true
 	ignorecase = false
+  pager = delta
 [push]
 	default = current
 [apply]
@@ -36,3 +37,24 @@
   keepBackup = false
 [pull]
   rebase = true
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+  hunk-header-style =omit
+  theme = zenburn
+  navigate =true
+  side-by-side =true
+  line-numbers =true
+
+
+[merge]
+  conflictstyle = diff3
+
+[diff]
+  colorMoved = default
+
+[branch]
+  sort=-committerdate

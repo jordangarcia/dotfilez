@@ -1,3 +1,4 @@
+SHELL_NODE_VERSION="v18.18.2"
 # handles all node / nvm setup
 lazynvm() {
   unset -f nvm
@@ -11,6 +12,7 @@ nvm() {
   nvm $@
 }
 
+
 autoload -U add-zsh-hook
 load-nvmrc() {
   if [[ -f .nvmrc && -r .nvmrc ]]; then
@@ -19,3 +21,5 @@ load-nvmrc() {
 }
 
 add-zsh-hook chpwd load-nvmrc
+
+export PATH="/Users/jordan/.nvm/versions/node/$SHELL_NODE_VERSION/bin:$PATH"
