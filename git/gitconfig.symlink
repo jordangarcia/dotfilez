@@ -37,7 +37,8 @@
   keepBackup = false
 [pull]
   rebase = true
-
+[init]
+  defaultBranch = main
 [interactive]
   diffFilter = delta --color-only
 
