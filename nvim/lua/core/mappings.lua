@@ -298,6 +298,14 @@ M.telescope = {
     -- },
     -- ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<C-t>"] = {
+      function()
+        require("telescope.builtin").lsp_dynamic_workspace_symbols {
+          ignore_symbols = { "property", "variable" },
+        }
+      end,
+      "Find symbols",
+    },
     -- ["<C-p>"] = { "<cmd> Telescope git_files <CR>", "Find files" },
     -- ["<C-S-p>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<C-S-p>"] = { "<cmd> Telescope builtin <CR>", "Find oldfiles" },
