@@ -23,7 +23,7 @@
 	ui = true
 [core]
   excludesfile = ~/.gitignore
-  editor = vim
+  editor = nvim
 	precomposeunicode = true
 	ignorecase = false
   pager = delta

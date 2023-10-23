@@ -16,8 +16,8 @@ else
 fi
 
 
-alias vim='TERM=xterm-256color vim'
-alias vi='vim'
+alias vim='nvim'
+alias vi='nvim'
 alias tmux='TERM=screen-256color-bce tmux'
 # most recent 10 git branches accessed
 alias gbl='git checkout $(git branch --sort=-committerdate | head -n 20 | fzf)'
