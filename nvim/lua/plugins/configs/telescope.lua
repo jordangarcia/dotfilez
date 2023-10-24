@@ -49,6 +49,8 @@ local options = {
       n = {
         ["q"] = require("telescope.actions").close,
         ["<C-s>"] = "select_vertical",
+        ["<C-p>"] = false,
+        ["<C-S-p>"] = false,
       },
       i = {
         ["<C-n>"] = false,

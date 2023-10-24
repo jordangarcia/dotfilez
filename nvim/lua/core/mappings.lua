@@ -2,6 +2,25 @@
 
 local M = {}
 
+-- since we open empty splits - clean them up as we cycle through open buffers
+function ChangeTab(motion)
+  local last_buffer_id = vim.fn.bufnr()
+  local last_buffer_name = vim.fn.expand "%"
+
+  if motion == "next" then
+    vim.cmd [[BufferLineCycleWindowlessNext]]
+  elseif motion == "prev" then
+    vim.cmd [[BufferLineCycleWindowlessPrev]]
+  else
+    error("Invalid motion: " .. motion)
+    return
+  end
+
+  if last_buffer_name == "" then
+    vim.cmd("bd " .. last_buffer_id)
+  end
+end
+
 M.general = {
   i = {
     -- go to  beginning and end
@@ -16,9 +35,25 @@ M.general = {
   },
 
   n = {
+    ["<leader>|"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
     -- switch between windows
+
+    ["<S-l>"] = {
+      function()
+        ChangeTab "next"
+      end,
+      { noremap = true, silent = true },
+    },
+    ["<S-h>"] = {
+      function()
+        ChangeTab "prev"
+      end,
+      { noremap = true, silent = true },
+    },
+    -- ["<S-t>"] = { "<CMD> BufferLineCycleWindowlessToggle <CR>", { noremap = true, silent = true } },
+
     ["<C-h>"] = { "<cmd> winc h <CR>", "Window left" },
     ["<C-j>"] = { "<cmd> winc j <CR>", "Window up" },
     ["<C-k>"] = { "<cmd> winc k <CR>", "Window down" },
@@ -26,11 +61,14 @@ M.general = {
     -- ["<C-l>"] = { "<C-w>l", "Window right" },
     -- ["<C-j>"] = { "<C-w>j", "Window down" },
     -- ["<C-k>"] = { "<C-w>k", "Window up" },
-    ["<C-w>q"] = { "<cmd> q <CR>", "Close Window" },
+    ["<C-w>q"] = { "<cmd> BufDel <CR>", "Close Window" },
     ["<C-w>h"] = { "<cmd> split <CR>", "Split window horizontally" },
     ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>k"] = { "", "" },
+    ["<leader>tl"] = { "<cmd> tabNext <CR>", "Tab Next" },
+    ["<leader>th"] = { "<cmd> tabprevious <CR>", "Tab Prev" },
+    ["<leader>tt"] = { "<cmd> tabe <CR>", "New Tab" },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
@@ -55,12 +93,12 @@ M.general = {
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
 
-    ["<leader>fm"] = {
-      function()
-        vim.lsp.buf.format { async = true }
-      end,
-      "LSP formatting",
-    },
+    -- ["<leader>fm"] = {
+    --   function()
+    --     vim.lsp.buf.format { async = true }
+    --   end,
+    --   "LSP formatting",
+    -- },
   },
 
   t = {
@@ -207,24 +245,25 @@ M.lspconfig = {
       "LSP references",
     },
 
-    ["<leader>lf"] = {
-      function()
-        vim.diagnostic.open_float { border = "rounded" }
-      end,
-      "Floating diagnostic",
-    },
+    -- ["<leader>lf"] = {
+    --   function()
+    --     vim.diagnostic.open_float { border = "rounded" }
+    --   end,
+    --   "Floating diagnostic",
+    -- },
 
     ["[d"] = {
-      function()
-        vim.diagnostic.goto_prev { float = { border = "rounded" } }
-      end,
+      "<cmd> Lspsaga diagnostic_jump_prev <CR>",
       "Goto prev",
     },
 
+    ["]d"] = {
+      "<cmd> Lspsaga diagnostic_jump_prev <CR>",
+      "Goto next",
+    },
+
     ["<C-n>"] = {
-      function()
-        vim.diagnostic.goto_next { float = { border = "rounded" } }
-      end,
+      "<cmd> Lspsaga diagnostic_jump_next <CR>",
       "Goto next",
     },
 
@@ -297,7 +336,13 @@ M.telescope = {
     --   "Find files",
     -- },
     -- ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
-    ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    -- ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    -- ["<D-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<C-S-P>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
+    ["<C-S-K>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
+    -- ["<M-C-S-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    -- ["<T-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-t>"] = {
       function()
         require("telescope.builtin").lsp_dynamic_workspace_symbols {
@@ -308,26 +353,33 @@ M.telescope = {
     },
     -- ["<C-p>"] = { "<cmd> Telescope git_files <CR>", "Find files" },
     -- ["<C-S-p>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
-    ["<C-S-p>"] = { "<cmd> Telescope builtin <CR>", "Find oldfiles" },
-    ["<C-S-o>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
+    -- ["<C-S-k"] = { "<cmd> Telescope builtin <CR>", "Find oldfiles" },
+    -- ["<C-S-p>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
     ["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
+    ["<leader>fs"] = {
+      function()
+        require("telescope").load_extension "session-lens"
+        require("auto-session.session-lens").search_session()
+      end,
+      "Find sessions",
+    },
 
     -- git
-    ["<leader>cm"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-    ["<leader>gt"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+    ["<leader>fc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
+    ["<leader>fd"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 
     -- pick a hidden term
-    ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
+    -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
 
     -- theme switcher
-    ["<leader>th"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
+    ["<leader>ft"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
 
-    ["<leader>ma"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+    ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
   },
 }
 

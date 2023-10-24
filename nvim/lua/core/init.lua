@@ -77,7 +77,7 @@ autocmd("FileType", {
 autocmd("BufWritePost", {
   pattern = vim.tbl_map(function(path)
     return vim.fs.normalize(vim.loop.fs_realpath(path))
-  end, vim.fn.glob(vim.fn.stdpath "config" .. "/lua/{plugins,core}/**/*.lua", true, true, true)),
+  end, vim.fn.glob(vim.fn.stdpath "config" .. "/lua/plugins/**/*.lua", true, true, true)),
 
   group = vim.api.nvim_create_augroup("ReloadNvChad", {}),
 
@@ -88,7 +88,7 @@ autocmd("BufWritePost", {
 
     require("plenary.reload").reload_module "base46"
     require("plenary.reload").reload_module(module)
-    -- require("plenary.reload").reload_module "custom.cha:drc"
+    require("plenary.reload").reload_module "custom.chadrc"
 
     config = require("core.utils").load_config()
 

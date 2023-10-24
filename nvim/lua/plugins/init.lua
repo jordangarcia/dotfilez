@@ -1,6 +1,6 @@
 -- All plugins have lazy=true by default,to load a plugin on startup just lazy=false
 -- List of all default plugins & their definitions
-
+--
 local default_plugins = {
 
   "nvim-lua/plenary.nvim",
@@ -42,6 +42,38 @@ local default_plugins = {
       vim.defer_fn(function()
         require("colorizer").attach_to_buffer(0)
       end, 0)
+    end,
+  },
+
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+    config = function()
+      require("auto-session").setup {
+        log_level = "error",
+        auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+
+        session_lens = {
+          -- If load_on_setup is set to false, one needs to eventually call `require("auto-session").setup_session_lens()` if they want to use session-lens.
+          buftypes_to_ignore = {}, -- list of buffer types what should not be deleted from current session
+          load_on_setup = true,
+          theme_conf = {
+            border = true,
+          },
+          previewer = false,
+        },
+      }
+      -- vim.api.nvim_create_autocmd("FileType", {
+      --   pattern = { "NvimTree" },
+      --   callback = function(args)
+      --     vim.api.nvim_create_autocmd("VimLeavePre", {
+      --       callback = function()
+      --         vim.api.nvim_buf_delete(args.buf, { force = true })
+      --         return true
+      --       end,
+      --     })
+      --   end,
+      -- })
     end,
   },
 
@@ -227,7 +259,10 @@ local default_plugins = {
         -- snippet plugin
         "L3MON4D3/LuaSnip",
         dependencies = "rafamadriz/friendly-snippets",
-        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+        opts = {
+          history = true,
+          updateevents = "TextChanged,TextChangedI",
+        },
         config = function(_, opts)
           require("plugins.configs.others").luasnip(opts)
         end,
@@ -287,6 +322,7 @@ local default_plugins = {
   -- file managing , picker etc
   {
     "nvim-tree/nvim-tree.lua",
+    lazy = false,
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     init = function()
       require("core.utils").load_mappings "nvimtree"
@@ -297,12 +333,27 @@ local default_plugins = {
     config = function(_, opts)
       dofile(vim.g.base46_cache .. "nvimtree")
       require("nvim-tree").setup(opts)
+      vim.api.nvim_create_autocmd({ "BufEnter" }, {
+        pattern = "NvimTree*",
+        callback = function()
+          local view = require "nvim-tree.view"
+          local is_visible = view.is_visible()
+
+          local api = require "nvim-tree.api"
+          if not is_visible then
+            api.tree.open()
+          end
+        end,
+      })
     end,
   },
 
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter", { "nvim-telescope/telescope-fzf-native.nvim", build = "make" } },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    },
     cmd = "Telescope",
     init = function()
       require("core.utils").load_mappings "telescope"
@@ -320,7 +371,7 @@ local default_plugins = {
         telescope.load_extension(ext)
       end
     end,
-  },
+  }, -- Only load whichkey after all the gui
 
   -- Only load whichkey after all the gui
   {
@@ -335,12 +386,39 @@ local default_plugins = {
       require("which-key").setup(opts)
     end,
   },
-
   {
     "max397574/better-escape.nvim",
     event = "InsertEnter",
     config = function()
       require("better_escape").setup()
+    end,
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup {
+        -- Configuration here, or leave empty to use defaults
+      }
+    end,
+  },
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    config = function()
+      require("lspsaga").setup {}
+    end,
+  },
+
+  {
+    "ojroques/nvim-bufdel",
+    lazy = false,
+    config = function()
+      require("bufdel").setup {
+        next = "tabs",
+        quit = false, -- quit Neovim when last buffer is closed
+      }
     end,
   },
 }
