@@ -615,7 +615,42 @@ local plugins = {
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
     config = function()
-      require("typescript-tools").setup {}
+      require("typescript-tools").setup {
+        settings = {
+          -- spawn additional tsserver instance to calculate diagnostics on it
+          separate_diagnostic_server = false,
+          -- "change"|"insert_leave" determine when the client asks the server about diagnostic
+          publish_diagnostic_on = "insert_leave",
+        },
+      }
+    end,
+  },
+  {
+    "smoka7/multicursors.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "smoka7/hydra.nvim",
+    },
+    opts = {},
+    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
+    keys = {
+      {
+        mode = { "v" },
+        "<C-F>",
+        "<cmd>MCstart<cr>",
+        desc = "Multi cursor start",
+      },
+    },
+    config = function()
+      local N = require "multicursors.normal_mode"
+      require("multicursors").setup {
+        normal_leys = {
+          ["<C-f>"] = { method = N.find_next, opts = { desc = "Find next" } },
+        },
+      }
+
+      vim.api.nvim_set_hl(0, "MultiCursor", { bg = "#FFD700" })
+      vim.api.nvim_set_hl(0, "MultiCursorMain", { bg = "#FFD700" })
     end,
   },
 }

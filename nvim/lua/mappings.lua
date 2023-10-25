@@ -372,6 +372,10 @@ M.telescope = {
     ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
+    ["<C-b>"] = {
+      "<cmd> Telescope buffers sort_mru=true ignore_current_buffer=true cwd_only=true <CR>",
+      "Find buffers",
+    },
     -- ["<M-C-S-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     -- ["<T-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-t>"] = {

@@ -130,7 +130,7 @@ local options = {
 
   sources = {
     { name = "copilot" },
-    { name = "nvim_lsp", keyword_length = 3 },
+    { name = "nvim_lsp" },
     { name = "luasnip" },
     { name = "buffer", keyword_length = 5 },
   },
@@ -139,6 +139,13 @@ local options = {
 -- vim.cmd([[
 --   set completeopt=menuone,noinsert,noselect
 --   highlight! default link CmpItemKind CmpItemMenuDefault
+--
 -- ]])
+-- vim.api.nvim_set_hl("CmpItemAbbrMatch", { bg = "NONE", fg = "#569CD6" })
+vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { bg = "NONE", fg = "#569CD6" })
+vim.api.nvim_set_hl(0, "CmpItemKindFunction", { bg = "NONE", fg = "#C586C0" })
+vim.api.nvim_set_hl(0,"CmpItemKindMethod", { bg = "NONE", fg = "#C586C0" })
+vim.api.nvim_set_hl(0, "CmpItemKindVariable", { bg = "NONE", fg = "#9CDCFE" })
+vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { bg = "NONE", fg = "#D4D4D4" })
 
 return options
