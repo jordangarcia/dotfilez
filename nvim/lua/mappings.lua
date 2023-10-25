@@ -116,7 +116,12 @@ M.general = {
   },
 
   t = {
-    ["<C-x>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
+    ["<F1>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
+    ["<C-w>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
+    ["<C-h>"] = { "<cmd> winc h <CR>", "Window left" },
+    ["<C-j>"] = { "<cmd> winc j <CR>", "Window up" },
+    ["<C-k>"] = { "<cmd> winc k <CR>", "Window down" },
+    ["<C-l>"] = { "<cmd> winc l <CR>", "Window right" },
   },
 
   v = {

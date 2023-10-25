@@ -659,6 +659,16 @@ local plugins = {
     config = function()
       require("nvterm").setup()
       require("utils").load_mappings "nvterm"
+
+      function server_test()
+        local fn = vim.fn.expand "%"
+        -- if fn has .spec in it run as test
+        if string.find(fn, ".spec") then
+          local cmd = "yarn test:watch -- " .. fn
+          require("nvterm.terminal").send(cmd, "vertical")
+        end
+      end
+      vim.api.nvim_create_user_command("ServerTest", server_test, {})
     end,
   },
 }
