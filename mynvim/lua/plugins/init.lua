@@ -200,6 +200,8 @@ local plugins = {
           "html-lsp",
           "typescript-language-server",
           "prettier",
+          "prettierd",
+          "eslint_d",
           "prisma-language-server",
           "graphql-language-service-cli",
         },
@@ -256,9 +258,10 @@ local plugins = {
           local b = null_ls.builtins
 
           local sources = {
-            b.formatting.prettier.with {
-              filetypes = { "html", "markdown", "css", "typescript", "javascript" },
+            b.formatting.prettierd.with {
+              filetypes = { "html", "markdown", "css", "typescript", "javascript", "json", "graphql" },
             },
+            b.formatting.eslint_d,
             -- null_ls.builtins.formatting.prettierd,
             -- null_ls.builtins.diagnostics.eslint_d.with {
             --   diagnostics_format = "[eslint] #{m}\n(#{c})",
@@ -481,7 +484,12 @@ local plugins = {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
     config = function()
-      require("lspsaga").setup()
+      require("lspsaga").setup {
+        diagnostic = {
+          max_show_width = 0.4,
+          max_width = 0.4,
+        },
+      }
     end,
   },
 
@@ -492,6 +500,16 @@ local plugins = {
         autosave = {
           current = true,
         },
+        plugins = {
+          delete_hidden_buffers = {
+            hooks = {
+              "before_load",
+              vim.o.sessionoptions:match "buffer" and "before_save",
+            },
+            force = true, -- or fun(buf): boolean
+          },
+          delete_buffers = true,
+        },
         commands = {
           save = "SSave",
           load = "SLoad",
@@ -499,6 +517,14 @@ local plugins = {
           list = "SList",
         },
       }
+    end,
+  },
+
+  {
+    "goolord/alpha-nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("alpha").setup(require("plugins/configs/startify").config)
     end,
   },
 

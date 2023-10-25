@@ -40,6 +40,10 @@ M.general = {
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
     -- switch between windows
+    ["<C-f>"] = {
+      "",
+      { noremap = true, silent = true },
+    },
     ["<S-l>"] = {
       "<CMD> bn <CR>",
       { noremap = true, silent = true },
@@ -349,7 +353,7 @@ M.telescope = {
     -- ["<D-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
-    ["<C-S-K>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
+    ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     -- ["<M-C-S-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     -- ["<T-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-t>"] = {
@@ -384,7 +388,7 @@ M.telescope = {
 
     -- git = also combined with git
     ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-    ["<leader>gd"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 
     -- pick a hidden term
     -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },

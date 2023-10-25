@@ -75,39 +75,45 @@ lspconfig.lua_ls.setup {
   on_attach = M.on_attach,
   capabilities = M.capabilities,
 
-  -- settings = {
-  --   Lua = {
-  --     diagnostics = {
-  --       globals = { "vim" },
-  --     },
-  --     workspace = {
-  --       library = {
-  --         [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-  --         [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
-  --         [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
-  --       },
-  --       maxPreload = 100000,
-  --       preloadFileSize = 10000,
-  --     },
-  --   },
-  -- },
   settings = {
     Lua = {
       diagnostics = {
-        -- Get the language server to recognize the `vim` global
         globals = { "vim" },
       },
-
       workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file("", true),
-        checkThirdParty = false,
+        library = {
+          [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+          [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+          [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+        },
+        maxPreload = 100000,
+        preloadFileSize = 10000,
       },
     },
   },
+  -- settings = {
+  --   Lua = {
+  --     diagnostics = {
+  --       -- Get the language server to recognize the `vim` global
+  --       globals = { "vim" },
+  --     },
+  --
+  --     workspace = {
+  --       -- Make the server aware of Neovim runtime files
+  --       library = vim.api.nvim_get_runtime_file("", true),
+  --       checkThirdParty = false,
+  --     },
+  --   },
+  -- },
 }
 
-local servers = { "html", "cssls", "tsserver", "prismals", "graphql" }
+local servers = { "html", "cssls", "tsserver", "prismals" }
+
+lspconfig["graphql"].setup {
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  root_dir = require("lspconfig.util").root_pattern "package.json",
+}
 
 lspconfig["tsserver"].setup {
   on_attach = function(client, bufnr)
