@@ -432,7 +432,8 @@ local plugins = {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      { "nvim-telescope/telescope-fzy-native.nvim" },
+      -- { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       { "nvim-telescope/telescope-frecency.nvim" },
       "jedrzejboczar/possession.nvim",
     },
@@ -651,6 +652,13 @@ local plugins = {
 
       vim.api.nvim_set_hl(0, "MultiCursor", { bg = "#FFD700" })
       vim.api.nvim_set_hl(0, "MultiCursorMain", { bg = "#FFD700" })
+    end,
+  },
+  {
+    "NvChad/nvterm",
+    config = function()
+      require("nvterm").setup()
+      require("utils").load_mappings "nvterm"
     end,
   },
 }
