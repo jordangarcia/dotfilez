@@ -190,12 +190,12 @@ M.lspconfig = {
   -- See `<cmd> :help vim.lsp.*` for documentation on any of the below functions
 
   n = {
-    ["<F11>"] = {
-      function()
-        vim.lsp.buf.declaration()
-      end,
-      "LSP declaration",
-    },
+    -- ["<F11>"] = {
+    --   function()
+    --     vim.lsp.buf.declaration()
+    --   end,
+    --   "LSP declaration",
+    -- },
 
     ["gt"] = {
       function()
@@ -275,6 +275,11 @@ M.lspconfig = {
       "Goto next",
     },
 
+    ["<F11>"] = {
+      "<cmd> Lspsaga finder def+ref <CR>",
+      "Lspsaga finder",
+    },
+
     ["<C-n>"] = {
       "<cmd> Lspsaga diagnostic_jump_next <CR>",
       "Goto next",
@@ -315,6 +320,19 @@ M.lspconfig = {
         vim.lsp.buf.code_action()
       end,
       "LSP code action",
+    },
+  },
+}
+
+M.copilot = {
+  i = {
+    ["<C-l>"] = {
+      function()
+        if require("copilot.suggestion").is_visible() then
+          require("copilot.suggestion").accept_line()
+        end
+      end,
+      "Copilot accept",
     },
   },
 }
