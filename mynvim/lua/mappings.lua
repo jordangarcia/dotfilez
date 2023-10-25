@@ -37,7 +37,7 @@ M.general = {
   n = {
     ["<leader>|"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
     ["<leader>s"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
-    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+    -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
     -- switch between windows
     ["<C-f>"] = {
@@ -370,7 +370,7 @@ M.telescope = {
     -- ["<C-p>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     -- ["<D-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
-    ["<C-S-P>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
+    ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     -- ["<M-C-S-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     -- ["<T-P>"] = { "<cmd> Telescope find_files <CR>", "Find files" },
