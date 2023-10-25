@@ -34,6 +34,8 @@ M.general = {
   },
 
   n = {
+    ["<A-up>"] = { ":m .-2<CR>==", "Move line up" },
+    ["<A-down>"] = { ":m .+1<CR>==", "Move line down" },
     ["<leader>|"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
     ["<leader>s"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
     -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
@@ -118,6 +120,8 @@ M.general = {
   },
 
   v = {
+    ["<A-down>"] = { ":m '>+1<CR>gv=gv", "Move lines down" },
+    ["<A-up>"] = { ":m '<-2<CR>gv=gv", "Move lines up" },
     ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
     ["<"] = { "<gv", "Indent line" },
