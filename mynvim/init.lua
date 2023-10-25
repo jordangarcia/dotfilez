@@ -9,6 +9,7 @@ vim.g.mapleader = ","
 vim.opt.laststatus = 3 -- global statusline
 vim.opt.showmode = false
 
+vim.opt.linespace = 0
 vim.opt.clipboard = "unnamedplus"
 vim.opt.cursorline = true
 
@@ -16,6 +17,10 @@ vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
+vim.opt.scrolljump = 5
+vim.opt.scrolloff = 3
+vim.opt.autoindent = true
+
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 
