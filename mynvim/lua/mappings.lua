@@ -407,6 +407,7 @@ M.telescope = {
     -- git = also combined with git
     ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
     ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+    ["<leader>gg"] = { "<cmd> Neogit <CR>", "Neogit" },
 
     -- pick a hidden term
     -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
