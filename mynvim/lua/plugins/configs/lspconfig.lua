@@ -46,8 +46,6 @@ protocol.CompletionItemKind = {
 M.on_attach = function(client, bufnr)
   -- client.server_capabilities.documentFormattingProvider = false
   client.server_capabilities.documentRangeFormattingProvinder = false
-
-  require("utils").load_mappings("lspconfig", { buffer = bufnr })
 end
 
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -107,7 +105,7 @@ lspconfig.lua_ls.setup {
   -- },
 }
 
-local servers = { "html", "cssls", "tsserver", "prismals" }
+local servers = { "html", "cssls", "prismals" }
 
 lspconfig["graphql"].setup {
   on_attach = M.on_attach,
@@ -115,13 +113,13 @@ lspconfig["graphql"].setup {
   root_dir = require("lspconfig.util").root_pattern "package.json",
 }
 
-lspconfig["tsserver"].setup {
-  on_attach = function(client, bufnr)
-    require("utils").load_mappings("lspconfig", { buffer = bufnr })
-    enable_format_on_save(client, bufnr)
-  end,
-  capabilities = M.capabilities,
-}
+-- lspconfig["tsserver"].setup {
+--   on_attach = function(client, bufnr)
+--     require("utils").load_mappings("lspconfig", { buffer = bufnr })
+--     enable_format_on_save(client, bufnr)
+--   end,
+--   capabilities = M.capabilities,
+-- }
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {

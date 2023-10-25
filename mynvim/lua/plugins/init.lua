@@ -306,6 +306,7 @@ local plugins = {
     },
     config = function()
       require "plugins.configs.lspconfig"
+      require("utils").load_mappings "lspconfig"
       -- require "custom.configs.lspconfig"
     end, -- Override to setup mason-lspconfig
   },
@@ -481,6 +482,7 @@ local plugins = {
       require("nvim-surround").setup()
     end,
   },
+
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
@@ -606,6 +608,15 @@ local plugins = {
       "ibhagwan/fzf-lua", -- optional
     },
     config = true,
+  },
+
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+    config = function()
+      require("typescript-tools").setup {}
+    end,
   },
 }
 

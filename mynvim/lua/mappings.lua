@@ -4,7 +4,6 @@ local M = {}
 
 -- since we open empty splits - clean them up as we cycle through open buffers
 function ChangeTab(motion)
-  local last_buffer_id = vim.fn.bufnr()
   local last_buffer_name = vim.fn.expand "%"
 
   if motion == "next" then
@@ -74,14 +73,14 @@ M.general = {
     -- ["<C-l>"] = { "<C-w>l", "Window right" },
     -- ["<C-j>"] = { "<C-w>j", "Window down" },
     -- ["<C-k>"] = { "<C-w>k", "Window up" },
-    -- ["<C-w>q"] = { "<cmd> BufDel <CR>", "Close Window" },
+    ["<leader>q"] = { "<cmd> q <CR>", "Close Window" },
     ["<C-w>h"] = { "<cmd> split <CR>", "Split window horizontally" },
     ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>k"] = { "", "" },
-    ["<leader>tl"] = { "<cmd> tabNext <CR>", "Tab Next" },
-    ["<leader>th"] = { "<cmd> tabprevious <CR>", "Tab Prev" },
-    ["<leader>tt"] = { "<cmd> tabe <CR>", "New Tab" },
+    ["<leader>tn"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
+    ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
+    ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
@@ -199,6 +198,7 @@ M.lspconfig = {
 
     ["gt"] = {
       function()
+        print "tryingggg"
         vim.lsp.buf.definition()
       end,
       "LSP definition",
@@ -285,12 +285,12 @@ M.lspconfig = {
       "Goto next",
     },
 
-    ["<leader>q"] = {
-      function()
-        vim.diagnostic.setloclist()
-      end,
-      "Diagnostic setloclist",
-    },
+    -- ["<leader>q"] = {
+    --   function()
+    --     vim.diagnostic.setloclist()
+    --   end,
+    --   "Diagnostic setloclist",
+    -- },
 
     ["<leader>wa"] = {
       function()
