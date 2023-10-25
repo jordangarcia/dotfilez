@@ -5,11 +5,23 @@ local options = {
     "html",
     "css",
     "javascript",
+    "json",
     "typescript",
     "tsx",
     "c",
     "markdown",
     "markdown_inline",
+    "prisma",
+    "graphql",
+  },
+
+  autotag = {
+    enable = true,
+  },
+
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = false,
   },
 
   highlight = {

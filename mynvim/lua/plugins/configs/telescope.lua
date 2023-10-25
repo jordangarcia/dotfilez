@@ -20,31 +20,30 @@ local options = {
     layout_config = {
       horizontal = {
         prompt_position = "top",
-        preview_width = 0.55,
-        results_width = 0.8,
       },
       vertical = {
         mirror = false,
       },
-      width = 0.87,
-      height = 0.80,
-      preview_cutoff = 120,
+      width = 0.60,
+      height = 0.45,
+      preview_cutoff = 80,
     },
-    file_sorter = require("telescope.sorters").get_fuzzy_file,
+    -- file_sorter = require("telescope.sorters").get_fuzzy_file,
+    file_sorter = require("telescope.sorters").frecency,
     file_ignore_patterns = { "node_modules", "dist" },
     generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
     path_display = { "truncate" },
     winblend = 0,
     border = {},
-    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    -- borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
     color_devicons = true,
     set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-    previewer = false,
+    -- previewer = true,
     -- file_previewer = require("telescope.previewers").vim_buffer_cat.new,
     -- grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
     -- qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
     -- Developer configurations: Not meant for general override
-    buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+    -- buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
     mappings = {
       n = {
         ["q"] = require("telescope.actions").close,
@@ -65,7 +64,7 @@ local options = {
     },
   },
 
-  extensions_list = { "themes", "terms", "fzf" },
+  extensions_list = { "fzf", "frecency" },
   extensions = {
     fzf = {
       fuzzy = true,

@@ -36,22 +36,31 @@ M.general = {
 
   n = {
     ["<leader>|"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
+    ["<leader>s"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
     -- switch between windows
-
     ["<S-l>"] = {
-      function()
-        ChangeTab "next"
-      end,
+      "<CMD> bn <CR>",
       { noremap = true, silent = true },
     },
     ["<S-h>"] = {
-      function()
-        ChangeTab "prev"
-      end,
+      "<CMD> bp <CR>",
       { noremap = true, silent = true },
     },
+
+    -- ["<S-l>"] = {
+    -- 	function()
+    -- 		ChangeTab("next")
+    -- 	end,
+    -- 	{ noremap = true, silent = true },
+    -- },
+    -- ["<S-h>"] = {
+    -- 	function()
+    -- 		ChangeTab("prev")
+    -- 	end,
+    -- 	{ noremap = true, silent = true },
+    -- },
     -- ["<S-t>"] = { "<CMD> BufferLineCycleWindowlessToggle <CR>", { noremap = true, silent = true } },
 
     ["<C-h>"] = { "<cmd> winc h <CR>", "Window left" },
@@ -61,7 +70,7 @@ M.general = {
     -- ["<C-l>"] = { "<C-w>l", "Window right" },
     -- ["<C-j>"] = { "<C-w>j", "Window down" },
     -- ["<C-k>"] = { "<C-w>k", "Window up" },
-    ["<C-w>q"] = { "<cmd> BufDel <CR>", "Close Window" },
+    -- ["<C-w>q"] = { "<cmd> BufDel <CR>", "Close Window" },
     ["<C-w>h"] = { "<cmd> split <CR>", "Split window horizontally" },
     ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
@@ -93,12 +102,12 @@ M.general = {
     ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
     ["<leader>ch"] = { "<cmd> NvCheatsheet <CR>", "Mapping cheatsheet" },
 
-    -- ["<leader>fm"] = {
-    --   function()
-    --     vim.lsp.buf.format { async = true }
-    --   end,
-    --   "LSP formatting",
-    -- },
+    ["<leader>fm"] = {
+      function()
+        vim.lsp.buf.format { async = true }
+      end,
+      "LSP formatting",
+    },
   },
 
   t = {
@@ -226,7 +235,7 @@ M.lspconfig = {
 
     ["<F2>"] = {
       function()
-        require("nvchad.renamer").open()
+        vim.lsp.buf.rename()
       end,
       "LSP rename",
     },
@@ -357,21 +366,25 @@ M.telescope = {
     -- ["<C-S-p>"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
+    ["<leader>fd"] = {
+      "<cmd> Telescope lsp_document_symbols follow=true no_ignore=true hidden=true <CR>",
+      "Find all",
+    },
     ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
     ["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
     ["<leader>fs"] = {
       function()
-        require("telescope").load_extension "session-lens"
-        require("auto-session.session-lens").search_session()
+        require("telescope").load_extension "possession"
+        require("telescope").extensions.possession.list()
       end,
       "Find sessions",
     },
 
-    -- git
-    ["<leader>fc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-    ["<leader>fd"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+    -- git = also combined with git
+    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
+    ["<leader>gd"] = { "<cmd> Telescope git_status <CR>", "Git status" },
 
     -- pick a hidden term
     -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
@@ -379,7 +392,7 @@ M.telescope = {
     -- theme switcher
     ["<leader>ft"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
 
-    ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+    -- ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
   },
 }
 
