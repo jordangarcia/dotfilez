@@ -129,6 +129,7 @@ local options = {
   },
 
   sources = {
+    { name = "copilot" },
     { name = "nvim_lsp", keyword_length = 3 },
     { name = "luasnip" },
     { name = "buffer", keyword_length = 5 },
