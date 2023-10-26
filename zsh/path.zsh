@@ -6,3 +6,4 @@ export PATH="$PATH:/Users/jordan/.local/bin"
 # psql 
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export MANPATH="/usr/local/man:/usr/local/mysql/man:/usr/local/git/man:$MANPATH"
+export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"

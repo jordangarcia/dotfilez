@@ -66,12 +66,12 @@ local options = {
     },
   },
 
-  extensions_list = { "fzy_native", "frecency" },
+  extensions_list = { "fzf", "frecency" },
   extensions = {
-    fzy_native = {
-      -- fuzzy = true,
-      override_generic_sorter = false,
-      override_file_sorter = true,
+    fzf = {
+      fuzzy = true,
+      -- override_generic_sorter = false,
+      -- override_file_sorter = true,
       -- override_generic_sorter = true,
       -- override_file_sorter = true,
       -- case_mode = "smart_case",

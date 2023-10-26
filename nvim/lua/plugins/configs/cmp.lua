@@ -103,7 +103,9 @@ local options = {
       select = true,
     },
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+      if require("copilot.suggestion").is_visible() then
+        fallback()
+      elseif cmp.visible() then
         cmp.select_next_item()
       elseif require("luasnip").expand_or_jumpable() then
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
@@ -115,7 +117,9 @@ local options = {
       "s",
     }),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+      if require("copilot.suggestion").is_visible() then
+        fallback()
+      elseif cmp.visible() then
         cmp.select_prev_item()
       elseif require("luasnip").jumpable(-1) then
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
@@ -144,7 +148,7 @@ local options = {
 -- vim.api.nvim_set_hl("CmpItemAbbrMatch", { bg = "NONE", fg = "#569CD6" })
 vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { bg = "NONE", fg = "#569CD6" })
 vim.api.nvim_set_hl(0, "CmpItemKindFunction", { bg = "NONE", fg = "#C586C0" })
-vim.api.nvim_set_hl(0,"CmpItemKindMethod", { bg = "NONE", fg = "#C586C0" })
+vim.api.nvim_set_hl(0, "CmpItemKindMethod", { bg = "NONE", fg = "#C586C0" })
 vim.api.nvim_set_hl(0, "CmpItemKindVariable", { bg = "NONE", fg = "#9CDCFE" })
 vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { bg = "NONE", fg = "#D4D4D4" })
 

@@ -18,7 +18,6 @@ fi
 
 alias vim='nvim'
 alias vi='nvim'
-alias tmux='TERM=screen-256color-bce tmux'
 # most recent 10 git branches accessed
 alias gbl='git checkout $(git branch --sort=-committerdate | head -n 20 | fzf)'
 alias gblast='for k in `git branch|perl -pe s/^..//`;do echo -e `git show --pretty=format:"%Cgreen%ci %Cblue%cr%Creset" $k|head -n 1`\\t$k;done|sort -r | head -n 10'

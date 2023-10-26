@@ -38,7 +38,7 @@ setopt HIST_REDUCE_BLANKS
 setopt complete_aliases
 
 zle -N newtab
-
+#
 bindkey '^[^[[D' backward-word
 bindkey '^[^[[C' forward-word
 bindkey '^[[5D' beginning-of-line
@@ -47,15 +47,15 @@ bindkey '^[[3~' delete-char
 bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char
 
-bindkey '^B' backward-word
-bindkey '^F' forward-word
+# bindkey '^B' backward-word
+# bindkey '^F' forward-word
 # ^left
 bindkey ';5D' backward-word
 # ^right
 bindkey ';5C' forward-word
-
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
+#
+# # bindkey '^a' beginning-of-line
+# # bindkey '^e' end-of-line
 bindkey '^r' history-incremental-search-backward
 
 # vim mode

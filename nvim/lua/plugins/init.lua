@@ -4,6 +4,25 @@ local plugins = {
 
   "rebelot/kanagawa.nvim",
 
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup {
+        flavour = "mocha",
+      }
+    end,
+  },
+
+  {
+    "alexghergh/nvim-tmux-navigation",
+    config = function()
+      require("nvim-tmux-navigation").setup {
+        disable_when_zoomed = true, -- defaults to false
+      }
+    end,
+  },
   -- {
   --   "NvChad/base46",
   --   branch = "v2.0",
@@ -432,8 +451,8 @@ local plugins = {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      { "nvim-telescope/telescope-fzy-native.nvim" },
-      -- { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      -- { "nvim-telescope/telescope-fzy-native.nvim" },
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
       { "nvim-telescope/telescope-frecency.nvim" },
       "jedrzejboczar/possession.nvim",
     },
@@ -493,7 +512,36 @@ local plugins = {
           max_show_width = 0.4,
           max_width = 0.4,
         },
+        lightbulb = {
+          enable = false,
+        },
+        symbol_in_winbar = {
+          hide_keyword = true,
+        },
       }
+
+      require("which-key").register({
+        l = {
+          name = "Lsp",
+          f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
+          o = { "<cmd> Lspsaga outline <CR>", "Lspsaga [o]utline" },
+          r = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
+          s = {
+            function()
+              vim.lsp.buf.signature_help()
+            end,
+            "Lsp [s]ignature",
+          },
+          d = { "<cmd> Lspsaga peek_definition <CR>", "Lspsaga [d]efinition" },
+          t = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga [t]ype definition" },
+          a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
+          n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
+          p = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
+        },
+      }, {
+        prefix = "<leader>",
+        mode = { "n", "v" },
+      })
     end,
   },
 
@@ -637,7 +685,7 @@ local plugins = {
     keys = {
       {
         mode = { "v" },
-        "<C-F>",
+        "<C-*>",
         "<cmd>MCstart<cr>",
         desc = "Multi cursor start",
       },
