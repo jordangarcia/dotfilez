@@ -3,6 +3,7 @@
 -- vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
 vim.g.toggle_theme_icon = "   "
 vim.g.transparency = false
+vim.g.clipboard = "unnamed"
 vim.opt.swapfile = false
 
 -------------------------------------- options ------------------------------------------
@@ -11,7 +12,6 @@ vim.opt.laststatus = 3 -- global statusline
 vim.opt.showmode = false
 
 vim.opt.linespace = 0
-vim.opt.clipboard = "unnamed"
 vim.opt.cursorline = true
 
 -- Indenting

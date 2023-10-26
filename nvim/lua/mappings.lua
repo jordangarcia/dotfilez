@@ -1,23 +1,7 @@
--- n, v, i, t = mode names
-
 local M = {}
 
--- since we open empty splits - clean them up as we cycle through open buffers
-function ChangeTab(motion)
-  local last_buffer_name = vim.fn.expand "%"
-
-  if motion == "next" then
-    vim.cmd [[BufferLineCycleWindowlessNext]]
-  elseif motion == "prev" then
-    vim.cmd [[BufferLineCycleWindowlessPrev]]
-  else
-    error("Invalid motion: " .. motion)
-    return
-  end
-
-  if last_buffer_name == "" then
-    vim.cmd("bd " .. last_buffer_id)
-  end
+local set_clipboard = function()
+  vim.cmd("call system('pbcopy', @+)", { silent = true })
 end
 
 -- get rid of command history
@@ -67,6 +51,12 @@ M.general = {
       { noremap = true, silent = true },
     },
 
+    ["<leader>y"] = {
+      function()
+        set_clipboard()
+      end,
+      "Yank -> Clipboard",
+    },
     ["<leader>q"] = { "<cmd> q <CR>", "Close Window" },
     ['<C-w>"'] = { "<cmd> split <CR>", "Split window horizontally" },
     ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
