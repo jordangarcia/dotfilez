@@ -93,3 +93,6 @@ vim.opt.rtp:prepend(lazypath)
 require "plugins"
 
 vim.cmd.colorscheme "catppuccin"
+vim.cmd [[hi DiagnosticUnderlineError cterm=undercurl gui=undercurl ]]
+vim.cmd [[hi DiagnosticUnderlineWarn cterm=undercurl gui=undercurl ]]
+vim.cmd [[hi clear DiagnosticUnderlineHint]]

@@ -128,26 +128,31 @@ for _, lsp in ipairs(servers) do
   }
 end
 
-local signs = { Error = " ", Warn = " ", Hint = "*", Info = " " }
+local signs = { Error = ">>", Warn = " ", Hint = "*", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "ErrorMessage" })
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-  underline = true,
+  undercurl = true,
+  -- underline = true,
   update_in_insert = false,
   -- virtual_text = { spacing = 4, prefix = "\u{ea71}" },
   severity_sort = true,
+  virtual_text = false,
 })
 
 vim.diagnostic.config {
   virtual_text = false,
-  underline = true,
+  undercurl = true,
+  -- underline = true,
   -- update_in_insert = true,
   -- float = {
   --   source = "always", -- Or "if_many"
   -- },
 }
+
+-- vim.cmd [[hi DiagnosticUnderlineError cterm=undercurl gui=undercurl guisp=#ff0000]]
 
 return M

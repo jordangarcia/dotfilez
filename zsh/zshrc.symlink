@@ -1,4 +1,5 @@
 unsetopt nomatch
+export PATH=/opt/homebrew/bin:$PATH
 
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles

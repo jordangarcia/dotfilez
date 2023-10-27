@@ -65,11 +65,7 @@ M.general = {
     ["<leader>tn"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
     ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
     ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
-    -- tmux window stuff
-    ["<C-h>"] = { "<cmd> NvimTmuxNavigateLeft <CR>", "Window left" },
-    ["<C-j>"] = { "<cmd> NvimTmuxNavigateDown <CR>", "Window down" },
-    ["<C-k>"] = { "<cmd> NvimTmuxNavigateUp <CR>", "Window up" },
-    ["<C-l>"] = { "<cmd> NvimTmuxNavigateRight <CR>", "Window right" },
+    ["<leader>tt"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
@@ -139,11 +135,6 @@ M.comment = {
   },
 
   v = {
-    -- tmux support :/
-    ["<C-_>"] = {
-      "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-      "Toggle comment",
-    },
     ["<C-/>"] = {
       "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
       "Toggle comment",
@@ -237,7 +228,7 @@ M.nvimtree = {
     ["<leader>d"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
 
     -- focus
-    ["<C-0>"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
+    ["<C-:>"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
   },
 }
 
@@ -249,7 +240,7 @@ M.telescope = {
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     ["<C-b>"] = {
-      "<cmd> Telescope buffers sort_mru=true ignore_current_buffer=true cwd_only=true <CR>",
+      "<cmd> Telescope buffers sort_mru=true cwd_only=true <CR>",
       "Find buffers",
     },
     ["<C-t>"] = {
@@ -280,9 +271,6 @@ M.telescope = {
     },
 
     -- git = also combined with git
-    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
-    ["<leader>gg"] = { "<cmd> Neogit <CR>", "Neogit" },
 
     -- pick a hidden term
     -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
@@ -390,6 +378,17 @@ M.gitsigns = {
         require("gitsigns").preview_hunk()
       end,
       "Preview hunk",
+    },
+
+    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
+    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
+    ["<leader>gg"] = { "<cmd> Neogit <CR>", "Neogit" },
+    ["<leader>gz"] = {
+      function()
+        vim.cmd("Gitsigns toggle_signs", { silent = true })
+        -- require("gitsigns").preview_hunk()
+      end,
+      "[G]itsigns toggle [z]enmode",
     },
   },
 }

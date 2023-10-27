@@ -15,14 +15,7 @@ local plugins = {
     end,
   },
 
-  {
-    "alexghergh/nvim-tmux-navigation",
-    config = function()
-      require("nvim-tmux-navigation").setup {
-        disable_when_zoomed = true, -- defaults to false
-      }
-    end,
-  },
+  "knubie/vim-kitty-navigator",
   -- {
   --   "NvChad/base46",
   --   branch = "v2.0",
@@ -127,6 +120,9 @@ local plugins = {
     config = function(_, opts)
       -- dofile(vim.g.base46_cache .. "git")
       require("gitsigns").setup {
+        attach_to_untracked = false,
+        -- use keybind to toggle
+        signcolumn = false,
         signs = {
           add = { text = "│" },
           change = { text = "│" },
@@ -137,6 +133,8 @@ local plugins = {
         },
         on_attach = function() end,
       }
+
+      require("utils").load_mappings "gitsigns"
     end,
   },
 
@@ -197,6 +195,9 @@ local plugins = {
         -- Private gitlab hosts, if you use a private gitlab, put your private gitlab host here
         -- private_gitlabs = { "https://xxx.git.com" },
         -- Enable winbar in all windows created by this plugin
+        --
+        --
+        --
         winbar = false,
       }
     end,
@@ -271,56 +272,82 @@ local plugins = {
       -- format & linting
       {
         "jose-elias-alvarez/null-ls.nvim",
-        config = function()
-          local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+        opts = function()
           local null_ls = require "null-ls"
-          local b = null_ls.builtins
-
-          local sources = {
-            b.formatting.prettierd.with {
-              filetypes = { "html", "markdown", "css", "typescript", "javascript", "json", "graphql" },
+          return {
+            sources = {
+              -- null_ls.builtins.diagnostics.eslint,
+              null_ls.builtins.formatting.prettier,
+              null_ls.builtins.formatting.stylua,
             },
-            b.formatting.eslint_d,
-            -- null_ls.builtins.formatting.prettierd,
-            -- null_ls.builtins.diagnostics.eslint_d.with {
-            --   diagnostics_format = "[eslint] #{m}\n(#{c})",
-            -- },
-            -- b.formatting.prismaFmt,
-            -- Lua
-            b.formatting.stylua,
-          }
-
-          local lsp_formatting = function(bufnr)
-            vim.lsp.buf.format {
-              filter = function(client)
-                return client.name == "null-ls"
-              end,
-              bufnr = bufnr,
-            }
-          end
-
-          -- format on save
-          null_ls.setup {
-            debug = false,
-            sources = sources,
             on_attach = function(client, bufnr)
               if client.supports_method "textDocument/formatting" then
-                vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+                vim.api.nvim_clear_autocmds {
+                  group = augroup,
+                  buffer = bufnr,
+                }
                 vim.api.nvim_create_autocmd("BufWritePre", {
                   group = augroup,
                   buffer = bufnr,
                   callback = function()
-                    lsp_formatting(bufnr)
+                    vim.lsp.buf.format { bufnr = bufnr }
                   end,
                 })
               end
             end,
           }
-
-          vim.api.nvim_create_user_command("DisableLspFormatting", function()
-            vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
-          end, { nargs = 0 })
         end,
+        -- config = function()
+        --   local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+        --   local null_ls = require "null-ls"
+        --   local b = null_ls.builtins
+        --
+        --   local sources = {
+        --     b.formatting.prettierd.with {
+        --       filetypes = { "html", "markdown", "css", "typescript", "javascript", "json", "graphql" },
+        --     },
+        --     b.formatting.eslint_d,
+        --     -- null_ls.builtins.formatting.prettierd,
+        --     -- null_ls.builtins.diagnostics.eslint_d.with {
+        --     --   diagnostics_format = "[eslint] #{m}\n(#{c})",
+        --     -- },
+        --     -- b.formatting.prismaFmt,
+        --     -- Lua
+        --     b.formatting.stylua,
+        --   }
+        --
+        --   local lsp_formatting = function(bufnr)
+        --     vim.lsp.buf.format {
+        --       filter = function(client)
+        --         print("formatting" .. client)
+        --         return client.name == "null-ls"
+        --       end,
+        --       bufnr = bufnr,
+        --     }
+        --   end
+        --
+        --   -- format on save
+        --   null_ls.setup {
+        --     debug = false,
+        --     sources = sources,
+        --     on_attach = function(client, bufnr)
+        --       if client.supports_method "textDocument/formatting" then
+        --         vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+        --         vim.api.nvim_create_autocmd("BufWritePre", {
+        --           group = augroup,
+        --           buffer = bufnr,
+        --           callback = function()
+        --             lsp_formatting(bufnr)
+        --           end,
+        --         })
+        --       end
+        --     end,
+        --   }
+        --
+        --   vim.api.nvim_create_user_command("DisableLspFormatting", function()
+        --     vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
+        --   end, { nargs = 0 })
+        -- end,
       },
     },
     config = function()
@@ -403,12 +430,12 @@ local plugins = {
   {
     "numToStr/Comment.nvim",
     keys = {
-      { "gcc", mode = "n", desc = "Comment toggle current line" },
-      { "gc", mode = { "n", "o" }, desc = "Comment toggle linewise" },
-      { "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
-      { "gbc", mode = "n", desc = "Comment toggle current block" },
-      { "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
-      { "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
+      { "gcc", mode = "n",          desc = "Comment toggle current line" },
+      { "gc",  mode = { "n", "o" }, desc = "Comment toggle linewise" },
+      { "gc",  mode = "x",          desc = "Comment toggle linewise (visual)" },
+      { "gbc", mode = "n",          desc = "Comment toggle current block" },
+      { "gb",  mode = { "n", "o" }, desc = "Comment toggle blockwise" },
+      { "gb",  mode = "x",          desc = "Comment toggle blockwise (visual)" },
     },
     init = function()
       require("utils").load_mappings "comment"
@@ -518,7 +545,13 @@ local plugins = {
         symbol_in_winbar = {
           hide_keyword = true,
         },
+        finder = {
+          left_width = 0.7,
+          right_width = 0.7,
+        },
       }
+      vim.api.nvim_command "highlight clear SagaNormal"
+      vim.api.nvim_command "highlight link SagaNormal Normal"
 
       require("which-key").register({
         l = {
@@ -651,10 +684,10 @@ local plugins = {
   {
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim", -- required
+      "nvim-lua/plenary.nvim",         -- required
       "nvim-telescope/telescope.nvim", -- optional
-      "sindrets/diffview.nvim", -- optional
-      "ibhagwan/fzf-lua", -- optional
+      "sindrets/diffview.nvim",        -- optional
+      "ibhagwan/fzf-lua",              -- optional
     },
     config = true,
   },
@@ -716,6 +749,7 @@ local plugins = {
           require("nvterm.terminal").send(cmd, "vertical")
         end
       end
+
       vim.api.nvim_create_user_command("ServerTest", server_test, {})
     end,
   },

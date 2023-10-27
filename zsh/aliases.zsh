@@ -1,5 +1,6 @@
 alias reload!='. ~/.zshrc'
 
+
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
 #   `brew install coreutils`
@@ -67,3 +68,5 @@ alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias gdt='git dt'
 alias gstash='git stash -u'
+
+alias gamma="kitty --session ~/.config/kitty/sessions/gamma.conf &"

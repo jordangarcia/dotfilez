@@ -16,6 +16,7 @@ local options = {
     initial_mode = "insert",
     selection_strategy = "reset",
     sorting_strategy = "ascending",
+    shorten_path = true,
     layout_strategy = "horizontal",
     layout_config = {
       horizontal = {
@@ -24,7 +25,7 @@ local options = {
       vertical = {
         mirror = false,
       },
-      width = 0.60,
+      width = 0.70,
       height = 0.45,
       preview_cutoff = 80,
     },
