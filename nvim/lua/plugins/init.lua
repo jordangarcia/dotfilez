@@ -139,7 +139,18 @@ local plugins = {
   },
 
   {
+    "tpope/vim-fugitive",
+    keys = {
+      { "<leader>gd", "<cmd> Gvdiffsplit <cr>", desc = "Git diff" },
+      { "<leader>gb", "<cmd> Git blame <cr>",   desc = "Git blame" },
+      { "<leader>gg", "<cmd> Git <cr>",         desc = "Git read" },
+      { "<leader>gl", "<cmd> Gclog <cr>",       desc = "Git log" },
+    },
+  },
+
+  {
     "dinhhuy258/git.nvim",
+    enabled = false,
 
     -- init = function()
     --   init = function()
@@ -263,99 +274,99 @@ local plugins = {
     end,
   },
 
-  {
-    "neovim/nvim-lspconfig",
-    init = function()
-      require("utils").lazy_load "nvim-lspconfig"
-    end,
-    dependencies = {
-      -- format & linting
-      {
-        "jose-elias-alvarez/null-ls.nvim",
-        opts = function()
-          local null_ls = require "null-ls"
-          return {
-            sources = {
-              -- null_ls.builtins.diagnostics.eslint,
-              null_ls.builtins.formatting.prettier,
-              null_ls.builtins.formatting.stylua,
-            },
-            on_attach = function(client, bufnr)
-              if client.supports_method "textDocument/formatting" then
-                vim.api.nvim_clear_autocmds {
-                  group = augroup,
-                  buffer = bufnr,
-                }
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                  group = augroup,
-                  buffer = bufnr,
-                  callback = function()
-                    vim.lsp.buf.format { bufnr = bufnr }
-                  end,
-                })
-              end
-            end,
-          }
-        end,
-        -- config = function()
-        --   local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-        --   local null_ls = require "null-ls"
-        --   local b = null_ls.builtins
-        --
-        --   local sources = {
-        --     b.formatting.prettierd.with {
-        --       filetypes = { "html", "markdown", "css", "typescript", "javascript", "json", "graphql" },
-        --     },
-        --     b.formatting.eslint_d,
-        --     -- null_ls.builtins.formatting.prettierd,
-        --     -- null_ls.builtins.diagnostics.eslint_d.with {
-        --     --   diagnostics_format = "[eslint] #{m}\n(#{c})",
-        --     -- },
-        --     -- b.formatting.prismaFmt,
-        --     -- Lua
-        --     b.formatting.stylua,
-        --   }
-        --
-        --   local lsp_formatting = function(bufnr)
-        --     vim.lsp.buf.format {
-        --       filter = function(client)
-        --         print("formatting" .. client)
-        --         return client.name == "null-ls"
-        --       end,
-        --       bufnr = bufnr,
-        --     }
-        --   end
-        --
-        --   -- format on save
-        --   null_ls.setup {
-        --     debug = false,
-        --     sources = sources,
-        --     on_attach = function(client, bufnr)
-        --       if client.supports_method "textDocument/formatting" then
-        --         vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
-        --         vim.api.nvim_create_autocmd("BufWritePre", {
-        --           group = augroup,
-        --           buffer = bufnr,
-        --           callback = function()
-        --             lsp_formatting(bufnr)
-        --           end,
-        --         })
-        --       end
-        --     end,
-        --   }
-        --
-        --   vim.api.nvim_create_user_command("DisableLspFormatting", function()
-        --     vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
-        --   end, { nargs = 0 })
-        -- end,
-      },
-    },
-    config = function()
-      require "plugins.configs.lspconfig"
-      require("utils").load_mappings "lspconfig"
-      -- require "custom.configs.lspconfig"
-    end, -- Override to setup mason-lspconfig
-  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   init = function()
+  --     require("utils").lazy_load "nvim-lspconfig"
+  --   end,
+  --   dependencies = {
+  --     -- format & linting
+  --     {
+  --       "jose-elias-alvarez/null-ls.nvim",
+  --       opts = function()
+  --         local null_ls = require "null-ls"
+  --         return {
+  --           sources = {
+  --             -- null_ls.builtins.diagnostics.eslint,
+  --             null_ls.builtins.formatting.prettier,
+  --             null_ls.builtins.formatting.stylua,
+  --           },
+  --           on_attach = function(client, bufnr)
+  --             if client.supports_method "textDocument/formatting" then
+  --               vim.api.nvim_clear_autocmds {
+  --                 group = augroup,
+  --                 buffer = bufnr,
+  --               }
+  --               vim.api.nvim_create_autocmd("BufWritePre", {
+  --                 group = augroup,
+  --                 buffer = bufnr,
+  --                 callback = function()
+  --                   vim.lsp.buf.format { bufnr = bufnr }
+  --                 end,
+  --               })
+  --             end
+  --           end,
+  --         }
+  --       end,
+  --       -- config = function()
+  --       --   local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+  --       --   local null_ls = require "null-ls"
+  --       --   local b = null_ls.builtins
+  --       --
+  --       --   local sources = {
+  --       --     b.formatting.prettierd.with {
+  --       --       filetypes = { "html", "markdown", "css", "typescript", "javascript", "json", "graphql" },
+  --       --     },
+  --       --     b.formatting.eslint_d,
+  --       --     -- null_ls.builtins.formatting.prettierd,
+  --       --     -- null_ls.builtins.diagnostics.eslint_d.with {
+  --       --     --   diagnostics_format = "[eslint] #{m}\n(#{c})",
+  --       --     -- },
+  --       --     -- b.formatting.prismaFmt,
+  --       --     -- Lua
+  --       --     b.formatting.stylua,
+  --       --   }
+  --       --
+  --       --   local lsp_formatting = function(bufnr)
+  --       --     vim.lsp.buf.format {
+  --       --       filter = function(client)
+  --       --         print("formatting" .. client)
+  --       --         return client.name == "null-ls"
+  --       --       end,
+  --       --       bufnr = bufnr,
+  --       --     }
+  --       --   end
+  --       --
+  --       --   -- format on save
+  --       --   null_ls.setup {
+  --       --     debug = false,
+  --       --     sources = sources,
+  --       --     on_attach = function(client, bufnr)
+  --       --       if client.supports_method "textDocument/formatting" then
+  --       --         vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
+  --       --         vim.api.nvim_create_autocmd("BufWritePre", {
+  --       --           group = augroup,
+  --       --           buffer = bufnr,
+  --       --           callback = function()
+  --       --             lsp_formatting(bufnr)
+  --       --           end,
+  --       --         })
+  --       --       end
+  --       --     end,
+  --       --   }
+  --       --
+  --       --   vim.api.nvim_create_user_command("DisableLspFormatting", function()
+  --       --     vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
+  --       --   end, { nargs = 0 })
+  --       -- end,
+  --     },
+  --   },
+  --   config = function()
+  --     require "plugins.configs.lspconfig"
+  --     require("utils").load_mappings "lspconfig"
+  --     -- require "custom.configs.lspconfig"
+  --   end, -- Override to setup mason-lspconfig
+  -- },
 
   -- load luasnips + cmp related in insert mode only
   {
@@ -681,16 +692,16 @@ local plugins = {
   --     "nvim-telescope/telescope.nvim",
   --   },
   -- },
-  {
-    "NeogitOrg/neogit",
-    dependencies = {
-      "nvim-lua/plenary.nvim",         -- required
-      "nvim-telescope/telescope.nvim", -- optional
-      "sindrets/diffview.nvim",        -- optional
-      "ibhagwan/fzf-lua",              -- optional
-    },
-    config = true,
-  },
+  -- {
+  --   "NeogitOrg/neogit",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",         -- required
+  --     "nvim-telescope/telescope.nvim", -- optional
+  --     "sindrets/diffview.nvim",        -- optional
+  --     "ibhagwan/fzf-lua",              -- optional
+  --   },
+  --   config = true,
+  -- },
 
   {
     "pmizio/typescript-tools.nvim",

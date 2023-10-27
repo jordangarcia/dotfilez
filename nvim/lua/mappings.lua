@@ -380,9 +380,8 @@ M.gitsigns = {
       "Preview hunk",
     },
 
-    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits" },
-    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status" },
-    ["<leader>gg"] = { "<cmd> Neogit <CR>", "Neogit" },
+    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits (telescope)" },
+    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status (telescope)" },
     ["<leader>gz"] = {
       function()
         vim.cmd("Gitsigns toggle_signs", { silent = true })
