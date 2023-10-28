@@ -2,6 +2,18 @@ local M = {}
 
 local protocol = require "vim.lsp.protocol"
 
+-- global opts
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+  update_in_insert = false,
+  -- virtual_text = { spacing = 4, prefix = "\u{ea71}" },
+  severity_sort = true,
+  virtual_text = false,
+})
+
+vim.diagnostic.config {
+  virtual_text = false,
+}
+
 local augroup_format = vim.api.nvim_create_augroup("Format", { clear = true })
 local enable_format_on_save = function(_, bufnr)
   vim.api.nvim_clear_autocmds { group = augroup_format, buffer = bufnr }
@@ -44,7 +56,7 @@ protocol.CompletionItemKind = {
 
 -- export on_attach & capabilities for custom lspconfigs
 M.on_attach = function(client, bufnr)
-  -- client.server_capabilities.documentFormattingProvider = false
+  client.server_capabilities.documentFormattingProvider = false
   client.server_capabilities.documentRangeFormattingProvinder = false
 end
 
@@ -134,24 +146,6 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "ErrorMessage" })
 end
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-  undercurl = true,
-  -- underline = true,
-  update_in_insert = false,
-  -- virtual_text = { spacing = 4, prefix = "\u{ea71}" },
-  severity_sort = true,
-  virtual_text = false,
-})
-
-vim.diagnostic.config {
-  virtual_text = false,
-  undercurl = true,
-  -- underline = true,
-  -- update_in_insert = true,
-  -- float = {
-  --   source = "always", -- Or "if_many"
-  -- },
-}
 
 -- vim.cmd [[hi DiagnosticUnderlineError cterm=undercurl gui=undercurl guisp=#ff0000]]
 

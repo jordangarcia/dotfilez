@@ -138,13 +138,14 @@ local plugins = {
     end,
   },
 
+  -- http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/
   {
     "tpope/vim-fugitive",
     keys = {
       { "<leader>gd", "<cmd> Gvdiffsplit <cr>", desc = "Git diff" },
-      { "<leader>gb", "<cmd> Git blame <cr>",   desc = "Git blame" },
-      { "<leader>gg", "<cmd> Git <cr>",         desc = "Git read" },
-      { "<leader>gl", "<cmd> Gclog <cr>",       desc = "Git log" },
+      { "<leader>gb", "<cmd> Git blame <cr>", desc = "Git blame" },
+      { "<leader>gg", "<cmd> Git <cr>", desc = "Git read" },
+      { "<leader>gl", "<cmd> Gclog <cr>", desc = "Git log" },
     },
   },
 
@@ -274,99 +275,47 @@ local plugins = {
     end,
   },
 
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   init = function()
-  --     require("utils").lazy_load "nvim-lspconfig"
-  --   end,
-  --   dependencies = {
-  --     -- format & linting
-  --     {
-  --       "jose-elias-alvarez/null-ls.nvim",
-  --       opts = function()
-  --         local null_ls = require "null-ls"
-  --         return {
-  --           sources = {
-  --             -- null_ls.builtins.diagnostics.eslint,
-  --             null_ls.builtins.formatting.prettier,
-  --             null_ls.builtins.formatting.stylua,
-  --           },
-  --           on_attach = function(client, bufnr)
-  --             if client.supports_method "textDocument/formatting" then
-  --               vim.api.nvim_clear_autocmds {
-  --                 group = augroup,
-  --                 buffer = bufnr,
-  --               }
-  --               vim.api.nvim_create_autocmd("BufWritePre", {
-  --                 group = augroup,
-  --                 buffer = bufnr,
-  --                 callback = function()
-  --                   vim.lsp.buf.format { bufnr = bufnr }
-  --                 end,
-  --               })
-  --             end
-  --           end,
-  --         }
-  --       end,
-  --       -- config = function()
-  --       --   local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-  --       --   local null_ls = require "null-ls"
-  --       --   local b = null_ls.builtins
-  --       --
-  --       --   local sources = {
-  --       --     b.formatting.prettierd.with {
-  --       --       filetypes = { "html", "markdown", "css", "typescript", "javascript", "json", "graphql" },
-  --       --     },
-  --       --     b.formatting.eslint_d,
-  --       --     -- null_ls.builtins.formatting.prettierd,
-  --       --     -- null_ls.builtins.diagnostics.eslint_d.with {
-  --       --     --   diagnostics_format = "[eslint] #{m}\n(#{c})",
-  --       --     -- },
-  --       --     -- b.formatting.prismaFmt,
-  --       --     -- Lua
-  --       --     b.formatting.stylua,
-  --       --   }
-  --       --
-  --       --   local lsp_formatting = function(bufnr)
-  --       --     vim.lsp.buf.format {
-  --       --       filter = function(client)
-  --       --         print("formatting" .. client)
-  --       --         return client.name == "null-ls"
-  --       --       end,
-  --       --       bufnr = bufnr,
-  --       --     }
-  --       --   end
-  --       --
-  --       --   -- format on save
-  --       --   null_ls.setup {
-  --       --     debug = false,
-  --       --     sources = sources,
-  --       --     on_attach = function(client, bufnr)
-  --       --       if client.supports_method "textDocument/formatting" then
-  --       --         vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
-  --       --         vim.api.nvim_create_autocmd("BufWritePre", {
-  --       --           group = augroup,
-  --       --           buffer = bufnr,
-  --       --           callback = function()
-  --       --             lsp_formatting(bufnr)
-  --       --           end,
-  --       --         })
-  --       --       end
-  --       --     end,
-  --       --   }
-  --       --
-  --       --   vim.api.nvim_create_user_command("DisableLspFormatting", function()
-  --       --     vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
-  --       --   end, { nargs = 0 })
-  --       -- end,
-  --     },
-  --   },
-  --   config = function()
-  --     require "plugins.configs.lspconfig"
-  --     require("utils").load_mappings "lspconfig"
-  --     -- require "custom.configs.lspconfig"
-  --   end, -- Override to setup mason-lspconfig
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    init = function()
+      require("utils").lazy_load "nvim-lspconfig"
+    end,
+    dependencies = {
+      -- format & linting
+      {
+        "jose-elias-alvarez/null-ls.nvim",
+        opts = function()
+          local null_ls = require "null-ls"
+          return {
+            sources = {
+              -- null_ls.builtins.diagnostics.eslint,
+              null_ls.builtins.formatting.prettier,
+              null_ls.builtins.formatting.stylua,
+            },
+            on_attach = function(client, bufnr)
+              if client.supports_method "textDocument/formatting" then
+                vim.api.nvim_clear_autocmds {
+                  group = augroup,
+                  buffer = bufnr,
+                }
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                  group = augroup,
+                  buffer = bufnr,
+                  callback = function()
+                    vim.lsp.buf.format { bufnr = bufnr }
+                  end,
+                })
+              end
+            end,
+          }
+        end,
+      },
+    },
+    config = function()
+      require "plugins.configs.lspconfig"
+      require("utils").load_mappings "lspconfig"
+    end, -- Override to setup mason-lspconfig
+  },
 
   -- load luasnips + cmp related in insert mode only
   {
@@ -441,12 +390,12 @@ local plugins = {
   {
     "numToStr/Comment.nvim",
     keys = {
-      { "gcc", mode = "n",          desc = "Comment toggle current line" },
-      { "gc",  mode = { "n", "o" }, desc = "Comment toggle linewise" },
-      { "gc",  mode = "x",          desc = "Comment toggle linewise (visual)" },
-      { "gbc", mode = "n",          desc = "Comment toggle current block" },
-      { "gb",  mode = { "n", "o" }, desc = "Comment toggle blockwise" },
-      { "gb",  mode = "x",          desc = "Comment toggle blockwise (visual)" },
+      { "gcc", mode = "n", desc = "Comment toggle current line" },
+      { "gc", mode = { "n", "o" }, desc = "Comment toggle linewise" },
+      { "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
+      { "gbc", mode = "n", desc = "Comment toggle current block" },
+      { "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
+      { "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
     },
     init = function()
       require("utils").load_mappings "comment"
@@ -559,6 +508,11 @@ local plugins = {
         finder = {
           left_width = 0.7,
           right_width = 0.7,
+          keys = {
+            toggle_or_open = "<CR>",
+            vsplit = "s",
+            shuttle = "<TAB>",
+          },
         },
       }
       vim.api.nvim_command "highlight clear SagaNormal"
@@ -581,6 +535,7 @@ local plugins = {
           a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
           n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
           p = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
+          ["<C-r>"] = { "<cmd> LspRestart <CR>", "Lsp[R]estart" },
         },
       }, {
         prefix = "<leader>",
@@ -692,28 +647,31 @@ local plugins = {
   --     "nvim-telescope/telescope.nvim",
   --   },
   -- },
-  -- {
-  --   "NeogitOrg/neogit",
-  --   dependencies = {
-  --     "nvim-lua/plenary.nvim",         -- required
-  --     "nvim-telescope/telescope.nvim", -- optional
-  --     "sindrets/diffview.nvim",        -- optional
-  --     "ibhagwan/fzf-lua",              -- optional
-  --   },
-  --   config = true,
-  -- },
 
   {
     "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {},
     config = function()
       require("typescript-tools").setup {
+        on_attach = function(client, bufnr)
+          -- let null-ls do formatting
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvinder = false
+        end,
         settings = {
           -- spawn additional tsserver instance to calculate diagnostics on it
           separate_diagnostic_server = false,
           -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-          publish_diagnostic_on = "insert_leave",
+          publish_diagnostic_on = "change",
+        },
+        handlers = {
+          documentFormattingProvider = true,
+          documentHighlightProvider = true,
+          ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+            severity_sort = true,
+            virtual_text = false,
+          }),
         },
       }
     end,

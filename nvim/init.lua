@@ -95,4 +95,5 @@ require "plugins"
 vim.cmd.colorscheme "catppuccin"
 vim.cmd [[hi DiagnosticUnderlineError cterm=undercurl gui=undercurl ]]
 vim.cmd [[hi DiagnosticUnderlineWarn cterm=undercurl gui=undercurl ]]
-vim.cmd [[hi clear DiagnosticUnderlineHint]]
+vim.cmd [[hi DiagnosticUnderlineHint cterm=undercurl gui=undercurl ]]
+vim.cmd [[hi DiagnosticUnnecessary guifg=#888ca0 ]]

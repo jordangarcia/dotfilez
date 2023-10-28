@@ -98,11 +98,6 @@ M.general = {
     },
   },
 
-  t = {
-    ["<F1>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
-    ["<C-w>"] = { vim.api.nvim_replace_termcodes("<C-\\><C-N>", true, true, true), "Escape terminal mode" },
-  },
-
   v = {
     ["<A-down>"] = { ":m '>+1<CR>gv=gv", "Move lines down" },
     ["<A-up>"] = { ":m '<-2<CR>gv=gv", "Move lines up" },
@@ -175,8 +170,12 @@ M.lspconfig = {
     },
 
     ["<C-n>"] = {
-      "<cmd> Lspsaga diagnostic_jump_next <CR>",
-      "Goto next",
+      function()
+        require("lspsaga.diagnostic"):goto_next {
+          severity = 1, -- error
+        }
+      end,
+      "Goto next error",
     },
 
     ["<leader>wa"] = {
@@ -228,13 +227,19 @@ M.nvimtree = {
     ["<leader>d"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
 
     -- focus
-    ["<C-:>"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
+    ["<C-0>"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
   },
 }
 
 M.telescope = {
   plugin = true,
 
+  v = {
+    ["<leader>fw"] = {
+      "<cmd> Telescope live_grep <CR>",
+      "Live grep",
+    },
+  },
   n = {
     ["<C-P>"] = { "<cmd> Telescope frecency workspace=CWD <CR>", "Find frecency" },
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
