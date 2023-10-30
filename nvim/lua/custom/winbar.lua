@@ -76,6 +76,10 @@ local winbar_file = function()
 
   local win = vim.api.nvim_get_current_win()
   local nr = vim.api.nvim_win_get_buf(win)
+  local ft = vim.api.nvim_buf_get_option(nr, "filetype")
+  if ft == 'gitcommit' or 'help' then
+    return ""
+  end
 
   local name = (#api.nvim_buf_get_name(nr) ~= 0) and fn.fnamemodify(api.nvim_buf_get_name(nr), ":t") or ""
 
