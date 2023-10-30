@@ -259,6 +259,31 @@ local plugins = {
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
+
+  {
+    "ctrlpvim/ctrlp.vim",
+    lazy = false,
+    config = function(_, opts)
+      vim.cmd [[
+let g:ctrlp_switch_buffer = 'evh'
+let g:ctrlp_working_path_mode = 'r'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|\.hg$\|\.svn$',
+  \ 'file': '\.exe$\|\.so$\|\.dll$'
+\ }
+ let g:ctrlp_root_markers = ['package.json']
+let g:ctrlp_user_command = {
+  \ 'types': {
+    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+  \ },
+  \ 'fallback': 'find %s -type f'
+\ }
+
+
+      ]]
+    end,
+  },
 }
 
 return plugins

@@ -279,7 +279,7 @@ M.telescope = {
     },
   },
   n = {
-    ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find frecency" },
+    -- ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find frecency" },
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     ["<C-b>"] = {
@@ -403,7 +403,6 @@ M.whichkey = {
     },
   },
 }
-
 
 M.gitsigns = {
   plugin = true,
