@@ -240,6 +240,13 @@ local plugins = {
   {
     "mg979/vim-visual-multi",
     lazy = false,
+    init = function()
+      vim.cmd [[
+    let g:VM_maps = {}
+        let g:VM_maps['Find Under']         = '<C-f>'
+        let g:VM_maps['Find Subword Under'] = '<C-f>'
+      ]]
+    end,
   },
 
   {
@@ -262,6 +269,7 @@ local plugins = {
 
   {
     "ctrlpvim/ctrlp.vim",
+    enabled = false,
     lazy = false,
     config = function(_, opts)
       vim.cmd [[
@@ -279,9 +287,16 @@ let g:ctrlp_user_command = {
   \ },
   \ 'fallback': 'find %s -type f'
 \ }
-
-
       ]]
+    end,
+  },
+
+  {
+    "prochri/telescope-all-recent.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "kkharji/sqlite.lua" },
+    lazy = false,
+    config = function()
+      require("telescope-all-recent").setup {}
     end,
   },
 }

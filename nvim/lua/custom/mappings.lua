@@ -279,7 +279,7 @@ M.telescope = {
     },
   },
   n = {
-    -- ["<C-P>"] = { "<cmd> Telescope find_files <CR>", "Find frecency" },
+    ["<C-P>"] = { "<cmd> Telescope git_files use_git_root=false show_untracked=true <CR>", "Find gitfiles" },
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     ["<C-b>"] = {
@@ -427,8 +427,7 @@ M.gitsigns = {
     ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status (telescope)" },
     ["<leader>gz"] = {
       function()
-        vim.cmd("Gitsigns toggle_signs", { silent = true })
-        -- require("gitsigns").preview_hunk()
+        vim.cmd "Gitsigns toggle_signs"
       end,
       "[G]itsigns toggle [z]enmode",
     },

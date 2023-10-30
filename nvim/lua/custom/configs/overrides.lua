@@ -12,6 +12,10 @@ M.treesitter = {
     "c",
     "markdown",
     "markdown_inline",
+    "prisma",
+    "graphql",
+    "json",
+    "yaml",
   },
   indent = {
     enable = true,

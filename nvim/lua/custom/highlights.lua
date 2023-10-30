@@ -15,6 +15,7 @@ local palette = {
   sumiInk6 = "#54546D", --fg
   waveBlue1 = "#223249",
   waveBlue2 = "#2D4F67",
+  waveAqua1 = "#6A9589",
   waveAqua2 = "#7AA89F", -- improve lightness: desaturated greenish Aqua
   springGreen = "#98BB6C",
   sakuraPink = "#D27E99",
@@ -34,7 +35,9 @@ local palette = {
   carpYellow = "#E6C384",
   samuraiRed = "#E82424",
 
+  dragonBlue = "#658594",
   dragonGray2 = "#9e9b93",
+  roninYellow = "#FF9E3B",
 }
 M.base_30 = {
   white = "#DCD7BA",
@@ -89,6 +92,13 @@ M.base_16 = {
   base0F = "#d8616b",
 }
 
+local diag = {
+  ok = palette.springGreen,
+  error = palette.samuraiRed,
+  warning = palette.roninYellow,
+  info = palette.dragonBlue,
+  hint = palette.waveAqua1,
+}
 local syn = {
   string = palette.springGreen,
   variable = "#DCD7BA",
@@ -111,6 +121,7 @@ local syn = {
   -- punct = palette.fujiGray,
   -- punct = palette.springViolet1,
 
+  -- maybe springViolet2?
   punct = palette.dragonGray2,
 
   special1 = palette.springBlue,
@@ -130,17 +141,20 @@ M.override = {
   TelescopePromptTitle = { bg = "nord_blue" },
   TelescopePromptPrefix = { fg = "nord_blue" },
 
-  DiagnosticUnderlineError = { undercurl = true },
-  DiagnosticUnderlineWarn = { undercurl = true },
-  DiagnosticUnderlineHint = { undercurl = true },
-
-  NvimTreeGitDirty = { fg = "yellow" },
+  NvimTreeGitDirty = { fg = palette.surimiOrange },
 
   NvimTreeRootFolder = {
     fg = "teal",
     bold = true,
   },
 
+  ["Label"] = {
+    fg = palette.carpYellow,
+  },
+
+  ["@namespace"] = {
+    fg = palette.carpYellow,
+  },
   ["@constructor"] = {
     fg = "purple",
   },
@@ -213,6 +227,15 @@ M.override = {
   Visual = { bg = palette.waveBlue1 },
   LineNr = { bg = M.base_16.base00 },
   NvimTreeLineNr = { bg = M.base_16.base00 },
+
+  -- diag
+  --
+
+  DiagnosticOk = { fg = diag.ok },
+  DiagnosticError = { fg = diag.error },
+  DiagnosticWarn = { fg = diag.warning },
+  DiagnosticInfo = { fg = diag.info },
+  DiagnosticHint = { fg = diag.hint },
 }
 
 ---@type HLTable
@@ -251,6 +274,10 @@ M.add = {
     fg = palette.carpYellow,
   },
 
+  ["@lsp.typemod.function.declaration.lua"] = {
+    link = "@function",
+  },
+
   ["@lsp.type.property.lua"] = {
     fg = palette.carpYellow,
   },
@@ -285,12 +312,21 @@ M.add = {
   ["@lsp.typemod.variable.local"] = {
     link = "@variable",
   },
+  ["@lsp.typemod.property.readonly"] = {
+    link = "@property",
+  },
 
   -- react
   ["@constructor.tsx"] = {
     fg = syn.type,
   },
+
   DiagnosticUnnecessary = { fg = palette.boatYellow1, italic = false },
+
+  DiagnosticUnderlineError = { undercurl = true, sp = diag.error },
+  DiagnosticUnderlineWarn = { undercurl = true, sp = diag.warning },
+  DiagnosticUnderlineInfo = { undercurl = true, sp = diag.info },
+  DiagnosticUnderlineHint = { undercurl = true, sp = diag.hint },
 }
 
 return M

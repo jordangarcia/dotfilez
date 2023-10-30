@@ -1,6 +1,5 @@
-local utils = require "core.utils"
-
 local config = function()
+  local api = require "typescript-tools.api"
   require("typescript-tools").setup {
     on_attach = require("plugins.configs.lspconfig").on_attach,
     settings = {
@@ -12,6 +11,12 @@ local config = function()
     handlers = {
       documentFormattingProvider = true,
       documentHighlightProvider = true,
+      ["textDocument/publishDiagnostics"] = api.filter_diagnostics { -- Ignore 'This may be converted to an async function' diagnostics.
+        80006,
+        -- no implicit any on variable
+        7043,
+      },
+
       -- ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
       --   severity_sort = true,
       --   virtual_text = false,
