@@ -236,6 +236,14 @@ M.override = {
   DiagnosticWarn = { fg = diag.warning },
   DiagnosticInfo = { fg = diag.info },
   DiagnosticHint = { fg = diag.hint },
+
+  CmpItemKindField = { link = "@property" },
+  CmpItemKindProperty = { link = "@property" },
+  CmpItemKindIdentifier = { fg = syn.identifier },
+  CmpItemKindTypeParameter = { link = "@type" },
+
+  --
+  IndentBlanklineContextStart = { bg = "NONE" },
 }
 
 ---@type HLTable
@@ -263,7 +271,8 @@ M.add = {
   },
 
   ["@lsp.typemod.variable.defaultLibrary"] = {
-    link = "Variable",
+    link = "@variable.builtin",
+    -- link = "Variable",
   },
 
   ["@constant.typescript"] = {

@@ -12,6 +12,8 @@ local config = function()
       documentFormattingProvider = true,
       documentHighlightProvider = true,
       ["textDocument/publishDiagnostics"] = api.filter_diagnostics { -- Ignore 'This may be converted to an async function' diagnostics.
+        --conver to esm
+        80001,
         80006,
         -- no implicit any on variable
         7043,

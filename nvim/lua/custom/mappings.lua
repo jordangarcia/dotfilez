@@ -125,7 +125,6 @@ M.general = {
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
 
     -- new buffer
-    ["<leader>b"] = { "<cmd> enew <CR>", "New buffer" },
     ["<leader>ch"] = { "<cmd> Telescope keymaps <CR>", "Keymaps" },
 
     ["<leader>fm"] = {
@@ -210,7 +209,7 @@ M.lspconfig = {
     ["<C-n>"] = {
       function()
         require("lspsaga.diagnostic"):goto_next {
-          severity = 2, -- error
+          severity = 1, -- error
         }
       end,
       "Goto next error",
@@ -252,10 +251,6 @@ M.copilot = {
   },
 }
 
-M.tmu = {
-  n = {},
-}
-
 M.nvimtree = {
   plugin = true,
 
@@ -269,6 +264,15 @@ M.nvimtree = {
   },
 }
 
+local find_files = function()
+  vim.fn.system("git -C " .. '"' .. vim.fn.getcwd() .. '"' .. " ls-files")
+  if vim.v.shell_error == 0 then
+    vim.cmd [[ Telescope git_files use_git_root=false show_untracked=true ]]
+  else
+    vim.cmd [[ Telescope find_files ]]
+  end
+end
+
 M.telescope = {
   plugin = true,
 
@@ -279,7 +283,12 @@ M.telescope = {
     },
   },
   n = {
-    ["<C-P>"] = { "<cmd> Telescope git_files use_git_root=false show_untracked=true <CR>", "Find gitfiles" },
+    ["<C-P>"] = {
+      function()
+        require("custom.configs.telescope").project_files()
+      end,
+      "Find gitfiles",
+    },
     ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     ["<C-b>"] = {
@@ -294,6 +303,7 @@ M.telescope = {
       end,
       "Find symbols",
     },
+    ["<leader>fc"] = { "<cmd> Telescope cder <CR>", "Change [C]WD" },
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
@@ -438,6 +448,12 @@ M.tabufline = {
   plugin = true,
 
   n = {
+    -- cycle through buffers
+    ["<tab>"] = { "" },
+    ["<S-tab>"] = { "" },
+    -- close buffer + hide terminal buffer
+    ["<leader>x"] = { "" },
+
     -- cycle through buffers
     ["<S-l>"] = {
       function()

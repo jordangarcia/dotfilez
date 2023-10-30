@@ -21,3 +21,4 @@ vim.opt.rnu = true
 
 vim.opt.wrap = false
 
+vim.cmd [[set path+="/opt/homebrew/bin"]]

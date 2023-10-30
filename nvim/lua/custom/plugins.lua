@@ -176,7 +176,7 @@ local plugins = {
           keymap = {
             -- accept = "<C-l>",
             -- accept = "<C-l>",
-            accept = "<Tab>",
+            accept = "<C-l>",
             accept_word = false,
             accept_line = false,
             next = "<C-k>",
@@ -207,9 +207,12 @@ local plugins = {
 
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = {
+      "zane-/cder.nvim",
+    },
     opts = function()
       local opts = require "plugins.configs.telescope"
-      local overides = require "custom.configs.telescope"
+      local overides = require "custom.configs.telescope".options
       return vim.tbl_deep_extend("force", opts, overides)
     end,
   },
@@ -299,6 +302,15 @@ let g:ctrlp_user_command = {
       require("telescope-all-recent").setup {}
     end,
   },
+
+  -- {
+  --   "zane-/cder.nvim",
+  --   dependencies = { "nvim-telescope/telescope.nvim" },
+  --   config = function()
+  --     require("telescope").load_extension "cder"
+  --     telescope.setup {}
+  --   end,
+  -- },
 }
 
 return plugins
