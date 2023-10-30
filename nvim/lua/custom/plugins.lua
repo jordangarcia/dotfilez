@@ -42,6 +42,7 @@ local plugins = {
     "williamboman/mason.nvim",
     opts = overrides.mason,
   },
+
   {
     "NvChad/nvterm",
     enabled = false,
@@ -156,6 +157,9 @@ local plugins = {
     end,
     config = function(_, opts)
       require("cmp").setup(opts)
+      require("cmp").setup.filetype({ "gitcommit" }, {
+        enabled = false,
+      })
     end,
   },
 
