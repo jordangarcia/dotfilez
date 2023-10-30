@@ -40,7 +40,7 @@ shell_integration enabled
 url_prefixes http https file ftp gemini irc gopher mailto news git
 url_style curly
 window_padding_width 5
-adjust_cell_width -10
+# adjust_cell_width -10
 
 
 # SHORTCUT
@@ -168,12 +168,5 @@ globinclude kitty.d/**/*.conf
 
 # BEGIN_KITTY_THEME
 # Catppuccin-Mocha
-# include current-theme.conf
-
-startup_session ./sessions/gamma.conf
-
-
-# BEGIN_KITTY_THEME
-# kanagawabones
 include current-theme.conf
 # END_KITTY_THEME

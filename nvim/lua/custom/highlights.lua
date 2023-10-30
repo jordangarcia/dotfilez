@@ -109,9 +109,10 @@ local syn = {
   deprecated = palette.katanaGray,
   comment = palette.fujiGray,
   -- punct = palette.fujiGray,
-  punct = palette.springViolet1,
+  -- punct = palette.springViolet1,
 
-  -- punct = palette.dragonGray2,
+  punct = palette.dragonGray2,
+
   special1 = palette.springBlue,
   special2 = palette.waveRed,
   special3 = palette.peachRed,
@@ -140,9 +141,6 @@ M.override = {
     bold = true,
   },
 
-  ["@type.builtin"] = {
-    fg = "teal",
-  },
   ["@constructor"] = {
     fg = "purple",
   },
@@ -166,13 +164,33 @@ M.override = {
   ["@variable.builtin"] = {
     fg = palette.waveRed,
   },
+  ["@constant.builtin"] = {
+    fg = palette.springBlue,
+  },
+  ["@type.builtin"] = {
+    fg = "teal",
+  },
   ["@keyword.operator"] = {
     fg = "purple",
   },
   ["@punctuation.delimiter"] = { fg = syn.punct },
   -- @punctuation.bracket                        ; brackets (e.g. `()` / `{}` / `[]`)
   ["@punctuation.bracket"] = { fg = syn.punct },
+  -- ["@punctuation.special"] = {
+  --   fg = palette.carpYellow,
+  -- },
   ["@constant"] = { link = "@variable" },
+  ["@tag.delimiter"] = {
+    fg = syn.punct,
+  },
+  ["@operator"] = {
+    fg = palette.carpYellow,
+  },
+  ["@punctuation.special"] = {
+    -- fg = palette.carpYellow,
+    fg = syn.punct,
+  },
+
   -- variables are white
   Include = { fg = palette.surimiOrange },
   Boolean = { fg = palette.surimiOrange, bold = true },
@@ -191,7 +209,7 @@ M.override = {
   Type = { fg = syn.type },
 
   -- ui
-  Search = { fg = "white", bg = palette.waveBlue2, },
+  Search = { fg = "white", bg = palette.waveBlue2 },
   Visual = { bg = palette.waveBlue1 },
   LineNr = { bg = M.base_16.base00 },
   NvimTreeLineNr = { bg = M.base_16.base00 },
@@ -221,7 +239,7 @@ M.add = {
     fg = "purple",
   },
 
-  ["@lsp.typemod.variable.defaultLibrary.typescript"] = {
+  ["@lsp.typemod.variable.defaultLibrary"] = {
     link = "Variable",
   },
 
@@ -237,10 +255,41 @@ M.add = {
     fg = palette.carpYellow,
   },
 
-  ["@lsp.mod.declaration.typescript"] = {
+  ["@lsp.mod.declaration"] = {
+    fg = palette.carpYellow,
+  },
+  ["@lsp.type.namespace"] = {
+    link = "@variable",
+  },
+  ["@keyword.coroutine"] = {
+    bold = true,
+    fg = syn.keyword,
+  },
+
+  ["@lsp.typemod.parameter.declaration"] = {
     fg = palette.carpYellow,
   },
 
+  -- ["@lsp.typemod.variable.readonly"] = {
+  --   fg = palette.surimiOrange,
+  -- },
+  ["@lsp.mod.readonly"] = {
+    fg = palette.surimiOrange,
+  },
+  ["@lsp.typemod.variable.declaration"] = {
+    link = "@variable",
+  },
+  ["@lsp.typemod.function.readonly"] = {
+    link = "@function",
+  },
+  ["@lsp.typemod.variable.local"] = {
+    link = "@variable",
+  },
+
+  -- react
+  ["@constructor.tsx"] = {
+    fg = syn.type,
+  },
   DiagnosticUnnecessary = { fg = palette.boatYellow1, italic = false },
 }
 

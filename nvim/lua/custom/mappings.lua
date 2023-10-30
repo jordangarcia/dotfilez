@@ -404,6 +404,7 @@ M.whichkey = {
   },
 }
 
+
 M.gitsigns = {
   plugin = true,
 
@@ -470,17 +471,6 @@ M.tabufline = {
       close_hidden_buffers,
       "Close hidden buffers",
     },
-  },
-}
-
-M.multicursors = {
-  plugin = true,
-
-  n = {
-    ["<C-f>"] = { "", "" },
-  },
-  v = {
-    ["<C-f>"] = { "<CMD> MCstart <CR>", "Multicursor start" },
   },
 }
 

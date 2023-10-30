@@ -5,6 +5,9 @@ local M = {}
 local highlights = require "custom.highlights"
 
 M.ui = {
+  nvdash = {
+    load_on_startup = false,
+  },
   theme = "kanagawa",
   theme_toggle = { "kanagawa", "one_light" },
   -- lsp_semantic_tokens = true, -- needs nvim v0.9, just adds highlight groups for lsp semantic tokens

@@ -224,16 +224,6 @@ local plugins = {
   },
 
   {
-    "smoka7/multicursors.nvim",
-    lazy = false,
-    dependencies = {
-      "smoka7/hydra.nvim",
-    },
-    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
-    config = require "custom.configs.multicursor",
-  },
-
-  {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
     config = require "custom.configs.lspsaga",
@@ -247,10 +237,28 @@ local plugins = {
   -- All NvChad plugins are lazy-loaded by default
   -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
   -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
-  -- {
-  --   "mg979/vim-visual-multi",
-  --   lazy = false,
-  -- }
+  {
+    "mg979/vim-visual-multi",
+    lazy = false,
+  },
+
+  {
+    "pmizio/typescript-tools.nvim",
+    lazy = false,
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = require "custom.configs.typescript-tools",
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    lazy = false,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function(_, opts)
+      local opts = require "custom.configs.treesitter-textobjects"
+
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
 }
 
 return plugins
