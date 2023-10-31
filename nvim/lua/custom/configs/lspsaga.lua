@@ -23,14 +23,25 @@ return function()
   vim.api.nvim_command "highlight clear SagaNormal"
   vim.api.nvim_command "highlight link SagaNormal Normal"
 
-  vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
+  -- vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
   require("which-key").register({
     l = {
       name = "Lsp",
-      f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
+      -- f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
       o = { "<cmd> Lspsaga outline <CR>", "Lspsaga [o]utline" },
       r = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
-      -- i = { "<cmd> mF:%!eslint_d --stdin --fix-to-stdout<CR>`F   <CR>", "Eslint Fix [i]mports" },
+      i = { "<CMD> EslintFixAll <CR>", "Eslint f[i]x all" },
+      f = {
+        function()
+          vim.lsp.buf.code_action {
+            filter = function(a)
+              return a.isPreferred
+            end,
+            apply = true,
+          }
+        end,
+        "Lsp [f]ix all",
+      },
       s = {
         function()
           vim.lsp.buf.signature_help()

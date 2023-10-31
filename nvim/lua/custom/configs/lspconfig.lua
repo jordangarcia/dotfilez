@@ -9,8 +9,13 @@ lspconfig["graphql"].setup {
   capabilities = capabilities,
   root_dir = require("lspconfig.util").root_pattern "package.json",
 }
+lspconfig["eslint"].setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  root_dir = require("lspconfig.util").root_pattern ".git",
+}
 
-local servers = { "html", "cssls", "prismals"}
+local servers = { "html", "cssls", "prismals" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -22,7 +27,7 @@ vim.diagnostic.config {
   virtual_text = false,
 }
 
--- dont show hints in sidebar 
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "LineNr", numhl="" })
+-- dont show hints in sidebar
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "LineNr", numhl = "" })
 --
 -- lspconfig.pyright.setup { blabla}

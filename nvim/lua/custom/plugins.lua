@@ -131,14 +131,14 @@ local plugins = {
         "windwp/nvim-autopairs",
         opts = {
           fast_wrap = {},
-          disable_filetype = { "TelescopePrompt", "vim" },
+          disable_filetype = { "TelescopePrompt", "vim"},
         },
         config = function(_, opts)
           require("nvim-autopairs").setup(opts)
 
           -- setup cmp for autopairs
-          local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-          require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+          -- local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+          -- require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
         end,
       },
       -- cmp sources plugins
@@ -185,7 +185,14 @@ local plugins = {
           },
         },
         filetypes = {
-          ["*"] = true,
+          lua = true,
+          javascript = true,
+          typescript = true,
+          json = true,
+          yaml = true,
+          html = true,
+          css = true,
+          ["*"] = false,
         },
         panel = { enabled = true },
       }
@@ -209,10 +216,17 @@ local plugins = {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "zane-/cder.nvim",
+      {
+        "ThePrimeagen/harpoon",
+        init = function(_)
+          require("core.utils").load_mappings "harpoon"
+        end,
+        opts = require "custom.configs.harpoon",
+      },
     },
     opts = function()
       local opts = require "plugins.configs.telescope"
-      local overides = require "custom.configs.telescope".options
+      local overides = require("custom.configs.telescope").options
       return vim.tbl_deep_extend("force", opts, overides)
     end,
   },
@@ -259,14 +273,27 @@ local plugins = {
     config = require "custom.configs.typescript-tools",
   },
 
+  -- {
+  --   "nvim-treesitter/nvim-treesitter-textobjects",
+  --   lazy = false,
+  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
+  --   config = function(_, opts)
+  --     local opts = require "custom.configs.treesitter-textobjects"
+  --
+  --     require("nvim-treesitter.configs").setup(opts)
+  --   end,
+  -- },
+
   {
-    "nvim-treesitter/nvim-treesitter-textobjects",
+    "windwp/nvim-ts-autotag",
     lazy = false,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function(_, opts)
-      local opts = require "custom.configs.treesitter-textobjects"
-
-      require("nvim-treesitter.configs").setup(opts)
+      require'nvim-treesitter.configs'.setup {
+        autotag = {
+          enable = true,
+        }
+      }
     end,
   },
 
@@ -311,6 +338,31 @@ let g:ctrlp_user_command = {
   --     telescope.setup {}
   --   end,
   -- },
+  {
+    "numToStr/Comment.nvim",
+    dependencies = {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+    },
+    opts = function()
+      return {
+        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+      }
+    end,
+    keys = {
+      { "gcc", mode = "n", desc = "Comment toggle current line" },
+      { "gc", mode = { "n", "o" }, desc = "Comment toggle linewise" },
+      { "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
+      { "gbc", mode = "n", desc = "Comment toggle current block" },
+      { "gb", mode = { "n", "o" }, desc = "Comment toggle blockwise" },
+      { "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
+    },
+    init = function()
+      require("core.utils").load_mappings "comment"
+    end,
+    config = function(_, opts)
+      require("Comment").setup(opts)
+    end,
+  },
 }
 
 return plugins

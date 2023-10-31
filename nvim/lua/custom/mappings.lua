@@ -289,7 +289,8 @@ M.telescope = {
       end,
       "Find gitfiles",
     },
-    ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
+    -- ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
+    ["<C-S-P>"] = { "<cmd> Telescope harpoon marks <CR>", "Find harpoon" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     ["<C-b>"] = {
       "<cmd> Telescope buffers sort_mru=true cwd_only=true <CR>",
@@ -484,6 +485,50 @@ M.tabufline = {
     ["<leader>bh"] = {
       close_hidden_buffers,
       "Close hidden buffers",
+    },
+  },
+}
+
+M.harpoon = {
+  plugin = true,
+
+  n = {
+    -- cycle through buffers
+    ["<leader>h1"] = {
+      function()
+        require("harpoon.ui").nav_file(1)
+      end,
+      "[H]arpoon file [1]",
+    },
+    ["<leader>h2"] = {
+      function()
+        require("harpoon.ui").nav_file(2)
+      end,
+      "[H]arpoon file [2]",
+    },
+    ["<leader>h3"] = {
+      function()
+        require("harpoon.ui").nav_file(3)
+      end,
+      "[H]arpoon file [3]",
+    },
+    ["<leader>h4"] = {
+      function()
+        require("harpoon.ui").nav_file(4)
+      end,
+      "[H]arpoon file [4]",
+    },
+    ["<leader>h5"] = {
+      function()
+        require("harpoon.ui").nav_file(5)
+      end,
+      "[H]arpoon file [5]",
+    },
+    ["<leader>ha"] = {
+      function()
+        require("harpoon.mark").add_file()
+      end,
+      "[H]arpoon [a]dd",
     },
   },
 }

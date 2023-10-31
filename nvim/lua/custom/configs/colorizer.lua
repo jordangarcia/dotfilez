@@ -1,4 +1,8 @@
 local options = {
-  names = false, }
+  filetypes = { "css", "lua" },
+  user_default_options = {
+    names = false,
+  },
+}
 
 return options

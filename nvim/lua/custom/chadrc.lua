@@ -24,6 +24,38 @@ M.ui = {
     -- overriden_modules = nil,
     -- modules arg here is the default table of modules
     overriden_modules = function(modules)
+      local function stbufnr()
+        return vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+      end
+      modules[2] = (function()
+        return ""
+      end)()
+      modules[7] = (function()
+        if not rawget(vim, "lsp") then
+          return ""
+        end
+
+        local errors = #vim.diagnostic.get(stbufnr(), { severity = vim.diagnostic.severity.ERROR })
+        local warnings = #vim.diagnostic.get(stbufnr(), { severity = vim.diagnostic.severity.WARN })
+
+        errors = (errors and errors > 0) and ("%#St_lspError#" .. " " .. errors .. " ") or ""
+        warnings = (warnings and warnings > 0) and ("%#St_lspWarning#" .. "  " .. warnings .. " ") or ""
+
+        return errors .. warnings
+      end)()
+
+      modules[8] = (function()
+        local clients = {}
+        if rawget(vim, "lsp") then
+          for _, client in ipairs(vim.lsp.get_active_clients()) do
+            if client.attached_buffers[stbufnr()] and client.name ~= "null-ls" then
+              table.insert(clients, client.name)
+            end
+          end
+          local str = table.concat(clients, " ")
+          return (vim.o.columns > 100 and "%#St_LspStatus#" .. "   " .. str .. " ")
+        end
+      end)()
 
       -- TODO make paste configurable
       -- table.insert(

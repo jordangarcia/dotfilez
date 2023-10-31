@@ -27,6 +27,15 @@ end
 
 M.options = {
   defaults = {
+    file_ignore_patterns = { "node_modules", "src/translations" },
+
+    path_display = {
+      shorten = {
+        len = 3,
+        exclude = { 1, 2, 3, -1, -2 },
+      },
+    },
+
     mappings = {
       n = {
         ["<c-x>"] = require("telescope.actions").delete_buffer,
@@ -52,7 +61,7 @@ M.options = {
       },
     },
   },
-  extensions_list = { "cder" },
+  extensions_list = { "cder", "harpoon" },
   extensions = {
     cder = {
       dir_command = {

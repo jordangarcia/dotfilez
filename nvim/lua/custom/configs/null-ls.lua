@@ -1,21 +1,8 @@
 local null_ls = require "null-ls"
 
-local h = require "null-ls.helpers"
-local u = require "null-ls.utils"
-
-local eslint = require("null-ls").builtins.diagnostics.eslint_d.with {
-  cwd = h.cache.by_bufnr(function(params)
-    local cwd = u.root_pattern ".git"(params.bufname)
-    return cwd
-  end),
-}
-
 local opts = {
   debug = true,
   sources = {
-    -- null_ls.builtins.diagnostics.eslint_d,
-    eslint,
-    -- null_ls.builtins.diagnostics.eslint,
     null_ls.builtins.formatting.prettier,
     null_ls.builtins.formatting.stylua,
   },
