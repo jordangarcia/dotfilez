@@ -33,14 +33,9 @@ return function()
       i = { "<CMD> EslintFixAll <CR>", "Eslint f[i]x all" },
       f = {
         function()
-          vim.lsp.buf.code_action {
-            filter = function(a)
-              return a.isPreferred
-            end,
-            apply = true,
-          }
+          vim.lsp.buf.format { async = true }
         end,
-        "Lsp [f]ix all",
+        "Lsp [f]ormat",
       },
       s = {
         function()

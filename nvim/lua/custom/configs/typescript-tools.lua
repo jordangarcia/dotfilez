@@ -9,7 +9,7 @@ local config = function()
       -- "change"|"insert_leave" determine when the client asks the server about diagnostic
       publish_diagnostic_on = "insert_leave",
       tsserver_file_preferences = {
-        autoImportFileExcludePatterns = { "**/dist/**" },
+        -- autoImportFileExcludePatterns = { "**/dist/**" },
         importModuleSpecifierPreference = "relative",
       },
     },
