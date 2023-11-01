@@ -29,5 +29,6 @@ vim.diagnostic.config {
 
 -- dont show hints in sidebar
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "LineNr", numhl = "" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "LineNr", numhl = "" })
 --
 -- lspconfig.pyright.setup { blabla}

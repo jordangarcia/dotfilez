@@ -22,7 +22,10 @@ end
 local smart_close_buffer = function()
   local ft = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "filetype")
 
-  if ft == "help" or ft == "qf" then
+  local filepath = vim.fn.expand('%')
+  local is_fugitive = string.find(filepath, "fugitive://") ~= nil
+
+  if ft == "help" or ft == "qf" or is_fugitive then
     vim.cmd "q"
   else
     require("nvchad.tabufline").close_buffer()
@@ -57,8 +60,45 @@ local close_hidden_buffers = function()
   end
 end
 
+-- diasable default nvchad binds
+M.disabled = {
+  -- lspconfig
+  n = {
+    ["gD"] = "",
+    ["gd"] = "",
+    ["K"] = "",
+    ["gi"] = "",
+    ["<leader>cc"] = "",
+    ["<leader>y"] = "",
+    ["<leader>b"] = "",
+    ["<leader>cm"] = "",
+    ["<leader>ls"] = "",
+    ["<leader>D"] = "",
+    ["<leader>ra"] = "",
+    ["<leader>ca"] = "",
+    ["gr"] = "",
+    ["<leader>lf"] = "",
+    ["<leader>q"] = "",
+    ["<leader>wa"] = "",
+    ["<leader>wr"] = "",
+    ["<leader>wl"] = "",
+    ["<leader>fm"] = "",
+  },
+  v = {
+    ["<leader>ca"] = "",
+  },
+}
+
 M.general = {
   n = {
+    -- scrolling
+    -- ["<C-d>"] = { "<C-d>zz" },
+    -- ["<C-u>"] = { "<C-u>zz" },
+    ["n"] = { "nzzzv" },
+    ["N"] = { "Nzzzv" },
+    ["<C-o>"] = { "<C-o>zz" },
+    ["<C-i>"] = { "<C-i>zz" },
+
     -- cycle through buffers
     ["<S-i>"] = {
       function()
@@ -68,8 +108,6 @@ M.general = {
     },
     ["<A-up>"] = { ":m .-2<CR>==", "Move line up" },
     ["<A-down>"] = { ":m .+1<CR>==", "Move line down" },
-    ["<leader>|"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
-    ["<leader>s"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
     -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
     -- switch between windows
@@ -82,20 +120,26 @@ M.general = {
     --   { noremap = true, silent = true },
     -- },
 
-    ["<leader>y"] = {
-      "",
-      "Yank",
+    ["<leader>yf"] = {
+      function()
+        vim.cmd [[ let @+=expand('%') ]]
+      end,
+      "[Y]ank [f]ile path to keyboard",
     },
+
     ["<leader>yt"] = {
       toggle_clipboard,
       "[T]oggle [y]ank to keyboard",
     },
+
     ["<leader>yy"] = {
       function()
         set_clipboard()
       end,
       "Yank -> Clipboard",
     },
+
+    -- scrolling
     ['<C-w>"'] = { "<cmd> split <CR>", "Split window horizontally" },
     ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
@@ -104,6 +148,9 @@ M.general = {
     ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
     ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
     ["<leader>tt"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
+
+    -- splitting
+    ["<leader>v"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
 
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
@@ -124,15 +171,25 @@ M.general = {
     ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
 
+    ["<C-Left>"] = { "<CMD> vertical resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Right>"] = { "<CMD> vertical resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Up>"] = { "<CMD> horizontal resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Down>"] = { "<CMD> horizontal resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
+
     -- new buffer
     ["<leader>ch"] = { "<cmd> Telescope keymaps <CR>", "Keymaps" },
 
-    ["<leader>fm"] = {
-      function()
-        vim.lsp.buf.format { async = true }
-      end,
-      "LSP formatting",
-    },
+    -- file saving
+    ["<leader>wq"] = { "<cmd> wqa! <CR>", "Write all and [q]uit" },
+    ["<leader>ww"] = { "<cmd> qa! <CR>", "Quit [w]ithout writing" },
+    ["<leader>wa"] = { "<cmd> wa <CR>", "Write [a]ll" },
+
+    -- ["<leader>fm"] = {
+    --   function()
+    --     vim.lsp.buf.format { async = true }
+    --   end,
+    --   "LSP formatting",
+    -- },
   },
 
   v = {
@@ -215,26 +272,27 @@ M.lspconfig = {
       "Goto next error",
     },
 
-    ["<leader>wa"] = {
-      function()
-        vim.lsp.buf.add_workspace_folder()
-      end,
-      "Add workspace folder",
-    },
-
-    ["<leader>wr"] = {
-      function()
-        vim.lsp.buf.remove_workspace_folder()
-      end,
-      "Remove workspace folder",
-    },
-
-    ["<leader>wl"] = {
-      function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-      end,
-      "List workspace folders",
-    },
+    -- these are in which key
+    -- ["<leader>wa"] = {
+    --   function()
+    --     vim.lsp.buf.add_workspace_folder()
+    --   end,
+    --   "Add workspace folder",
+    -- },
+    --
+    -- ["<leader>wr"] = {
+    --   function()
+    --     vim.lsp.buf.remove_workspace_folder()
+    --   end,
+    --   "Remove workspace folder",
+    -- },
+    --
+    -- ["<leader>wl"] = {
+    --   function()
+    --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    --   end,
+    --   "List workspace folders",
+    -- },
   },
 }
 
@@ -284,7 +342,10 @@ M.telescope = {
   n = {
     ["<C-P>"] = {
       function()
-        require("custom.configs.telescope").project_files()
+        require("telescope").extensions.smart_open.smart_open {
+          cwd_only = true,
+          filename_first = true,
+        }
       end,
       "Find gitfiles",
     },
@@ -298,7 +359,7 @@ M.telescope = {
     ["<C-t>"] = {
       function()
         require("telescope.builtin").lsp_dynamic_workspace_symbols {
-          ignore_symbols = { "property", "variable" },
+          ignore_symbols = { "property ", "variable" },
         }
       end,
       "Find symbols",
@@ -480,7 +541,6 @@ M.tabufline = {
       smart_close_buffer,
       "Close buffer",
     },
-    ["<leader>b"] = { "", "Buffers" },
     ["<leader>bh"] = {
       close_hidden_buffers,
       "Close hidden buffers",

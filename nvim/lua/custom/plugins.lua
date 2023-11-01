@@ -120,6 +120,8 @@ local plugins = {
       {
         -- snippet plugin
         "L3MON4D3/LuaSnip",
+        -- no snippets for nwo
+        enabled = false,
         dependencies = "rafamadriz/friendly-snippets",
         opts = { history = true, updateevents = "TextChanged,TextChangedI" },
         config = function(_, opts)
@@ -131,7 +133,7 @@ local plugins = {
         "windwp/nvim-autopairs",
         opts = {
           fast_wrap = {},
-          disable_filetype = { "TelescopePrompt", "vim"},
+          disable_filetype = { "TelescopePrompt", "vim" },
         },
         config = function(_, opts)
           require("nvim-autopairs").setup(opts)
@@ -145,15 +147,15 @@ local plugins = {
       {
         "hrsh7th/cmp-nvim-lua",
         "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "zbirenbaum/copilot-cmp",
+        -- "hrsh7th/cmp-buffer",
+        -- "hrsh7th/cmp-path",
+        -- "zbirenbaum/copilot-cmp",
       },
     },
     opts = function()
       local opts = require "plugins.configs.cmp"
       local overides = require "custom.configs.cmp"
-      vim.tbl_deep_extend("force", opts, overides)
+      return vim.tbl_deep_extend("force", opts, overides)
     end,
     config = function(_, opts)
       require("cmp").setup(opts)
@@ -187,6 +189,7 @@ local plugins = {
         filetypes = {
           lua = true,
           javascript = true,
+          typescriptreact = true,
           typescript = true,
           json = true,
           yaml = true,
@@ -273,26 +276,26 @@ local plugins = {
     config = require "custom.configs.typescript-tools",
   },
 
-  -- {
-  --   "nvim-treesitter/nvim-treesitter-textobjects",
-  --   lazy = false,
-  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
-  --   config = function(_, opts)
-  --     local opts = require "custom.configs.treesitter-textobjects"
-  --
-  --     require("nvim-treesitter.configs").setup(opts)
-  --   end,
-  -- },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    lazy = false,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function(_, opts)
+      local opts = require "custom.configs.treesitter-textobjects"
+
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
 
   {
     "windwp/nvim-ts-autotag",
     lazy = false,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function(_, opts)
-      require'nvim-treesitter.configs'.setup {
+      require("nvim-treesitter.configs").setup {
         autotag = {
           enable = true,
-        }
+        },
       }
     end,
   },
@@ -362,6 +365,21 @@ let g:ctrlp_user_command = {
     config = function(_, opts)
       require("Comment").setup(opts)
     end,
+  },
+
+  {
+    "danielfalk/smart-open.nvim",
+    branch = "0.2.x",
+    config = function()
+      require("telescope").load_extension "smart_open"
+    end,
+    dependencies = {
+      "kkharji/sqlite.lua",
+      -- Only required if using match_algorithm fzf
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
+      { "nvim-telescope/telescope-fzy-native.nvim" },
+    },
   },
 }
 

@@ -20,5 +20,7 @@ vim.opt.number = false
 vim.opt.rnu = true
 
 vim.opt.wrap = false
+vim.opt.scrolljump = 5
+vim.opt.scrolloff = 3
 
 vim.cmd [[set path+="/opt/homebrew/bin"]]

@@ -252,6 +252,7 @@ M.override = {
   CmpItemKindProperty = { link = "@property" },
   CmpItemKindIdentifier = { fg = syn.identifier },
   CmpItemKindTypeParameter = { link = "@type" },
+  CmpItemKindVariable = { link = "@variable" },
 
   --
   IndentBlanklineContextStart = { bg = "NONE" },
