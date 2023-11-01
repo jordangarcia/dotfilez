@@ -1,19 +1,15 @@
 alias reload!='. ~/.zshrc'
 
-
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
 #   `brew install coreutils`
-if which gls &>/dev/null
+if which exa &>/dev/null
 then
-  alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la='gls -A --color'
+  alias ls="exa"
+  alias l="exa -l -a --group-directories-first --icons"
 else
   alias ls="ls"
-  alias l="ls -al"
-  alias ll="ls -l"
+  alias l="ls -lah"
 fi
 
 
@@ -41,12 +37,7 @@ setopt pushdminus
 
 alias -- -='cd -'
 
-alias md='mkdir -p'
-alias rd=rmdir
-alias d='dirs -v | head -10'
-
 # List directory contents
-alias l='ls -lah'
 
 # GIT STUFF
 alias gl='git pull --prune'
@@ -55,18 +46,15 @@ alias glr='git pull --rebase'
 alias glg="git log --graph --pretty=format:'%Cred%h%Creset %Cblue%an%Creset: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
 alias gp='git push -u origin HEAD'
 alias glrp='glr && gp'
-alias gph='git push heroku HEAD'
 alias gd='git diff'
 alias gdc='git diff --cached'
 alias gc='git commit'
 alias gca='git commit -a'
 alias gcm='git commit --amend'
 alias gcp='git cherry-pick'
-# alias gco='git checkout' # this is a zsh fucntion now
 alias gb='git branch'
 alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
-alias gdt='git dt'
 alias gstash='git stash -u'
 
 alias gamma="kitty --session ~/.config/kitty/sessions/gamma.conf &"

@@ -119,7 +119,7 @@ local syn = {
   statement = palette.oniViolet,
   keyword = palette.oniViolet,
   operator = palette.boatYellow2,
-  preproc = palette.waveRed, --lightBlue? deserves its own color
+  preproc = palette.springBlue, --lightBlue? deserves its own color
   type = palette.waveAqua2,
   regex = palette.boatYellow2,
   deprecated = palette.katanaGray,
@@ -219,6 +219,12 @@ M.override = {
     -- fg = palette.carpYellow,
     fg = syn.punct,
   },
+
+  -- zsh
+  ["zshRepeat"] = {
+    link = "Keyword",
+  },
+
   -- jsx
 
   -- ui
@@ -362,6 +368,12 @@ M.add = {
   DiagnosticUnderlineWarn = { undercurl = true, sp = diag.warning },
   DiagnosticUnderlineInfo = { undercurl = true, sp = diag.info },
   DiagnosticUnderlineHint = { undercurl = true, sp = diag.hint },
+  -- -- ["zshRepeat"] = { link = "Keyword" },
+  ["zshSubstDelim"] = { fg = syn.punct },
+  ["zshBrackets"] = { fg = syn.punct },
+  ["zshFunction"] = { link = "@function" },
+  -- ["zshSubstQuoted"] = { link = "Normal" },
+  -- ["zshDeref"] = { link = "Variable" },
 }
 
 return M
