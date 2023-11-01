@@ -66,12 +66,9 @@ local plugins = {
   {
     "tpope/vim-fugitive",
     lazy = false,
-    keys = {
-      { "<leader>gd", "<cmd> Gvdiffsplit <cr>", desc = "Git diff" },
-      { "<leader>gb", "<cmd> Git blame <cr>", desc = "Git blame" },
-      { "<leader>gg", "<cmd> Git <cr>", desc = "Git read" },
-      { "<leader>gl", "<cmd> Gclog <cr>", desc = "Git log" },
-    },
+    init = function()
+      require("core.utils").load_mappings "fugitive"
+    end,
   },
 
   {
@@ -121,7 +118,6 @@ local plugins = {
         -- snippet plugin
         "L3MON4D3/LuaSnip",
         -- no snippets for nwo
-        enabled = false,
         dependencies = "rafamadriz/friendly-snippets",
         opts = { history = true, updateevents = "TextChanged,TextChangedI" },
         config = function(_, opts)

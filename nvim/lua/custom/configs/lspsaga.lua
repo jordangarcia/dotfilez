@@ -37,7 +37,7 @@ return function()
         "Lspsaga [r]ename",
       },
       i = {
-        "<CMD> EslintFixAll <CR><CMD> TSToolsOrganizeImports <CR>",
+        "<CMD> EslintFixAll <CR>",
         "Eslint f[i]x all",
       },
       f = {

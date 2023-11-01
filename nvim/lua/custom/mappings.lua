@@ -19,13 +19,25 @@ local toggle_clipboard = function()
   vim.cmd "redrawstatus"
 end
 
+local close_all_fugitive_buffers = function()
+  local bufs = vim.api.nvim_list_bufs()
+  for _, buf in ipairs(bufs) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    if string.find(name, "fugitive://") then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+end
+
 local smart_close_buffer = function()
   local ft = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "filetype")
 
-  local filepath = vim.fn.expand('%')
+  local filepath = vim.fn.expand "%"
   local is_fugitive = string.find(filepath, "fugitive://") ~= nil
 
-  if ft == "help" or ft == "qf" or is_fugitive then
+  if is_fugitive then
+    close_all_fugitive_buffers()
+  elseif ft == "help" or ft == "qf" then
     vim.cmd "q"
   else
     require("nvchad.tabufline").close_buffer()
@@ -148,6 +160,7 @@ M.general = {
     ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
     ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
     ["<leader>tt"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
+    ["<leader>tq"] = { "<cmd> tabc <CR>", "[T]ab [q]uit" },
 
     -- splitting
     ["<leader>v"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
@@ -589,6 +602,16 @@ M.harpoon = {
       end,
       "[H]arpoon [a]dd",
     },
+  },
+}
+
+M.fugitive = {
+  n = {
+    ["<leader>gd"] = { "<cmd> Gvdiffsplit <cr>", desc = "Git [d]iff" },
+    ["<leader>gb"] = { "<cmd> Git blame <cr>", desc = "Git [b]lame" },
+    ["<leader>gg"] = { "<cmd> Git <cr>", desc = "Git git" },
+    ["<leader>gl"] = { "<cmd> Gclog <cr>", desc = "Git [l]og" },
+    ["<leader>g3"] = { "<cmd> Gvdiffsplit! <cr>", desc = "Git diff [3]way" },
   },
 }
 

@@ -22,22 +22,31 @@ local opts = {
     null_ls.builtins.formatting.stylua,
   },
   on_attach = function(client, bufnr)
-    if client.supports_method "textDocument/formatting" then
-      local augroup = vim.api.nvim_create_augroup("Format", {})
-
-      vim.api.nvim_clear_autocmds {
-        group = augroup,
-        buffer = bufnr,
-      }
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-          vim.lsp.buf.format { bufnr = bufnr }
-        end,
-      })
-    end
+    -- this is buggy, instead just setup an auto cmd for EVERYTHING
+    -- that saves 
+    -- if client.supports_method "textDocument/formatting" then
+    --   local augroup = vim.api.nvim_create_augroup("Format", {})
+    --
+    --   vim.api.nvim_clear_autocmds {
+    --     group = augroup,
+    --     buffer = bufnr,
+    --   }
+    --   vim.api.nvim_create_autocmd("BufWritePre", {
+    --     group = augroup,
+    --     buffer = bufnr,
+    --     callback = function()
+    --       print("null ls formatting" .. bufnr)
+    --       vim.lsp.buf.format { bufnr = bufnr, async = false }
+    --     end,
+    --   })
+    -- end
   end,
 }
 
 null_ls.setup(opts)
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function(ev)
+    vim.lsp.buf.format { bufnr = ev.buf, async = false }
+  end,
+})

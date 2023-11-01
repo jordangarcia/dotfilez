@@ -140,19 +140,24 @@ M.override = {
   Comment = {
     italic = true,
   },
-  -- remove colors
-  TbLineBufOnClose = { link = "TbLineBufOn" },
-  TbLineBufOnModified = { link = "TbLineBufOn" },
-  TbLineBufOffModified = { link = "TbLineBufOff" },
-  TelescopePromptTitle = { bg = "nord_blue" },
-  TelescopePromptPrefix = { fg = "nord_blue" },
 
-  NvimTreeGitDirty = { fg = palette.surimiOrange },
-
-  NvimTreeRootFolder = {
-    fg = "teal",
-    bold = true,
-  },
+  -- variables are white
+  Variable = { fg = palette.fujiWhite },
+  Include = { fg = palette.surimiOrange },
+  Boolean = { fg = palette.surimiOrange, bold = true },
+  Constant = { link = "Variable" },
+  String = { fg = syn.string },
+  Character = { link = "String" },
+  Number = { fg = syn.number },
+  Float = { link = "Number" },
+  Identifier = { fg = syn.identifier },
+  Function = { fg = syn.fun },
+  Statement = { fg = syn.statement },
+  Operator = { fg = syn.operator },
+  Keyword = { fg = syn.keyword },
+  Exception = { fg = syn.special2 },
+  PreProc = { fg = syn.preproc },
+  Type = { fg = syn.type },
 
   ["Label"] = {
     fg = palette.carpYellow,
@@ -162,7 +167,8 @@ M.override = {
     fg = palette.carpYellow,
   },
   ["@constructor"] = {
-    fg = palette.oniViolet,
+    link = "Type",
+    -- fg = palette.oniViolet,
   },
   ["Structure"] = {
     link = "Type",
@@ -215,24 +221,6 @@ M.override = {
   },
   -- jsx
 
-  -- variables are white
-  Variable = { fg = palette.fujiWhite },
-  Include = { fg = palette.surimiOrange },
-  Boolean = { fg = palette.surimiOrange, bold = true },
-  Constant = { link = "Variable" },
-  String = { fg = syn.string },
-  Character = { link = "String" },
-  Number = { fg = syn.number },
-  Float = { link = "Number" },
-  Identifier = { fg = syn.identifier },
-  Function = { fg = syn.fun },
-  Statement = { fg = syn.statement },
-  Operator = { fg = syn.operator },
-  Keyword = { fg = syn.keyword },
-  Exception = { fg = syn.special2 },
-  PreProc = { fg = syn.preproc },
-  Type = { fg = syn.type },
-
   -- ui
   Search = { fg = palette.fujiWhite, bg = palette.waveBlue2 },
   Visual = { bg = palette.waveBlue1 },
@@ -248,14 +236,33 @@ M.override = {
   DiagnosticInfo = { fg = diag.info },
   DiagnosticHint = { fg = diag.hint },
 
+  -- PLUGINS
+
   CmpItemKindField = { link = "@property" },
   CmpItemKindProperty = { link = "@property" },
   CmpItemKindIdentifier = { fg = syn.identifier },
   CmpItemKindTypeParameter = { link = "@type" },
   CmpItemKindVariable = { link = "@variable" },
 
-  --
+  -- indentline
   IndentBlanklineContextStart = { bg = "NONE" },
+
+  -- remove colors
+  -- bufferline
+  TbLineBufOnClose = { link = "TbLineBufOn" },
+  TbLineBufOnModified = { link = "TbLineBufOn" },
+  TbLineBufOffModified = { link = "TbLineBufOff" },
+
+  -- telescope
+  TelescopePromptTitle = { bg = "nord_blue" },
+  TelescopePromptPrefix = { fg = "nord_blue" },
+
+  -- nvim tree
+  NvimTreeGitDirty = { fg = palette.surimiOrange },
+  NvimTreeRootFolder = {
+    fg = "teal",
+    bold = true,
+  },
 }
 
 ---@type HLTable

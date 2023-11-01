@@ -2,6 +2,7 @@ local M = {}
 local api = vim.api
 local devicons_present, devicons = pcall(require, "nvim-web-devicons")
 local fn = vim.fn
+local Path = require "plenary.path"
 
 dofile(vim.g.base46_cache .. "tbline")
 
@@ -81,7 +82,33 @@ local winbar_file = function()
     return ""
   end
 
+  local tail = fn.fnamemodify(api.nvim_buf_get_name(nr), ":t")
+  local head = fn.fnamemodify(api.nvim_buf_get_name(nr), ":h")
+  local base = fn.fnamemodify(head, ":.")
+
+  -- print("head: " .. head .. "\ntail: " .. tail .. "\nbase:" .. base)
+  local icon2 = ""
+  -- print("icons?" .. vim.inspect(devicons_present))
+  if true and devicons_present then
+    local icon, icon_hl = devicons.get_icon(tail)
+
+    if not icon then
+      icon = "󰈚"
+      icon_hl = "DevIconDefault"
+    end
+
+    icon2 = (
+      api.nvim_get_current_buf() == nr and new_hl(icon_hl, "TbLineBufOn") .. " " .. icon
+      or new_hl(icon_hl, "TbLineBufOff") .. " " .. icon
+    )
+    -- print("whats my icon" .. icon)
+    -- check for same buffer names under different dirs
+  end
+
+  -- filename only
   local name = (#api.nvim_buf_get_name(nr) ~= 0) and fn.fnamemodify(api.nvim_buf_get_name(nr), ":t") or ""
+  local name = (#api.nvim_buf_get_name(nr) ~= 0) and api.nvim_buf_get_name(nr) or ""
+  name = Path:new(name):normalize(vim.fn.getcwd())
 
   if name == "" then
     return ""
@@ -94,9 +121,22 @@ local winbar_file = function()
 
   local file_name = add_fileInfo(name, nr)
   local modified = " %-m"
-  local right_align = "%="
+  -- local right_align = "%="
+  local right_align = ""
 
-  return string.format("%s%s%s", right_align, file_name, modified)
+  local hl = "%#Comment#"
+
+  return string.format(
+    "%s%s %s%s%s%s%s",
+    "%=" .. "",
+    -- "%=" .. icon2,
+    "%#WinBarPath#",
+    base .. "/",
+    "%#WinBar#",
+    tail,
+    "%#WinBar#",
+    modified
+  )
 end
 
 M.show_winbar = function()
@@ -112,6 +152,8 @@ M.show_winbar = function()
 end
 
 M.setup = function()
+  api.nvim_set_hl(0, "WinBarPath", { fg = "#4c4c55" })
+
   vim.api.nvim_create_autocmd(
     { "DirChanged", "CursorMoved", "BufWinEnter", "BufFilePost", "InsertEnter", "BufWritePost" },
     {
