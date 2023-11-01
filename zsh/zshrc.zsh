@@ -22,7 +22,7 @@ do
 done
 
 # dont load path, completion or zshrc
-for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/zshrc.zsh}
+for file in ${${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/zshrc.zsh}:#*/plugins.zsh}
 do
   source $file
 done
@@ -47,14 +47,8 @@ done
 unset config_files
 
 
-eval "$(direnv hook zsh)"
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/jordan/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jordan/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/jordan/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jordan/google-cloud-sdk/completion.zsh.inc'; fi
-
-# source /Users/jordan/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-eval "$(zoxide init zsh)"
