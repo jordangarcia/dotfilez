@@ -21,25 +21,22 @@ do
   source $file
 done
 
-#source /Users/jgarcia/code/optimizely/.source_this.sh
-#source $HOMEBREW_PREFIX/opt/forgit/share/forgit/forgit.plugin.zsh
-
-# load everything but the path and completion files
-for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
+# dont load path, completion or zshrc
+for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/zshrc.zsh}
 do
   source $file
 done
 
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
-if [[ -a ~/.localrc ]]
-then
-  source ~/.localrc
-fi
+# Clone antidote if necessary.
+[[ -d ${ZDOTDIR:-~}/.antidote ]] ||
+  git clone https://github.com/mattmc3/antidote ${ZDOTDIR:-~}/.antidote
+
+# Create an amazing Zsh config using antidote plugins.
+source ${ZDOTDIR:-~}/.antidote/antidote.zsh
+antidote load
 
 # initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
+autoload -Uz compinit && compinit
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
@@ -49,7 +46,6 @@ done
 
 unset config_files
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 eval "$(direnv hook zsh)"
 
@@ -59,6 +55,6 @@ if [ -f '/Users/jordan/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jordan/g
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/jordan/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jordan/google-cloud-sdk/completion.zsh.inc'; fi
 
-source /Users/jordan/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source /Users/jordan/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 eval "$(zoxide init zsh)"
