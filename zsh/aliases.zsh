@@ -1,4 +1,4 @@
-alias reload!='. ~/.zshrc'
+alias reload!='. ~/.config/zsh/.zshrc'
 
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like

@@ -30,11 +30,18 @@ return function()
       -- f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
       o = { "<cmd> Lspsaga outline <CR>", "Lspsaga [o]utline" },
       -- r = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
+      -- f2 renames
+      -- r = {
+      --   function()
+      --     require("nvchad.renamer").open()
+      --   end,
+      --   "Lspsaga [r]ename",
+      -- },
       r = {
         function()
-          require("nvchad.renamer").open()
+          vim.lsp.buf.references()
         end,
-        "Lspsaga [r]ename",
+        "Lsp [r]eferences",
       },
       i = {
         "<CMD> EslintFixAll <CR>",

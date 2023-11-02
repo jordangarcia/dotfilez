@@ -215,6 +215,7 @@ local plugins = {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "zane-/cder.nvim",
+      "jvgrootveld/telescope-zoxide",
       {
         "ThePrimeagen/harpoon",
         init = function(_)

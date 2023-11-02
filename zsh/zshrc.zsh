@@ -27,6 +27,17 @@ do
   source $file
 done
 
+if [[ -z "$HOMEBREW_PREFIX" ]]; then
+  # Maintain compatability with potential custom user profiles, where we had
+  # previously relied on always sourcing shellenv. OMZ plugins should not rely
+  # on this to be defined due to out of order processing.
+  export HOMEBREW_PREFIX="$(brew --prefix)"
+fi
+
+if [[ -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]]; then
+  fpath+=("$HOMEBREW_PREFIX/share/zsh/site-functions")
+fi
+
 # Clone antidote if necessary.
 [[ -d ${ZDOTDIR:-~}/.antidote ]] ||
   git clone https://github.com/mattmc3/antidote ${ZDOTDIR:-~}/.antidote
@@ -52,3 +63,6 @@ if [ -f '/Users/jordan/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jordan/g
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/jordan/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jordan/google-cloud-sdk/completion.zsh.inc'; fi
+
+# fix JQ colors
+export JQ_COLORS="1;33:0;37:0;37:0;37:0;32:1;37:1;37:1;33"

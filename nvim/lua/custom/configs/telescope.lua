@@ -25,6 +25,8 @@ M.project_files = function()
   end
 end
 
+local z_utils = require "telescope._extensions.zoxide.utils"
+
 M.options = {
   defaults = {
     file_ignore_patterns = { "node_modules", "src/translations" },
@@ -61,31 +63,43 @@ M.options = {
       },
     },
   },
-  extensions_list = { "cder", "harpoon" },
+  extensions_list = { "cder", "harpoon", "zoxide" },
   extensions = {
-    cder = {
-      dir_command = {
-        "fd",
-        "--type=d",
-        "--exclude=node_modules",
-        "--hidden",
-        ".git$",
-        os.getenv "HOME" .. "/code/",
-        "|",
-        [[ sed 's/\/.git\///']],
-      },
-      mappings = {
-        default = function(directory)
-          local val = string.gsub(directory, ".git", "")
-          vim.cmd.cd(val)
-        end,
-      },
-    },
     fzf = {
       fuzzy = true,
       override_generic_sorter = true,
       override_file_sorter = true,
       case_mode = "smart_case",
+    },
+    zoxide = {
+      prompt_title = "zoxide",
+      mappings = {
+        default = {
+          action = function(selection)
+            vim.cmd.tcd(selection.path)
+          end,
+          after_action = function(selection)
+            print("Directory tab working directory to " .. selection.path)
+          end,
+        },
+        ["<C-s>"] = {},
+        ["<C-v>"] = {},
+        ["<C-e>"] = {},
+        ["<C-b>"] = {},
+        ["<C-f>"] = {
+          keepinsert = true,
+          action = function(selection)
+            builtin.find_files { cwd = selection.path }
+          end,
+        },
+        ["<C-w>"] = {
+          keepinsert = false,
+          action = function(selection)
+            builtin.live_grep { cwd = selection.path }
+          end,
+        },
+        ["<C-t>"] = {},
+      },
     },
   },
 }

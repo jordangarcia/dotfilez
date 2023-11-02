@@ -348,7 +348,7 @@ M.telescope = {
 
   v = {
     ["<leader>fw"] = {
-      "<cmd> Telescope live_grep <CR>",
+      "<cmd> Telescope grep_string <CR>",
       "Live grep",
     },
   },
@@ -377,7 +377,6 @@ M.telescope = {
       end,
       "Find symbols",
     },
-    ["<leader>fc"] = { "<cmd> Telescope cder <CR>", "Change [C]WD" },
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
@@ -388,7 +387,7 @@ M.telescope = {
     ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
-    ["<leader>fz"] = { "<cmd> Telescope current_buffer_fuzzy_find <CR>", "Find in current buffer" },
+    ["<leader>fz"] = { "<cmd> Telescope zoxide list <CR>", "Find [z]oxide" },
     ["<leader>fs"] = {
       function()
         require("telescope").load_extension "possession"
@@ -396,6 +395,7 @@ M.telescope = {
       end,
       "Find sessions",
     },
+    ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
 
     -- git = also combined with git
 
@@ -403,9 +403,7 @@ M.telescope = {
     -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
 
     -- theme switcher
-    ["<leader>ft"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
-
-    -- ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+    -- ["<leader>ft"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
   },
 }
 
