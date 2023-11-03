@@ -29,7 +29,7 @@ local z_utils = require "telescope._extensions.zoxide.utils"
 
 M.options = {
   defaults = {
-    file_ignore_patterns = { "node_modules", "src/translations" },
+    file_ignore_patterns = { "node_modules", "src/translations", "yarn.lock" },
 
     path_display = {
       shorten = {

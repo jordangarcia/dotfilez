@@ -29,15 +29,32 @@ local close_all_fugitive_buffers = function()
   end
 end
 
+local close_other_windows = function()
+  local api = vim.api
+
+  local curr_tab = api.nvim_get_current_tabpage()
+  for _, win in ipairs(api.nvim_list_wins()) do
+    local tab = api.nvim_win_get_tabpage(win)
+    local n = vim.api.nvim_buf_get_name(api.nvim_win_get_buf(win))
+    local ft = vim.api.nvim_buf_get_option(api.nvim_win_get_buf(win), "filetype")
+
+    if api.nvim_get_current_win() ~= win and tab == curr_tab and ft ~= "NvimTree" then
+      vim.api.nvim_win_close(win, true)
+    end
+  end
+end
+
 local smart_close_buffer = function()
   local ft = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "filetype")
 
   local filepath = vim.fn.expand "%"
   local is_fugitive = string.find(filepath, "fugitive://") ~= nil
+  -- fugitive blame shows up like this
+  local is_private = string.find(filepath, "private/var/folders") ~= nil
 
   if is_fugitive then
     close_all_fugitive_buffers()
-  elseif ft == "help" or ft == "qf" then
+  elseif ft == "help" or ft == "qf" or is_private then
     vim.cmd "q"
   else
     require("nvchad.tabufline").close_buffer()
@@ -179,8 +196,6 @@ M.general = {
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
     -- empty mode is same as using <cmd> :map
     -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-    ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-    ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
     ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
     ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
 
@@ -196,6 +211,14 @@ M.general = {
     ["<leader>wq"] = { "<cmd> wqa! <CR>", "Write all and [q]uit" },
     ["<leader>ww"] = { "<cmd> qa! <CR>", "Quit [w]ithout writing" },
     ["<leader>wa"] = { "<cmd> wa <CR>", "Write [a]ll" },
+
+    ["<leader>wo"] = {
+      function()
+        close_other_windows()
+      end,
+      "[W]indow [o]nly",
+    },
+    ["<leader>wc"] = { "<cmd> q <CR>", "[W]indow [c]lose" },
 
     -- ["<leader>fm"] = {
     --   function()

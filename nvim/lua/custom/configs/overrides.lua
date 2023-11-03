@@ -39,6 +39,7 @@ M.mason = {
     "eslint-lsp",
     "prisma-language-server",
     "graphql-language-service-cli",
+    "json-lsp",
 
     -- c/cpp stuff
     "clangd",
