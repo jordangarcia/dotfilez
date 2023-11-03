@@ -27,76 +27,17 @@ M.ui = {
     -- separator_style = "block",
     -- overriden_modules = nil,
     -- modules arg here is the default table of modules
-    overriden_modules = function(modules)
-      local function stbufnr()
-        return vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-      end
-      local sep = { left = "█", right = "█" }
-      local fn = vim.fn
-      table.insert(
-        modules,
-        1,
-        (function()
-          local dir_icon = "%#St_cwd_icon#" .. "󰉋 "
-          local dir_name = "%#St_cwd_text#" .. " " .. fn.fnamemodify(fn.getcwd(), ":t") .. " "
-          return (vim.o.columns > 85 and ("%#St_cwd_sep#" .. sep.left .. dir_icon .. dir_name)) or ""
-          -- return " between mode and filename ! "
-        end)()
-      )
-      modules[3] = (function()
-        return ""
-      end)()
-      modules[7] = (function()
-        if not rawget(vim, "lsp") then
-          return ""
-        end
-
-        local errors = #vim.diagnostic.get(stbufnr(), { severity = vim.diagnostic.severity.ERROR })
-        local warnings = #vim.diagnostic.get(stbufnr(), { severity = vim.diagnostic.severity.WARN })
-
-        errors = (errors and errors > 0) and ("%#St_lspError#" .. " " .. errors .. " ") or ""
-        warnings = (warnings and warnings > 0) and ("%#St_lspWarning#" .. "  " .. warnings .. " ") or ""
-
-        return errors .. warnings
-      end)()
-
-      modules[8] = (function()
-        local clients = {}
-        if rawget(vim, "lsp") then
-          for _, client in ipairs(vim.lsp.get_active_clients()) do
-            if client.attached_buffers[stbufnr()] and client.name ~= "null-ls" then
-              table.insert(clients, client.name)
-            end
-          end
-          local str = table.concat(clients, " ")
-          return (vim.o.columns > 100 and "%#St_LspStatus#" .. "   " .. str .. " ")
-        end
-      end)()
-
-      -- TODO make paste configurable
-      -- table.insert(
-      --   modules,
-      --   11,
-      --   (function()
-      --     local icon = " "
-      --     local left_sep = "%#St_paste_sep#" .. "█" .. "%#St_paste_icon#" .. icon
-      --     local val = vim.api.nvim_get_option('clipboard')
-      --     local text = val == 'unnamedplus' and 'on' or 'off'
-      --     -- if val== 'unnamedplus' then
-      --     --   text = 'on'
-      --     -- end
-      --     -- local text =  vim.o.cliboard == 'unnamedplus' and 'on' or "off"
-      --
-      --     -- return left_sep .. "%#St_paste_text#" .. " " .. text .. " "
-      --     return left_sep .. "%#St_paste_text#" .. " " .. text .. " "
-      --   end)()
-      -- )
-    end,
+    overriden_modules = require "custom.statusline",
   },
 
   tabufline = {
     lazyload = true,
-    overriden_modules = nil,
+    overriden_modules = function(modules)
+      -- no close tab or switch colorscheme button
+      modules[4] = (function()
+        return ""
+      end)()
+    end,
   },
 }
 

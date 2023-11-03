@@ -113,7 +113,7 @@ M.options = {
         ["<C-p>"] = {
           action = function(selection)
             require("telescope").extensions.smart_open.smart_open {
-              prompt_title = "find in: " .. selection.path,
+              prompt_title = require("custom.path_utils").normalize_to_home(selection.path),
               cwd = selection.path,
               cwd_only = true,
             }

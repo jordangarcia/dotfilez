@@ -13,6 +13,8 @@ M.disabled = {
     ["gD"] = "",
     ["gd"] = "",
     ["K"] = "",
+    ["j"] = "",
+    ["k"] = "",
     ["gi"] = "",
     ["<leader>cc"] = "",
     ["<leader>y"] = "",
@@ -43,14 +45,11 @@ M.disabled = {
 M.general = {
   n = {
     -- scrolling
-    -- ["<C-d>"] = { "<C-d>zz" },
-    -- ["<C-u>"] = { "<C-u>zz" },
     ["n"] = { "nzzzv" },
     ["N"] = { "Nzzzv" },
     ["<C-o>"] = { "<C-o>zz" },
     ["<C-i>"] = { "<C-i>zz" },
 
-    -- cycle through buffers
     ["<S-i>"] = {
       function()
         vim.cmd [[ Inspect ]]
@@ -59,18 +58,9 @@ M.general = {
     },
     ["<A-up>"] = { ":m .-2<CR>==", "Move line up" },
     ["<A-down>"] = { ":m .+1<CR>==", "Move line down" },
-    -- [";"] = { ":", "enter command mode", opts = { nowait = true } },
     ["<Esc>"] = { "<cmd> noh <CR>", "Clear highlights" },
-    -- switch between windows
-    -- ["<S-l>"] = {
-    --   "<CMD> bn <CR>",
-    --   { noremap = true, silent = true },
-    -- },
-    -- ["<S-h>"] = {
-    --   "<CMD> bp <CR>",
-    --   { noremap = true, silent = true },
-    -- },
 
+    -- yank things
     ["<leader>yf"] = {
       function()
         vim.cmd [[ let @+=expand('%') ]]
@@ -98,16 +88,10 @@ M.general = {
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
 
-    -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
-    -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
-    -- empty mode is same as using <cmd> :map
-    -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
     ["<C-Left>"] = { "<CMD> vertical resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
     ["<C-Right>"] = { "<CMD> vertical resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
     ["<C-Up>"] = { "<CMD> horizontal resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
     ["<C-Down>"] = { "<CMD> horizontal resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
-    -- quitting / wriing
-    --
 
     -- Quitting
     ["<c-q>"] = { "", "Quit" },
@@ -159,8 +143,8 @@ M.general = {
   },
 
   x = {
-    ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-    ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
+    -- ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
+    -- ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
     -- Don't copy the replaced text after pasting in visual mode
     -- https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text#Alternative_mapping_for_paste
     ["p"] = { 'p:let @+=@0<CR>:let @"=@0<CR>', "Dont copy replaced text", opts = { silent = true } },
@@ -228,28 +212,6 @@ M.lspconfig = {
       end,
       "Goto next error",
     },
-
-    -- these are in which key
-    -- ["<leader>wa"] = {
-    --   function()
-    --     vim.lsp.buf.add_workspace_folder()
-    --   end,
-    --   "Add workspace folder",
-    -- },
-    --
-    -- ["<leader>wr"] = {
-    --   function()
-    --     vim.lsp.buf.remove_workspace_folder()
-    --   end,
-    --   "Remove workspace folder",
-    -- },
-    --
-    -- ["<leader>wl"] = {
-    --   function()
-    --     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    --   end,
-    --   "List workspace folders",
-    -- },
   },
 }
 
@@ -278,15 +240,6 @@ M.nvimtree = {
   },
 }
 
-local find_files = function()
-  vim.fn.system("git -C " .. '"' .. vim.fn.getcwd() .. '"' .. " ls-files")
-  if vim.v.shell_error == 0 then
-    vim.cmd [[ Telescope git_files use_git_root=false show_untracked=true ]]
-  else
-    vim.cmd [[ Telescope find_files ]]
-  end
-end
-
 M.telescope = {
   plugin = true,
 
@@ -301,6 +254,7 @@ M.telescope = {
       function()
         print("searching in cwd" .. vim.fn.getcwd())
         require("telescope").extensions.smart_open.smart_open {
+          prompt_title = require("custom.path_utils").normalize_to_home(vim.fn.getcwd()),
           cwd = vim.fn.getcwd(),
           cwd_only = true,
         }
@@ -364,50 +318,7 @@ M.nvterm = {
     },
   },
 
-  n = {
-    -- -- toggle in normal mode
-    -- ["<C-\\>"] = {
-    --   function()
-    --     require("nvterm.terminal").toggle "vertical"
-    --   end,
-    --   "Toggle vertical term",
-    -- },
-    -- ["<A-i>"] = {
-    --   function()
-    --     require("nvterm.terminal").toggle "float"
-    --   end,
-    --   "Toggle floating term",
-    -- },
-    --
-    -- ["<A-h>"] = {
-    --   function()
-    --     require("nvterm.terminal").toggle "horizontal"
-    --   end,
-    --   "Toggle horizontal term",
-    -- },
-    --
-    -- ["<A-v>"] = {
-    --   function()
-    --     require("nvterm.terminal").toggle "vertical"
-    --   end,
-    --   "Toggle vertical term",
-    -- },
-
-    -- new
-    -- ["<leader>h"] = {
-    --   function()
-    --     require("nvterm.terminal").new "horizontal"
-    --   end,
-    --   "New horizontal term",
-    -- },
-
-    -- ["<leader>v"] = {
-    --   function()
-    --     require("nvterm.terminal").new "vertical"
-    --   end,
-    --   "New vertical term",
-    -- },
-  },
+  n = {},
 }
 
 M.whichkey = {
@@ -420,13 +331,6 @@ M.whichkey = {
       end,
       "Which-key all keymaps",
     },
-    -- ["<leader>wk"] = {
-    --   function()
-    --     local input = vim.fn.input "WhichKey: "
-    --     vim.cmd("WhichKey " .. input)
-    --   end,
-    --   "Which-key query lookup",
-    -- },
   },
 }
 
@@ -464,7 +368,6 @@ M.tabufline = {
   plugin = true,
 
   n = {
-
     -- cycle through buffers
     ["<S-l>"] = {
       function()
@@ -479,12 +382,6 @@ M.tabufline = {
       end,
       "Goto prev buffer",
     },
-
-    -- close buffer + hide terminal buffer
-    -- ["<leader>q"] = {
-    --   require("custom.buffer_utils").smart_close_buffer,
-    --   "Close buffer",
-    -- },
   },
 }
 
