@@ -261,8 +261,21 @@ M.telescope = {
       end,
       "Find smart open",
     },
-    ["<C-S-P>"] = { "<cmd> Telescope harpoon marks <CR>", "Find harpoon" },
-    ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
+    ["<C-S-P>"] = {
+      function()
+        require("telescope").extensions.harpoon.marks {
+          layout_strategy = "vertical",
+          layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
+        }
+      end,
+      "Find harpoon",
+    },
+    ["<C-S-O>"] = {
+      function()
+        require("telescope.builtin").builtin()
+      end,
+      "Find builtins",
+    },
     ["<C-b>"] = {
       "<cmd> Telescope buffers sort_mru=true cwd_only=true <CR>",
       "Find buffers",
@@ -285,7 +298,17 @@ M.telescope = {
     ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
-    ["<leader>fz"] = { "<cmd> Telescope zoxide list <CR>", "Find [z]oxide" },
+
+    ["<leader>fz"] = {
+      function()
+        require("telescope").extensions.zoxide.list {
+          layout_strategy = "vertical",
+          layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
+        }
+      end,
+      "Find [z]oxide",
+    },
+    -- ["<leader>fz"] = { "<cmd> Telescope zoxide list <CR>", "Find [z]oxide" },
     ["<leader>fs"] = {
       function()
         require("telescope").load_extension "possession"

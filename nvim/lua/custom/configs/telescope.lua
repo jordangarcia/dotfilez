@@ -75,7 +75,7 @@ M.options = {
       },
     },
   },
-  extensions_list = { "cder", "harpoon", "zoxide", smart_open },
+  extensions_list = { "cder", "harpoon", "zoxide", "smart_open" },
   extensions = {
     fzf = {
       fuzzy = true,
@@ -85,6 +85,7 @@ M.options = {
     },
     zoxide = {
       prompt_title = "zoxide",
+      path_display = "smart",
       mappings = {
         default = {
           action = function(selection)
