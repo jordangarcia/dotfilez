@@ -31,7 +31,19 @@ M.ui = {
       local function stbufnr()
         return vim.api.nvim_win_get_buf(vim.g.statusline_winid)
       end
-      modules[2] = (function()
+      local sep = { left = "█", right = "█" }
+      local fn = vim.fn
+      table.insert(
+        modules,
+        1,
+        (function()
+          local dir_icon = "%#St_cwd_icon#" .. "󰉋 "
+          local dir_name = "%#St_cwd_text#" .. " " .. fn.fnamemodify(fn.getcwd(), ":t") .. " "
+          return (vim.o.columns > 85 and ("%#St_cwd_sep#" .. sep.left .. dir_icon .. dir_name)) or ""
+          -- return " between mode and filename ! "
+        end)()
+      )
+      modules[3] = (function()
         return ""
       end)()
       modules[7] = (function()

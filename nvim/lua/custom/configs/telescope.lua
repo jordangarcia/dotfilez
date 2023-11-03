@@ -1,6 +1,8 @@
-local M = {}
-
+local action_state = require "telescope.actions.state"
+local z_utils = require "telescope._extensions.zoxide.utils"
 local builtin = require "telescope.builtin"
+
+local M = {}
 
 -- We cache the results of "git rev-parse"
 -- Process creation is expensive in Windows, so this reduces latency
@@ -25,8 +27,6 @@ M.project_files = function()
   end
 end
 
-local z_utils = require "telescope._extensions.zoxide.utils"
-
 M.options = {
   defaults = {
     file_ignore_patterns = { "node_modules", "src/translations", "yarn.lock" },
@@ -43,15 +43,27 @@ M.options = {
         ["<c-x>"] = require("telescope.actions").delete_buffer,
         ["q"] = require("telescope.actions").close,
         ["<C-q>"] = require("telescope.actions").close,
+        -- for some reason this does not work in insert mode
+        ["<C-S-P>"] = require("telescope").extensions.harpoon.list_marks,
+        ["<C-p>"] = function()
+          require("telescope").extensions.smart_open.smart_open {
+            cwd = vim.fn.getcwd(),
+            cwd_only = true,
+          }
+        end,
         ["<C-s>"] = "select_vertical",
-        ["<C-p>"] = false,
         ["<C-S-p>"] = false,
         ["<C-l>"] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist,
       },
       i = {
         ["<C-n>"] = false,
-        ["<C-p>"] = false,
-        ["<C-S-p>"] = false,
+        ["<C-p>"] = function()
+          require("telescope").extensions.smart_open.smart_open {
+            cwd = vim.fn.getcwd(),
+            cwd_only = true,
+          }
+        end,
+        ["<C-S-P>"] = require("telescope").extensions.harpoon.list_marks,
         ["<c-x>"] = require("telescope.actions").delete_buffer,
         ["<C-q>"] = require("telescope.actions").close,
         ["<C-l>"] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist,
@@ -63,7 +75,7 @@ M.options = {
       },
     },
   },
-  extensions_list = { "cder", "harpoon", "zoxide" },
+  extensions_list = { "cder", "harpoon", "zoxide", smart_open },
   extensions = {
     fzf = {
       fuzzy = true,
@@ -97,6 +109,17 @@ M.options = {
           action = function(selection)
             builtin.live_grep { cwd = selection.path }
           end,
+        },
+        ["<C-p>"] = {
+          action = function(selection)
+            require("telescope").extensions.smart_open.smart_open {
+              prompt_title = "find in: " .. selection.path,
+              cwd = selection.path,
+              cwd_only = true,
+            }
+          end,
+          function() end,
+          "Find smart open",
         },
         ["<C-t>"] = {},
       },

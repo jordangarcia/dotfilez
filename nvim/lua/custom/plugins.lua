@@ -89,7 +89,10 @@ local plugins = {
           current = true,
         },
         hooks = {
-          after_load = require("custom.buffer_utils").close_non_file_buffers,
+          after_load = function()
+            require("custom.buffer_utils").close_non_file_buffers()
+            vim.cmd [[ horizontal wincmd = ]]
+          end,
         },
         plugins = {
           delete_hidden_buffers = {
@@ -220,6 +223,16 @@ local plugins = {
       "zane-/cder.nvim",
       "jvgrootveld/telescope-zoxide",
       {
+        "danielfalk/smart-open.nvim",
+        dependencies = {
+          "kkharji/sqlite.lua",
+          -- Only required if using match_algorithm fzf
+          { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+          -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
+          { "nvim-telescope/telescope-fzy-native.nvim" },
+        },
+      },
+      {
         "ThePrimeagen/harpoon",
         init = function(_)
           require("core.utils").load_mappings "harpoon"
@@ -231,6 +244,15 @@ local plugins = {
       local opts = require "plugins.configs.telescope"
       local overides = require("custom.configs.telescope").options
       return vim.tbl_deep_extend("force", opts, overides)
+    end,
+  },
+
+  {
+    "prochri/telescope-all-recent.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "kkharji/sqlite.lua" },
+    lazy = false,
+    config = function()
+      require("telescope-all-recent").setup {}
     end,
   },
 
@@ -324,15 +346,6 @@ let g:ctrlp_user_command = {
     end,
   },
 
-  {
-    "prochri/telescope-all-recent.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim", "kkharji/sqlite.lua" },
-    lazy = false,
-    config = function()
-      require("telescope-all-recent").setup {}
-    end,
-  },
-
   -- {
   --   "zane-/cder.nvim",
   --   dependencies = { "nvim-telescope/telescope.nvim" },
@@ -365,21 +378,6 @@ let g:ctrlp_user_command = {
     config = function(_, opts)
       require("Comment").setup(opts)
     end,
-  },
-
-  {
-    "danielfalk/smart-open.nvim",
-    branch = "0.2.x",
-    config = function()
-      require("telescope").load_extension "smart_open"
-    end,
-    dependencies = {
-      "kkharji/sqlite.lua",
-      -- Only required if using match_algorithm fzf
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
-      { "nvim-telescope/telescope-fzy-native.nvim" },
-    },
   },
 }
 

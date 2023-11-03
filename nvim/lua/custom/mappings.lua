@@ -126,7 +126,11 @@ M.general = {
 
     ["<leader>wo"] = {
       require("custom.buffer_utils").close_other_windows,
-      "[W]indow [o]nly",
+      "Window [o]nly",
+    },
+    ["<leader>wh"] = {
+      require("custom.buffer_utils").close_hidden_buffers,
+      "Close [h]idden buffers",
     },
     ["<leader>wc"] = { "<cmd> q <CR>", "[W]indow [c]lose" },
 
@@ -288,14 +292,14 @@ M.telescope = {
   n = {
     ["<C-P>"] = {
       function()
+        print("searching in cwd" .. vim.fn.getcwd())
         require("telescope").extensions.smart_open.smart_open {
+          cwd = vim.fn.getcwd(),
           cwd_only = true,
-          filename_first = true,
         }
       end,
-      "Find gitfiles",
+      "Find smart open",
     },
-    -- ["<C-S-P>"] = { "<cmd> Telescope oldfiles cwd_only=true <CR>", "Find oldfiles" },
     ["<C-S-P>"] = { "<cmd> Telescope harpoon marks <CR>", "Find harpoon" },
     ["<C-S-O>"] = { "<cmd> Telescope builtin <CR>", "Find builtins" },
     ["<C-b>"] = {
