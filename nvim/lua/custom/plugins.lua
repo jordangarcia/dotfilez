@@ -88,6 +88,9 @@ local plugins = {
         autosave = {
           current = true,
         },
+        hooks = {
+          after_load = require("custom.buffer_utils").close_non_file_buffers,
+        },
         plugins = {
           delete_hidden_buffers = {
             hooks = {
