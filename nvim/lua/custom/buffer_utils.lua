@@ -69,21 +69,68 @@ local close_all_fugitive_buffers = function()
   end
 end
 
-M.smart_close_buffer = function()
-  local ft = vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "filetype")
+local is_shown_elsewhere = function(file)
+  local curr_window = vim.api.nvim_get_current_win()
 
+  -- get all windows in current tab
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local win_file = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
+    if win ~= curr_window and win_file == file then
+      -- is open in another tab
+      -- close the current window
+      return true
+    end
+  end
+
+  return false
+end
+
+M.smart_close_window = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local file = vim.api.nvim_buf_get_name(0)
+  local curr_window = vim.api.nvim_get_current_win()
+  if is_shown_elsewhere(file) then
+    vim.api.nvim_win_close(curr_window, true)
+  else
+    vim.api.nvim_buf_delete(bufnr, {})
+  end
+end
+
+-- this function does its best to close the buffer and not change the layout
+-- if the buffer is open in another window, it will cycle to the previous
+-- if only one buffer is shown in multiple windows it will
+M.smart_close_buffer = function()
   local filepath = vim.fn.expand "%"
+  local ft = vim.api.nvim_buf_get_option(0, "filetype")
   local is_fugitive = string.find(filepath, "fugitive://") ~= nil
   -- fugitive blame shows up like this
   local is_private = string.find(filepath, "private/var/folders") ~= nil
-
   if is_fugitive then
     close_all_fugitive_buffers()
+    return
   elseif ft == "help" or ft == "qf" or is_private then
     vim.cmd "q"
-  else
-    require("nvchad.tabufline").close_buffer()
+    return
   end
+
+  local bufnr = vim.api.nvim_get_current_buf()
+  local file = vim.api.nvim_buf_get_name(0)
+
+  local curr_buf_ind = require("nvchad.tabufline").getBufIndex(bufnr)
+  -- if its shown somewhere else goto prev buf
+  if is_shown_elsewhere(file) then
+    if #vim.t.bufs > 1 then
+      -- goto other buffer
+      local offset = curr_buf_ind == #vim.t.bufs and -1 or 1
+      vim.cmd("b" .. vim.t.bufs[curr_buf_ind + offset])
+    else
+      -- if the only buffer we have open is open in more than one window, just close window
+      vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
+    end
+    return
+  end
+
+  require("nvchad.tabufline").close_buffer()
 end
 
 return M

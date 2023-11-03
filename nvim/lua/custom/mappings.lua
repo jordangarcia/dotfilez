@@ -29,6 +29,11 @@ M.disabled = {
     ["<leader>wr"] = "",
     ["<leader>wl"] = "",
     ["<leader>fm"] = "",
+    ["<tab>"] = "",
+    ["<S-tab>"] = "",
+    ["<leader>x"] = "",
+    ["<leader>wk"] = "",
+    ["<leader>wK"] = "",
   },
   v = {
     ["<leader>ca"] = "",
@@ -81,10 +86,6 @@ M.general = {
     },
 
     -- scrolling
-    ['<C-w>"'] = { "<cmd> split <CR>", "Split window horizontally" },
-    ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
-    ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
-    ["<C-w>k"] = { "", "" },
     ["<leader>tn"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
     ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
     ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
@@ -97,33 +98,24 @@ M.general = {
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
 
-    -- Copy all
-    --    ["<C-c>"] = { "<cmd> %y+ <CR>", "Copy whole file" },
-
-    -- line numbers
-    --["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
-    -- ["<leader>rn"] = { "<cmd> set rnu! <CR>", "Toggle relative number" },
-
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
     -- empty mode is same as using <cmd> :map
     -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
-    ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-    ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
-
     ["<C-Left>"] = { "<CMD> vertical resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
     ["<C-Right>"] = { "<CMD> vertical resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
     ["<C-Up>"] = { "<CMD> horizontal resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
     ["<C-Down>"] = { "<CMD> horizontal resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
+    -- quitting / wriing
+    --
 
-    -- new buffer
-    ["<leader>ch"] = { "<cmd> Telescope keymaps <CR>", "Keymaps" },
+    -- Quitting
+    ["<c-q>"] = { "", "Quit" },
+    ["<c-q><c-q>"] = { "<cmd> qa! <CR>", "Force [q]uit" },
+    ["<c-q><c-w>"] = { "<cmd> wqa! <CR>", "Force [q]uit and [w]rite" },
+    ["<leader>qw"] = { "<cmd> wqa! <CR>", "Quit and [w]rite all" },
 
-    -- file saving
-    ["<leader>wq"] = { "<cmd> wqa! <CR>", "Write all and [q]uit" },
-    ["<leader>ww"] = { "<cmd> qa! <CR>", "Quit [w]ithout writing" },
-    ["<leader>wa"] = { "<cmd> wa <CR>", "Write [a]ll" },
-
+    -- window things
     ["<leader>wo"] = {
       require("custom.buffer_utils").close_other_windows,
       "Window [o]nly",
@@ -132,14 +124,29 @@ M.general = {
       require("custom.buffer_utils").close_hidden_buffers,
       "Close [h]idden buffers",
     },
-    ["<leader>wc"] = { "<cmd> q <CR>", "[W]indow [c]lose" },
+    ['<C-w>"'] = { "<cmd> split <CR>", "Split window horizontally" },
+    ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
+    ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
+    ["<C-w>k"] = { "", "" },
 
-    -- ["<leader>fm"] = {
-    --   function()
-    --     vim.lsp.buf.format { async = true }
-    --   end,
-    --   "LSP formatting",
-    -- },
+    ["<leader>wq"] = {
+      require("custom.buffer_utils").smart_close_window,
+      "[W]indow [q]uit",
+    },
+    ["<leader>wv"] = { "<CMD> vs <CR>", "New [v]ertical window" },
+    -- close buffer + hide terminal buffer
+    ["<leader>q"] = {
+      require("custom.buffer_utils").smart_close_buffer,
+      "Close buffer",
+    },
+    ["<C-w>q"] = {
+      require("custom.buffer_utils").smart_close_buffer,
+      "Close buffer",
+    },
+    ["<leader>bh"] = {
+      require("custom.buffer_utils").close_hidden_buffers,
+      "Close hidden buffers",
+    },
   },
 
   v = {
@@ -407,19 +414,19 @@ M.whichkey = {
   plugin = true,
 
   n = {
-    ["<leader>wK"] = {
+    ["<leader>?"] = {
       function()
         vim.cmd "WhichKey"
       end,
       "Which-key all keymaps",
     },
-    ["<leader>wk"] = {
-      function()
-        local input = vim.fn.input "WhichKey: "
-        vim.cmd("WhichKey " .. input)
-      end,
-      "Which-key query lookup",
-    },
+    -- ["<leader>wk"] = {
+    --   function()
+    --     local input = vim.fn.input "WhichKey: "
+    --     vim.cmd("WhichKey " .. input)
+    --   end,
+    --   "Which-key query lookup",
+    -- },
   },
 }
 
@@ -457,11 +464,6 @@ M.tabufline = {
   plugin = true,
 
   n = {
-    -- cycle through buffers
-    ["<tab>"] = { "" },
-    ["<S-tab>"] = { "" },
-    -- close buffer + hide terminal buffer
-    ["<leader>x"] = { "" },
 
     -- cycle through buffers
     ["<S-l>"] = {
@@ -479,19 +481,10 @@ M.tabufline = {
     },
 
     -- close buffer + hide terminal buffer
-    ["<leader>q"] = {
-      require("custom.buffer_utils").smart_close_buffer,
-      "Close buffer",
-    },
-
-    ["<C-w>q"] = {
-      require("custom.buffer_utils").smart_close_buffer,
-      "Close buffer",
-    },
-    ["<leader>bh"] = {
-      require("custom.buffer_utils").close_hidden_buffers,
-      "Close hidden buffers",
-    },
+    -- ["<leader>q"] = {
+    --   require("custom.buffer_utils").smart_close_buffer,
+    --   "Close buffer",
+    -- },
   },
 }
 
