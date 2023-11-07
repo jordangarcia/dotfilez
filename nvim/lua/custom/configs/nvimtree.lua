@@ -104,7 +104,7 @@ local options = {
   sync_root_with_cwd = false,
   update_focused_file = {
     enable = true,
-    update_root = true,
+    update_root = false,
   },
   view = {
     adaptive_size = false,
@@ -118,6 +118,7 @@ local options = {
   },
   filesystem_watchers = {
     enable = true,
+    ignore_dirs = { "node_modules" },
   },
   actions = {
     -- change_dir = {
@@ -173,5 +174,3 @@ local options = {
 }
 
 return options
-
-

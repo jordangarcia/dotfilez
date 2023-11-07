@@ -8,7 +8,7 @@
 # install this to the correct location by running the project's main `rake`
 # task.
 [user]
-	name = jordangarcia
+	name = Jordan Garcia
 	email = jordan.garcia@gmail.com
 [alias]
   co = checkout

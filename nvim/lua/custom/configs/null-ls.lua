@@ -12,6 +12,7 @@ local opts = {
         "scss",
         "html",
         "json",
+        "jsonc",
         "yaml",
         "markdown",
         "graphql",
@@ -23,7 +24,7 @@ local opts = {
   },
   on_attach = function(client, bufnr)
     -- this is buggy, instead just setup an auto cmd for EVERYTHING
-    -- that saves 
+    -- that saves
     -- if client.supports_method "textDocument/formatting" then
     --   local augroup = vim.api.nvim_create_augroup("Format", {})
     --

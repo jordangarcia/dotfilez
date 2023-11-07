@@ -85,13 +85,38 @@ local is_shown_elsewhere = function(file)
   return false
 end
 
+-- check if its last window on tab, excluding nvim tree
+local is_last_window = function()
+  local curr_window = vim.api.nvim_get_current_win()
+  local wins = vim.api.nvim_tabpage_list_wins(0)
+  local num_wins = #wins
+  for _, win in ipairs(wins) do
+    local ft = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(win), "filetype")
+    if win == curr_window or ft == "NvimTree" then
+      num_wins = num_wins - 1
+    end
+  end
+
+  return num_wins == 0
+end
+
 M.smart_close_window = function()
   local bufnr = vim.api.nvim_get_current_buf()
   local file = vim.api.nvim_buf_get_name(0)
   local curr_window = vim.api.nvim_get_current_win()
+  -- if there is only one window, and only buffer
+  if is_last_window() then
+    print "is last window"
+    -- close the buffer and either show a new buffer or newfile
+    require("nvchad.tabufline").close_buffer()
+    return
+  end
+
   if is_shown_elsewhere(file) then
+    print "is shown elsewhere"
     vim.api.nvim_win_close(curr_window, true)
   else
+    print "is only shown here"
     vim.api.nvim_buf_delete(bufnr, {})
   end
 end

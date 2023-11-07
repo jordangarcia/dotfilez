@@ -10,3 +10,10 @@ tree - ctrl-v
 telescope - ctrl-v
 telescope - ctrl-s
 diag - s
+
+### ways to close a window
+
+<c-w><c-q> - quit window
+<c-w>q - quit window
+-- these quit the window and wont quit the buffer if it is in other places
+-- if it's on the last window, it should not close

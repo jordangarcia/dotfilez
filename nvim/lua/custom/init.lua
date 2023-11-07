@@ -1,15 +1,13 @@
 -- local autocmd = vim.api.nvim_create_autocmd
 
 -- Auto resize panes when resizing nvim window
--- autocmd("VimResized", {
---   pattern = "*",
---   command = "tabdo wincmd =",
--- })
---
+vim.api.nvim_create_autocmd("VimResized", {
+  pattern = "*",
+  command = "tabdo wincmd =",
+})
 
 -- vim.g.clipboard = "unnamed"
 vim.opt.swapfile = false
-vim.g.leader = ","
 
 -- pmenu
 vim.opt.pumheight = 7
@@ -22,5 +20,6 @@ vim.opt.rnu = true
 vim.opt.wrap = false
 vim.opt.scrolljump = 5
 vim.opt.scrolloff = 3
+vim.opt.autochdir = false
 
 vim.cmd [[set path+="/opt/homebrew/bin"]]

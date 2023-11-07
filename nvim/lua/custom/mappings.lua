@@ -123,14 +123,23 @@ M.general = {
       require("custom.buffer_utils").smart_close_buffer,
       "Close buffer",
     },
+    ["<C-w><C-q>"] = {
+      require("custom.buffer_utils").smart_close_window,
+      "Smart close window",
+    },
     ["<C-w>q"] = {
-      require("custom.buffer_utils").smart_close_buffer,
-      "Close buffer",
+      require("custom.buffer_utils").smart_close_window,
+      "Smart close window",
     },
     ["<leader>bh"] = {
       require("custom.buffer_utils").close_hidden_buffers,
       "Close hidden buffers",
     },
+  },
+
+  i = {
+    -- save
+    ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
   },
 
   v = {
