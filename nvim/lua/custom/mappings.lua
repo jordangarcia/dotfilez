@@ -335,6 +335,7 @@ M.telescope = {
       "Find sessions",
     },
     ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
+    ["<leader>gf"] = { "<cmd> Easypick changed_files <CR>", "Telescope changed [f]iles" },
 
     -- git = also combined with git
 
@@ -390,7 +391,7 @@ M.autosession = {
 
 M.gitsigns = {
   plugin = true,
-
+  --
   n = {
     -- Actions
     ["<leader>rh"] = {

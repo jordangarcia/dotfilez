@@ -14,7 +14,7 @@ vim.opt.pumheight = 7
 vim.opt.pumwidth = 20
 
 vim.opt.splitbelow = false
-vim.opt.number = false
+vim.opt.number = true
 vim.opt.rnu = true
 
 vim.opt.wrap = false

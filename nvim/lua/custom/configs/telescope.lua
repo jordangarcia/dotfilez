@@ -110,9 +110,11 @@ local options = {
 ---@type NvPluginSpec
 return {
   "nvim-telescope/telescope.nvim",
-  cmd = "Telescope",
+  cmd = { "Telescope", "Easypick" },
   dependencies = {
+    "axkirillov/easypick.nvim",
     {
+
       "nvim-telescope/telescope-live-grep-args.nvim",
       -- This will not install any breaking changes.
       -- For major updates, this must be adjusted manually.
@@ -163,5 +165,23 @@ return {
     require("auto-session").setup_session_lens()
 
     require("telescope-all-recent").setup {}
+    local base_branch = "main"
+
+    local easypick = require "easypick"
+    easypick.setup {
+      pickers = {
+        -- add your custom pickers here
+        -- below you can find some examples of what those can look like
+
+        -- list files inside current folder with default previewer
+
+        -- diff current branch with base_branch and show files that changed with respective diffs in preview
+        {
+          name = "changed_files",
+          command = "git diff --relative --name-only $(git merge-base HEAD " .. base_branch .. " )",
+          previewer = easypick.previewers.branch_diff { base_branch = base_branch },
+        },
+      },
+    }
   end,
 }
