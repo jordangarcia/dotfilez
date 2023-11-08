@@ -26,9 +26,9 @@ $line_break\
 $character"""
 
 [character]
-success_symbol = "[\uf054](white)" # 
-vicmd_symbol = "[\ue62b](white)" # 
-error_symbol = "[\uf467](red)" # 
+# success_symbol = "[\uf054](white)" # 
+# vicmd_symbol = "[\ue62b](white)" # 
+# error_symbol = "[\uf467](red)" # 
 
 [directory]
 style = "blue bold"
@@ -54,10 +54,7 @@ disabled = true
 [git_branch]
 disabled = true
 format = "on [$symbol$branch]($style) "
-# symbol = "🍣"
 style = "bold yellow"
-# style = 'bold green'
-# disabled = true
 
 [git_commit]
 # disabled = true
@@ -66,7 +63,6 @@ style = "bold yellow"
 # disabled = true
 
 [git_metrics]
-
 added_style = 'bold green'
 # only_nonzero_diffs = false
 format = '(with [( $added)]($added_style) [( $deleted)]($deleted_style) )'
@@ -86,7 +82,7 @@ behind = ' ${count}'
 #     behind: " "
 #     staged: " "
 #     conflict: "󰕚 "
-untracked= "??"
+# untracked= "??"
 #     stashed: " "
 #     clean: "c"
 #     insertions: " "
@@ -95,9 +91,8 @@ untracked= "??"
 [nodejs]
 format = "via [$symbol$version](bold yellow) "
 
-
 [custom.gitbranch]
 when = "git rev-parse --is-inside-work-tree"
-command = './zsh/git_branch'
-format = '${output} '
+command = '~/.config/zsh/git_branch'
+format = '(${output} )'
 
