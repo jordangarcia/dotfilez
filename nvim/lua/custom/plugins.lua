@@ -82,6 +82,7 @@ local plugins = {
 
   {
     "jedrzejboczar/possession.nvim",
+    enabled = false,
     lazy = false,
     config = function()
       require("possession").setup {
@@ -323,38 +324,6 @@ local plugins = {
   },
 
   {
-    "ctrlpvim/ctrlp.vim",
-    enabled = false,
-    lazy = false,
-    config = function(_, opts)
-      vim.cmd [[
-let g:ctrlp_switch_buffer = 'evh'
-let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-  \ 'file': '\.exe$\|\.so$\|\.dll$'
-\ }
- let g:ctrlp_root_markers = ['package.json']
-let g:ctrlp_user_command = {
-  \ 'types': {
-    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-    \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-  \ },
-  \ 'fallback': 'find %s -type f'
-\ }
-      ]]
-    end,
-  },
-
-  -- {
-  --   "zane-/cder.nvim",
-  --   dependencies = { "nvim-telescope/telescope.nvim" },
-  --   config = function()
-  --     require("telescope").load_extension "cder"
-  --     telescope.setup {}
-  --   end,
-  -- },
-  {
     "numToStr/Comment.nvim",
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
@@ -377,6 +346,15 @@ let g:ctrlp_user_command = {
     end,
     config = function(_, opts)
       require("Comment").setup(opts)
+    end,
+  },
+
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+    opts = require "custom.configs.auto-session",
+    config = function(_, opts)
+      require("auto-session").setup(opts)
     end,
   },
 }

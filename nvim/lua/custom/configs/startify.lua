@@ -157,8 +157,6 @@ local function mru_title()
   return "MRU " .. vim.fn.getcwd()
 end
 
-local query = require "possession.query"
-local session = require "possession.session"
 local function contains(table, target)
   for _, value in ipairs(table) do
     if value == target then
@@ -169,25 +167,26 @@ local function contains(table, target)
 end
 
 local session_buttons = function(list)
-  local sessions = session.list()
-
-  local results = {}
-  for _, value in pairs(sessions) do
-    if contains(list, value.name) then
-      table.insert(results, button(string.sub(value.name, 1, 1), value.name, "<cmd> SLoad " .. value.name .. "<CR>"))
-    end
-  end
-  return results
+  -- local session = require "possession.session"
+  --   local sessions = session.list()
+  --
+  --   local results = {}
+  --   for _, value in pairs(sessions) do
+  --     if contains(list, value.name) then
+  --       table.insert(results, button(string.sub(value.name, 1, 1), value.name, "<cmd> SLoad " .. value.name .. "<CR>"))
+  --     end
+  --   end
+  --   return results
+  return {}
 end
 
-local get_layout = function()
-  return query.alpha_workspace_layout({}, button, {
-    others_name = "All Sessions",
-  })
-end
+-- local get_layout = function()
+--   return query.alpha_workspace_layout({}, button, {
+--     others_name = "All Sessions",
+--   })
+-- end
 
 -- use with the rest of sections for alpha.nvim, with throttling to avoid reading files on each redraw
-local utils = require "possession.utils"
 
 local section = {
   header = default_header,
@@ -248,10 +247,10 @@ local section = {
       },
     },
   },
-  all_sessions = {
-    type = "group",
-    val = utils.throttle(get_layout, 5000),
-  },
+  -- all_sessions = {
+  --   type = "group",
+  --   val = utils.throttle(get_layout, 5000),
+  -- },
   bottom_buttons = {
     type = "group",
     val = {

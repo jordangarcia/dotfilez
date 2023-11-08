@@ -320,8 +320,13 @@ M.telescope = {
     -- ["<leader>fz"] = { "<cmd> Telescope zoxide list <CR>", "Find [z]oxide" },
     ["<leader>fs"] = {
       function()
-        require("telescope").load_extension "possession"
-        require("telescope").extensions.possession.list()
+        require("auto-session.session-lens").search_session {
+          layout_strategy = "vertical",
+          layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
+          previewer = false,
+        }
+        -- require("telescope").load_extension "possession"
+        -- require("telescope").extensions.possession.list()
       end,
       "Find sessions",
     },

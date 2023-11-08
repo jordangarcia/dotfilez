@@ -59,7 +59,17 @@ M.close_hidden_buffers = function()
   end
 end
 
-local close_all_fugitive_buffers = function()
+M.close_all_fugitive_blame_buffers = function()
+  local bufs = vim.api.nvim_list_bufs()
+  for _, buf in ipairs(bufs) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    if string.find(name, "private/var/folders") then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+end
+
+M.close_all_fugitive_buffers = function()
   local bufs = vim.api.nvim_list_bufs()
   for _, buf in ipairs(bufs) do
     local name = vim.api.nvim_buf_get_name(buf)
@@ -131,7 +141,7 @@ M.smart_close_buffer = function()
   -- fugitive blame shows up like this
   local is_private = string.find(filepath, "private/var/folders") ~= nil
   if is_fugitive then
-    close_all_fugitive_buffers()
+    M.close_all_fugitive_buffers()
     return
   elseif ft == "help" or ft == "qf" or is_private then
     vim.cmd "q"
