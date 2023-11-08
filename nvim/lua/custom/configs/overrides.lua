@@ -14,6 +14,7 @@ M.treesitter = {
     "markdown_inline",
     "prisma",
     "graphql",
+    "python",
     "json",
     "yaml",
   },
@@ -41,6 +42,8 @@ M.mason = {
     "graphql-language-service-cli",
     "json-lsp",
 
+    -- python stuff
+    "python-lsp-server",
     -- c/cpp stuff
     "clangd",
     "clang-format",
