@@ -3,6 +3,7 @@ local overrides = require "custom.configs.overrides"
 ---@type NvPluginSpec[]
 local plugins = {
   {
+
     "lukas-reineke/indent-blankline.nvim",
     enabled = true,
   },
@@ -65,7 +66,7 @@ local plugins = {
   -- http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/
   {
     "tpope/vim-fugitive",
-    lazy = false,
+    event = "VeryLazy",
     init = function()
       require("core.utils").load_mappings "fugitive"
     end,
@@ -73,45 +74,12 @@ local plugins = {
 
   {
     "goolord/alpha-nvim",
+    -- since we autoload sessions this isn't needed
+    enabled = false,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     lazy = false,
     config = function()
       require("alpha").setup(require("custom/configs/startify").config)
-    end,
-  },
-
-  {
-    "jedrzejboczar/possession.nvim",
-    enabled = false,
-    lazy = false,
-    config = function()
-      require("possession").setup {
-        autosave = {
-          current = true,
-        },
-        hooks = {
-          after_load = function()
-            require("custom.buffer_utils").close_non_file_buffers()
-            vim.cmd [[ horizontal wincmd = ]]
-          end,
-        },
-        plugins = {
-          delete_hidden_buffers = {
-            hooks = {
-              "before_load",
-              vim.o.sessionoptions:match "buffer" and "before_save",
-            },
-            force = true, -- or fun(buf): boolean
-          },
-          delete_buffers = true,
-        },
-        commands = {
-          save = "SSave",
-          load = "SLoad",
-          delete = "SDelete",
-          list = "SList",
-        },
-      }
     end,
   },
 
@@ -220,9 +188,16 @@ local plugins = {
 
   {
     "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
     dependencies = {
       "zane-/cder.nvim",
       "jvgrootveld/telescope-zoxide",
+      -- {
+      --   "rmagatti/auto-session",
+      --   init = function()
+      --     require("auto-session").setup_session_lens()
+      --   end,
+      -- },
       {
         "danielfalk/smart-open.nvim",
         dependencies = {
@@ -246,12 +221,25 @@ local plugins = {
       local overides = require("custom.configs.telescope").options
       return vim.tbl_deep_extend("force", opts, overides)
     end,
+    config = function(_, opts)
+      dofile(vim.g.base46_cache .. "telescope")
+      local telescope = require "telescope"
+      telescope.setup(opts)
+
+      -- load extensions
+      for _, ext in ipairs(opts.extensions_list) do
+        telescope.load_extension(ext)
+      end
+
+      -- load autosession
+      require("auto-session").setup_session_lens()
+    end,
   },
 
   {
     "prochri/telescope-all-recent.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "kkharji/sqlite.lua" },
-    lazy = false,
+    cmd = "Telescope",
     config = function()
       require("telescope-all-recent").setup {}
     end,
@@ -282,7 +270,7 @@ local plugins = {
   -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
   {
     "mg979/vim-visual-multi",
-    lazy = false,
+    event = "VeryLazy",
     init = function()
       vim.cmd [[
     let g:VM_maps = {}
@@ -294,14 +282,14 @@ local plugins = {
 
   {
     "pmizio/typescript-tools.nvim",
-    lazy = false,
+    event = "LspAttach",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = require "custom.configs.typescript-tools",
   },
 
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    lazy = false,
+    event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function(_, opts)
       local opts = require "custom.configs.treesitter-textobjects"
@@ -312,7 +300,7 @@ local plugins = {
 
   {
     "windwp/nvim-ts-autotag",
-    lazy = false,
+    event = "VeryLazy",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup {
