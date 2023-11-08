@@ -371,6 +371,19 @@ M.whichkey = {
   },
 }
 
+M.autosession = {
+  plugin = true,
+
+  n = {
+    ["<leader>ss"] = {
+      function()
+        vim.cmd [[ SessionSave ]]
+      end,
+      "Session [s]ave",
+    },
+  },
+}
+
 M.gitsigns = {
   plugin = true,
 

@@ -1,5 +1,27 @@
 local M = {}
 
+M.close_buffers = function(check)
+  return function()
+    local buffers = vim.api.nvim_list_bufs()
+
+    for _, bufnr in ipairs(buffers) do
+      local data = {
+        ["bufnr"] = bufnr,
+        ["filetype"] = vim.api.nvim_buf_get_option(bufnr, "filetype"),
+        ["name"] = vim.api.nvim_buf_get_name(bufnr),
+      }
+
+      if check(data) then
+        vim.api.nvim_buf_delete(bufnr, { force = true })
+      end
+    end
+  end
+end
+
+M.close_help_buffers = M.close_buffers(function(data)
+  return data.filetype == "help"
+end)
+
 M.close_non_file_buffers = function()
   local bufs = vim.t.bufs
 

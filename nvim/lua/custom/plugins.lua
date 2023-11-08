@@ -31,6 +31,12 @@ local plugins = {
           require "custom.configs.null-ls"
         end,
       },
+      {
+        "pmizio/typescript-tools.nvim",
+        -- event = "LspAttach",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = require "custom.configs.typescript-tools",
+      },
     },
     config = function()
       require "plugins.configs.lspconfig"
@@ -68,6 +74,9 @@ local plugins = {
     "rmagatti/auto-session",
     lazy = false,
     opts = require "custom.configs.auto-session",
+    init = function(_)
+      require("core.utils").load_mappings "autosession"
+    end,
     config = function(_, opts)
       require("auto-session").setup(opts)
     end,
@@ -241,6 +250,7 @@ local plugins = {
 
       -- load autosession
       require("auto-session").setup_session_lens()
+
       require("telescope-all-recent").setup {}
     end,
   },
@@ -278,13 +288,6 @@ local plugins = {
         let g:VM_maps['Find Subword Under'] = '<C-f>'
       ]]
     end,
-  },
-
-  {
-    "pmizio/typescript-tools.nvim",
-    event = "LspAttach",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = require "custom.configs.typescript-tools",
   },
 
   {
