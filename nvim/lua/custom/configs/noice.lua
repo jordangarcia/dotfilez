@@ -35,6 +35,14 @@ return {
         },
         opts = { skip = true },
       },
+      {
+        filter = {
+          event = "notify",
+          -- kind = "echo",
+          find = "Format request failed",
+        },
+        opts = { skip = true },
+      },
     },
 
     lsp = {

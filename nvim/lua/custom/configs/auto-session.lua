@@ -23,7 +23,7 @@ return {
     restore_nvim_tree,
     "winc l",
     -- for some reason the first buffer doesnt start lsp
-    "LspStart",
+    "silent! LspStart",
     "winc =",
   },
   pre_save_cmds = {

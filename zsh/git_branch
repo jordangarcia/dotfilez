@@ -1,0 +1,48 @@
+#!/usr/bin/env zsh
+
+autoload colors && colors
+
+if (( $+commands[git] ))
+then
+  git="$commands[git]"
+else
+  git="/usr/bin/git"
+fi
+
+unpushed () {
+  $git cherry -v @{upstream} 2>/dev/null
+}
+need_push () {
+  if [[ $(unpushed) == "" ]]
+  then
+    echo " "
+  else
+    echo " with %{$fg_bold[magenta]%}unpushed%{$reset_color%} "
+  fi
+}
+git_prompt_info () {
+ ref=$(git symbolic-ref HEAD 2>/dev/null) || return
+ echo "${ref#refs/heads/}"
+}
+
+git_dirty () {
+  st=$(git status 2>/dev/null | tail -n 1)
+  if [[ $st == "" ]]
+  then
+    echo "no branch"
+  else
+    if [[ "$st" =~ ^nothing ]]
+    then
+      # echo "on [󰘬 $(git_prompt_info)]"
+
+      echo "on %{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
+      # echo "on \[󰘬 $(git_prompt_info)\]\(bold green\)"
+    else
+      # echo "on [󰘬 $(git_prompt_info)]"
+      echo "on %{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
+      # echo "on \[󰘬 $(git_prompt_info)\]\(bold red\)"
+    fi
+  fi
+}
+
+echo "$(git_dirty)"
