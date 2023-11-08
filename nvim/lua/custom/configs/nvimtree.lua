@@ -130,7 +130,7 @@ local options = {
     },
   },
   renderer = {
-    root_folder_label = true,
+    root_folder_label = ":~:s?$?/",
     highlight_git = true,
     highlight_opened_files = "none",
 

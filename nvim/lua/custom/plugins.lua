@@ -63,6 +63,15 @@ local plugins = {
     "knubie/vim-kitty-navigator",
     lazy = false,
   },
+
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+    opts = require "custom.configs.auto-session",
+    config = function(_, opts)
+      require("auto-session").setup(opts)
+    end,
+  },
   -- http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/
   {
     "tpope/vim-fugitive",
@@ -192,12 +201,6 @@ local plugins = {
     dependencies = {
       "zane-/cder.nvim",
       "jvgrootveld/telescope-zoxide",
-      -- {
-      --   "rmagatti/auto-session",
-      --   init = function()
-      --     require("auto-session").setup_session_lens()
-      --   end,
-      -- },
       {
         "danielfalk/smart-open.nvim",
         dependencies = {
@@ -214,6 +217,11 @@ local plugins = {
           require("core.utils").load_mappings "harpoon"
         end,
         opts = require "custom.configs.harpoon",
+      },
+      {
+        "prochri/telescope-all-recent.nvim",
+        dependencies = { "kkharji/sqlite.lua" },
+        config = function() end,
       },
     },
     opts = function()
@@ -233,14 +241,6 @@ local plugins = {
 
       -- load autosession
       require("auto-session").setup_session_lens()
-    end,
-  },
-
-  {
-    "prochri/telescope-all-recent.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim", "kkharji/sqlite.lua" },
-    cmd = "Telescope",
-    config = function()
       require("telescope-all-recent").setup {}
     end,
   },
@@ -334,15 +334,6 @@ local plugins = {
     end,
     config = function(_, opts)
       require("Comment").setup(opts)
-    end,
-  },
-
-  {
-    "rmagatti/auto-session",
-    lazy = false,
-    opts = require "custom.configs.auto-session",
-    config = function(_, opts)
-      require("auto-session").setup(opts)
     end,
   },
 }
