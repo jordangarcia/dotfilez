@@ -138,17 +138,14 @@ M.smart_close_window = function()
   local curr_window = vim.api.nvim_get_current_win()
   -- if there is only one window, and only buffer
   if is_last_window() then
-    print "is last window"
     -- close the buffer and either show a new buffer or newfile
     require("nvchad.tabufline").close_buffer()
     return
   end
 
   if is_shown_elsewhere(file) then
-    print "is shown elsewhere"
     vim.api.nvim_win_close(curr_window, true)
   else
-    print "is only shown here"
     vim.api.nvim_buf_delete(bufnr, {})
   end
 end

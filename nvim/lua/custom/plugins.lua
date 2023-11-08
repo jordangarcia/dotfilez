@@ -204,56 +204,7 @@ local plugins = {
     end,
   },
 
-  {
-    "nvim-telescope/telescope.nvim",
-    cmd = "Telescope",
-    dependencies = {
-      "zane-/cder.nvim",
-      "jvgrootveld/telescope-zoxide",
-      {
-        "danielfalk/smart-open.nvim",
-        dependencies = {
-          "kkharji/sqlite.lua",
-          -- Only required if using match_algorithm fzf
-          { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-          -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
-          { "nvim-telescope/telescope-fzy-native.nvim" },
-        },
-      },
-      {
-        "ThePrimeagen/harpoon",
-        init = function(_)
-          require("core.utils").load_mappings "harpoon"
-        end,
-        opts = require "custom.configs.harpoon",
-      },
-      {
-        "prochri/telescope-all-recent.nvim",
-        dependencies = { "kkharji/sqlite.lua" },
-        config = function() end,
-      },
-    },
-    opts = function()
-      local opts = require "plugins.configs.telescope"
-      local overides = require("custom.configs.telescope").options
-      return vim.tbl_deep_extend("force", opts, overides)
-    end,
-    config = function(_, opts)
-      dofile(vim.g.base46_cache .. "telescope")
-      local telescope = require "telescope"
-      telescope.setup(opts)
-
-      -- load extensions
-      for _, ext in ipairs(opts.extensions_list) do
-        telescope.load_extension(ext)
-      end
-
-      -- load autosession
-      require("auto-session").setup_session_lens()
-
-      require("telescope-all-recent").setup {}
-    end,
-  },
+  require "custom.configs.telescope",
 
   {
     "kylechui/nvim-surround",
@@ -337,6 +288,21 @@ local plugins = {
     end,
     config = function(_, opts)
       require("Comment").setup(opts)
+    end,
+  },
+
+  require "custom.configs.noice",
+
+  {
+    "sbbill/undotree",
+    event = "VeryLazy",
+  },
+
+  {
+    "nvim-pack/nvim-spectre",
+    event = "VeryLazy",
+    init = function(_)
+      require("core.utils").load_mappings "spectre"
     end,
   },
 }

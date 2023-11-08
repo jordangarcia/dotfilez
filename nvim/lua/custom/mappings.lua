@@ -5,6 +5,7 @@ local M = {}
 local set_clipboard = function()
   vim.cmd [[ call system('pbcopy', @+ ]]
 end
+vim.cmd [[ nnoremap * :keepjumps normal! mi*`i<CR> ]]
 
 -- diasable default nvchad binds
 M.disabled = {
@@ -254,14 +255,15 @@ M.telescope = {
 
   v = {
     ["<leader>fw"] = {
-      "<cmd> Telescope grep_string <CR>",
+      function()
+        require("telescope-live-grep-args.shortcuts").grep_visual_selection()
+      end,
       "Live grep",
     },
   },
   n = {
     ["<C-P>"] = {
       function()
-        print("searching in cwd" .. vim.fn.getcwd())
         require("telescope").extensions.smart_open.smart_open {
           prompt_title = require("custom.path_utils").normalize_to_home(vim.fn.getcwd()),
           cwd = vim.fn.getcwd(),
@@ -300,11 +302,13 @@ M.telescope = {
     ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<leader>fr"] = { "<cmd> Telescope resume <CR>", "[r]esume picker" },
+    ["<leader>fu"] = { "<cmd> Telescope undo <CR>", "[U]ndo tree" },
     ["<leader>fd"] = {
       "<cmd> Telescope lsp_document_symbols follow=true no_ignore=true hidden=true <CR>",
       "Find all",
     },
-    ["<leader>fw"] = { "<cmd> Telescope live_grep <CR>", "Live grep" },
+    ["<leader>fw"] = { "<cmd> Telescope live_grep_args <CR>", "Live grep" },
     ["<leader>fb"] = { "<cmd> Telescope buffers <CR>", "Find buffers" },
     ["<leader>fh"] = { "<cmd> Telescope help_tags <CR>", "Help page" },
 
@@ -486,6 +490,56 @@ M.fugitive = {
     ["<leader>gg"] = { "<cmd> Git <cr>", desc = "Git git" },
     ["<leader>gl"] = { "<cmd> Gclog <cr>", desc = "Git [l]og" },
     ["<leader>g3"] = { "<cmd> Gvdiffsplit! <cr>", desc = "Git diff [3]way" },
+  },
+}
+
+-- vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
+--     desc = "Toggle Spectre"
+-- })
+-- vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+--     desc = "Search current word"
+-- })
+-- vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+--     desc = "Search current word"
+-- })
+-- vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+--     desc = "Search on current file"
+-- })
+M.spectre = {
+  plugin = true,
+
+  v = {
+    ["<leader>rw"] = {
+      function()
+        local _, ls, cs = unpack(vim.fn.getpos "v")
+        local _, le, ce = unpack(vim.fn.getpos ".")
+        local visual = vim.api.nvim_buf_get_text(0, ls - 1, cs - 1, le - 1, ce, {})
+        local text = visual[1] or ""
+        print("got search_text" .. text)
+        require("spectre").open_visual { search_text = text }
+      end,
+      desc = "Find+Replace [w]ord",
+    },
+  },
+  n = {
+    ["<leader>rf"] = {
+      function()
+        require("spectre").open_file_search { select_word = true }
+      end,
+      desc = "Find+Replace [f]ile",
+    },
+    ["<leader>rw"] = {
+      function()
+        require("spectre").open_visual { select_word = true }
+      end,
+      desc = "Find+Replace [w]ord",
+    },
+    ["<leader>ra"] = {
+      function()
+        require("spectre").toggle()
+      end,
+      desc = "Find+Replace [a]ll",
+    },
   },
 }
 
