@@ -25,6 +25,7 @@ $cmd_duration\
 $line_break\
 $character"""
 
+
 [character]
 # success_symbol = "[\uf054](white)" # 
 # vicmd_symbol = "[\ue62b](white)" # 
@@ -41,6 +42,9 @@ disabled = true
 
 # [hostname]
 # disabled = true
+
+[cmd_duration]
+min_time = 5_000
 
 [gcloud]
 disabled = true
