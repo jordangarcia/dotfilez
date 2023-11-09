@@ -1,7 +1,8 @@
 local config = function()
   local api = require "typescript-tools.api"
   require("typescript-tools").setup {
-    root_dir = require("lspconfig.util").root_pattern ".git",
+    -- this shouldn't be needed now
+    -- root_dir = require("lspconfig.util").root_pattern ".git",
     on_attach = require("plugins.configs.lspconfig").on_attach,
     settings = {
       -- spawn additional tsserver instance to calculate diagnostics on it
