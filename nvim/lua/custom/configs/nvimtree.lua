@@ -1,3 +1,5 @@
+local path_utils = require "custom.path_utils"
+
 local function my_on_attach(bufnr)
   local api = require "nvim-tree.api"
 
@@ -8,6 +10,37 @@ local function my_on_attach(bufnr)
   vim.keymap.set("n", "mc", api.fs.copy.node, opts "Copy")
 
   -- open
+  vim.keymap.set("n", "<leader>fw", function(filename)
+    local node = api.tree.get_node_under_cursor()
+    local path = node.absolute_path
+
+    if node.type == "directory" and path then
+      local ppath = path_utils.normalize_to_home(path)
+      require("telescope").extensions.live_grep_args.live_grep_args {
+        prompt_title = "live_grep_args " .. ppath,
+        cwd = path,
+      }
+    end
+    -- print("grepping filename" .. vim.inspect(node))
+    -- print("grepping filename" .. vim.inspect(node.absolute_path))
+  end, opts "Grep here")
+
+  vim.keymap.set("n", "<leader>fp", function(filename)
+    local node = api.tree.get_node_under_cursor()
+    local path = node.absolute_path
+
+    if node.type == "directory" and path then
+      local ppath = path_utils.normalize_to_home(path)
+      require("telescope").extensions.smart_open.smart_open {
+        prompt_title = "Find: " .. ppath,
+        cwd = path,
+        cwd_only = true,
+      }
+    end
+    -- print("grepping filename" .. vim.inspect(node))
+    -- print("grepping filename" .. vim.inspect(node.absolute_path))
+  end, opts "Find here")
+
   vim.keymap.set("n", "o", api.node.open.edit, opts "Open")
   vim.keymap.set("n", "<CR>", api.node.open.edit, opts "Open")
   vim.keymap.set("n", "O", api.node.open.no_window_picker, opts "Open: No Window Picker")

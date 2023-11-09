@@ -20,7 +20,6 @@ M.disabled = {
     ["<leader>cc"] = "",
     ["<leader>y"] = "",
     ["<leader>b"] = "",
-    ["<leader>cm"] = "",
     ["<leader>ls"] = "",
     ["<leader>D"] = "",
     ["<leader>ra"] = "",
@@ -37,6 +36,24 @@ M.disabled = {
     ["<leader>x"] = "",
     ["<leader>wk"] = "",
     ["<leader>wK"] = "",
+    -- get rid of all telescope defaults
+    ["<leader>ff"] = "",
+    ["<leader>fa"] = "",
+    ["<leader>fw"] = "",
+    ["<leader>fb"] = "",
+    ["<leader>fh"] = "",
+    ["<leader>fo"] = "",
+    ["<leader>fz"] = "",
+    ["<leader>cm"] = "",
+    ["<leader>gt"] = "",
+    ["<leader>pt"] = "",
+    ["<leader>th"] = "",
+    ["<leader>ma"] = "",
+
+    -- gitsigns
+    ["<leader>td"] = "",
+    ["<leader>ph"] = "",
+    ["<leader>rh"] = "",
   },
   v = {
     ["<leader>ca"] = "",
@@ -262,6 +279,16 @@ M.telescope = {
     },
   },
   n = {
+    ["<leader>fp"] = {
+      function()
+        require("telescope").extensions.smart_open.smart_open {
+          prompt_title = require("custom.path_utils").normalize_to_home(vim.fn.getcwd()),
+          cwd = vim.fn.getcwd(),
+          cwd_only = true,
+        }
+      end,
+      "Find smart o[p]en",
+    },
     ["<C-P>"] = {
       function()
         require("telescope").extensions.smart_open.smart_open {
@@ -334,16 +361,6 @@ M.telescope = {
       end,
       "Find sessions",
     },
-    ["<leader>fm"] = { "<cmd> Telescope marks <CR>", "telescope bookmarks" },
-    ["<leader>gf"] = { "<cmd> Easypick changed_files <CR>", "Telescope changed [f]iles" },
-
-    -- git = also combined with git
-
-    -- pick a hidden term
-    -- ["<leader>pt"] = { "<cmd> Telescope terms <CR>", "Pick hidden term" },
-
-    -- theme switcher
-    -- ["<leader>ft"] = { "<cmd> Telescope themes <CR>", "Nvchad themes" },
   },
 }
 
@@ -394,27 +411,45 @@ M.gitsigns = {
   --
   n = {
     -- Actions
-    ["<leader>rh"] = {
+    ["<leader>ghr"] = {
       function()
         require("gitsigns").reset_hunk()
       end,
-      "Reset hunk",
+      "Git [h]unk [r]eset",
     },
-
-    ["<leader>ph"] = {
+    ["<leader>ghp"] = {
       function()
         require("gitsigns").preview_hunk()
       end,
-      "Preview hunk",
+      "Git [h]unk [p]review",
+    },
+    ["[h"] = {
+      function()
+        require("gitsigns").prev_hunk()
+      end,
+      "Prev hunk",
+    },
+    ["]h"] = {
+      function()
+        require("gitsigns").next_hunk()
+      end,
+      "Next hunk",
     },
 
-    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git commits (telescope)" },
-    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git status (telescope)" },
+    ["<leader>gf"] = { "<cmd> Telescope git_bcommits <CR>", "Git [f]ile history (telescope)" },
+    ["<leader>gc"] = { "<cmd> Telescope git_commits <CR>", "Git [c]ommits (telescope)" },
+    ["<leader>gs"] = { "<cmd> Telescope git_status <CR>", "Git [s]tatus (telescope)" },
     ["<leader>gz"] = {
       function()
         vim.cmd "Gitsigns toggle_signs"
       end,
       "[G]itsigns toggle [z]enmode",
+    },
+    ["<leader>gt"] = {
+      function()
+        require("gitsigns").toggle_deleted()
+      end,
+      "Git [t]oggle deleted",
     },
   },
 }

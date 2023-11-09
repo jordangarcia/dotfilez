@@ -6,6 +6,7 @@ return {
   opts = {
     presets = {
       -- bottom_search = true,
+      long_message_to_split = true, -- long messages will be sent to a split
     },
     messages = {
       -- NOTE: If you enable messages, then the cmdline is enabled automatically.

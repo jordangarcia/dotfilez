@@ -1,6 +1,7 @@
 -- local action_state = require "telescope.actions.state"
 -- local z_utils = require "telescope._extensions.zoxide.utils"
 
+local actions = require "telescope.actions"
 local options = {
   defaults = {
     file_ignore_patterns = { "node_modules", "src/translations", "yarn.lock" },
@@ -15,41 +16,60 @@ local options = {
     mappings = {
       n = {
         ["<c-x>"] = require("telescope.actions").delete_buffer,
+        -- remap close
+        -- default binding in normal also  has `<esc>`
         ["q"] = require("telescope.actions").close,
         ["<C-q>"] = require("telescope.actions").close,
+        -- disable default close
+        ["<C-c>"] = false,
         -- for some reason this does not work in insert mode
         ["<C-S-P>"] = function()
-          require("telescope").extensions.harpoon.list_marks()
-        end,
-        ["<C-p>"] = function()
-          require("telescope").extensions.smart_open.smart_open {
-            cwd = vim.fn.getcwd(),
-            cwd_only = true,
+          require("telescope").extensions.harpoon.marks {
+            layout_strategy = "vertical",
+            layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
           }
         end,
-        ["<C-s>"] = "select_vertical",
-        ["<C-S-p>"] = false,
         ["<C-l>"] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist,
+
+        -- custom movements
+        ["<C-p>"] = actions.preview_scrolling_up,
+        ["<C-n>"] = actions.preview_scrolling_down,
+
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
+
+        ["<C-u>"] = actions.results_scrolling_up,
+        ["<C-d>"] = actions.results_scrolling_down,
       },
       i = {
-        ["<C-n>"] = false,
-        ["<C-p>"] = function()
-          require("telescope").extensions.smart_open.smart_open {
-            cwd = vim.fn.getcwd(),
-            cwd_only = true,
+        -- remap close
+        -- default binding in normal also  has `<esc>`
+        ["q"] = require("telescope.actions").close,
+        ["<C-q>"] = require("telescope.actions").close,
+        -- disable default close
+        ["<C-c>"] = false,
+        ["<c-x>"] = require("telescope.actions").delete_buffer,
+        ["<C-S-P>"] = function()
+          require("telescope").extensions.harpoon.marks {
+            layout_strategy = "vertical",
+            layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
           }
         end,
-        ["<C-S-P>"] = function()
-          require("telescope").extensions.harpoon.list_marks()
-        end,
-        ["<c-x>"] = require("telescope.actions").delete_buffer,
-        ["<C-q>"] = require("telescope.actions").close,
         ["<C-l>"] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist,
         -- ["<C-r>"] = "cycle_history_prev",
-        ["<C-j>"] = "move_selection_next",
-        ["<C-k>"] = "move_selection_previous",
-        ["<C-s>"] = "select_vertical",
-        ["<C-o>"] = "select_default",
+        -- custom movements
+        ["<C-p>"] = actions.preview_scrolling_up,
+        ["<C-n>"] = actions.preview_scrolling_down,
+
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
+
+        ["<C-u>"] = actions.results_scrolling_up,
+        ["<C-d>"] = actions.results_scrolling_down,
+        -- ["<C-j>"] = "move_selection_next",
+        -- ["<C-k>"] = "move_selection_previous",
+        -- ["<C-s>"] = "select_vertical",
+        -- ["<C-o>"] = "select_default",
       },
     },
   },
@@ -76,18 +96,14 @@ local options = {
         ["<C-v>"] = {},
         ["<C-e>"] = {},
         ["<C-b>"] = {},
-        ["<C-f>"] = {
-          keepinsert = true,
-          action = function(selection)
-            local builtin = require "telescope.builtin"
-            builtin.find_files { cwd = selection.path }
-          end,
-        },
+        ["<C-f>"] = {},
         ["<C-w>"] = {
           keepinsert = false,
           action = function(selection)
-            local builtin = require "telescope.builtin"
-            builtin.live_grep { cwd = selection.path }
+            require("telescope").extensions.live_grep_args.live_grep_args {
+              prompt_title = "live_grep_args " .. require("custom.path_utils").normalize_to_home(selection.path),
+              cwd = selection.path,
+            }
           end,
         },
         ["<C-p>"] = {
@@ -112,9 +128,7 @@ return {
   "nvim-telescope/telescope.nvim",
   cmd = { "Telescope", "Easypick" },
   dependencies = {
-    "axkirillov/easypick.nvim",
     {
-
       "nvim-telescope/telescope-live-grep-args.nvim",
       -- This will not install any breaking changes.
       -- For major updates, this must be adjusted manually.
@@ -163,25 +177,6 @@ return {
 
     -- load autosession
     require("auto-session").setup_session_lens()
-
     require("telescope-all-recent").setup {}
-    local base_branch = "main"
-
-    local easypick = require "easypick"
-    easypick.setup {
-      pickers = {
-        -- add your custom pickers here
-        -- below you can find some examples of what those can look like
-
-        -- list files inside current folder with default previewer
-
-        -- diff current branch with base_branch and show files that changed with respective diffs in preview
-        {
-          name = "changed_files",
-          command = "git diff --relative --name-only $(git merge-base HEAD " .. base_branch .. " )",
-          previewer = easypick.previewers.branch_diff { base_branch = base_branch },
-        },
-      },
-    }
   end,
 }
