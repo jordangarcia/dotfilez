@@ -207,12 +207,8 @@ local plugins = {
   require "custom.configs.telescope",
 
   {
-    "kylechui/nvim-surround",
-    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    "tpope/vim-surround",
     event = "VeryLazy",
-    config = function()
-      require("nvim-surround").setup()
-    end,
   },
 
   {
@@ -241,17 +237,17 @@ local plugins = {
     end,
   },
 
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    event = "VeryLazy",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = function(_, opts)
-      local opts = require "custom.configs.treesitter-textobjects"
-
-      require("nvim-treesitter.configs").setup(opts)
-    end,
-  },
-
+  -- this is slow af and i dont use it
+  -- {
+  --   "nvim-treesitter/nvim-treesitter-textobjects",
+  --   event = "VeryLazy",
+  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
+  --   config = function(_, opts)
+  --     local opts = require "custom.configs.treesitter-textobjects"
+  --
+  --     require("nvim-treesitter.configs").setup(opts)
+  --   end,
+  -- },
   {
     "windwp/nvim-ts-autotag",
     event = "VeryLazy",
@@ -260,6 +256,9 @@ local plugins = {
       require("nvim-treesitter.configs").setup {
         autotag = {
           enable = true,
+          enable_rename = true,
+          enable_close = true,
+          enable_close_on_slash = false,
         },
       }
     end,

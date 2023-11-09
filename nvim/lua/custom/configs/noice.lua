@@ -46,6 +46,15 @@ return {
     },
 
     lsp = {
+      hover = {
+        enabled = false,
+      },
+      documentation = {
+        enabled = false,
+      },
+      signature = {
+        enabled = false,
+      },
       progress = {
         enabled = false,
       },
@@ -64,9 +73,20 @@ return {
         --   winhighlight = { Normal = "Normal" },
         -- },
       },
+
+      cmdline = {
+        position = {
+          row = 7,
+          col = "50%",
+        },
+        size = {
+          width = 60,
+          height = "auto",
+        },
+      },
       cmdline_popup = {
         position = {
-          row = 10,
+          row = 7,
           col = "50%",
         },
         size = {
@@ -77,7 +97,7 @@ return {
       popupmenu = {
         relative = "editor",
         position = {
-          row = 13,
+          row = 10,
           col = "50%",
         },
         size = {

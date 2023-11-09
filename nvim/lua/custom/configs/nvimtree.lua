@@ -26,6 +26,7 @@ local function my_on_attach(bufnr)
   vim.keymap.set("n", "ma", api.fs.create, opts "Create")
   vim.keymap.set("n", "md", api.fs.remove, opts "Delete")
   vim.keymap.set("n", "mp", api.fs.paste, opts "Paste")
+  vim.keymap.set("n", "mx", api.fs.cut, opts "Cut")
 
   -- create
 
