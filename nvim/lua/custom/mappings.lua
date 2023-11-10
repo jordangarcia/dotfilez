@@ -598,4 +598,25 @@ M.spectre = {
   },
 }
 
+M.navigator = {
+  n = {
+    ["<C-h>"] = {
+      "<CMD> NavigatorLeft <CR>",
+      desc = "Navigator left",
+    },
+    ["<C-j>"] = {
+      "<CMD> NavigatorDown <CR>",
+      desc = "Navigator down",
+    },
+    ["<C-k>"] = {
+      "<CMD> NavigatorUp <CR>",
+      desc = "Navigator up",
+    },
+    ["<C-l>"] = {
+      "<CMD> NavigatorRight <CR>",
+      desc = "Navigator right",
+    },
+  },
+}
+
 return M

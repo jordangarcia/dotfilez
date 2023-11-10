@@ -45,7 +45,7 @@ return {
   sources = {
     { name = "nvim_lsp" },
     -- { name = "luasnip", enabled =false},
-    -- { name = "buffer", enabled=false, keyword_length = 3 },
+    { name = "buffer", enabled = true, keyword_length = 2 },
     { name = "nvim_lua" },
     -- { name = "path" , enabled = false}
   },

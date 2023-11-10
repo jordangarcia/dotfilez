@@ -67,7 +67,22 @@ local plugins = {
 
   {
     "knubie/vim-kitty-navigator",
+    enabled = false,
     lazy = false,
+  },
+
+  {
+    "numToStr/Navigator.nvim",
+    event = "VeryLazy",
+    init = function(_)
+      require("core.utils").load_mappings "navigator"
+    end,
+    config = function(_, opts)
+      require("Navigator").setup {
+        -- Disable navigation when the current mux pane is zoomed in
+        disable_on_zoom = true,
+      }
+    end,
   },
 
   {
