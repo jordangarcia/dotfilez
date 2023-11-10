@@ -1,21 +1,11 @@
 ---@diagnostic disable: unused-local
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
+local balance = require("plugins.balance")
 local act = wezterm.action
 local mux = wezterm.mux
 local mods = require("mods")
 local hyper = "CTRL|SHIFT"
-
-local new_tab = function(cmd)
-	print("hhihihi")
-	local tab, pane, window = mux.spawn_tab(cmd or {})
-	-- Create a split occupying the right 1/3 of the screen
-	pane:split({ size = 0.3 })
-	-- Create another split in the right of the remaining 2/3
-	-- of the space; the resultant split is in the middle
-	-- 1/3 of the display and has the focus.
-	pane:split({ size = 0.5 })
-end
 
 local function isViProcess(pane)
 	-- get_foreground_process_name On Linux, macOS and Windows,
@@ -39,8 +29,7 @@ end
 
 -- open sidepane if only pane
 wezterm.on("side-pane", function(window, pane)
-	local win = mux.all_windows()
-	local tab = win[1]:active_tab()
+	local tab = window:active_tab()
 	local panes = tab:panes()
 	if #panes == 1 then
 		panes[1]:split({ size = 0.3 })
@@ -53,6 +42,34 @@ wezterm.on("side-pane", function(window, pane)
 	if #panes == 2 and right_pane then
 		right_pane:activate()
 	end
+end)
+
+wezterm.on("close-even", function(window, pane)
+	local winid = window:window_id()
+	local res = balance.close_direction()(window, pane)
+	wezterm.log_info("closing" .. pane:pane_id())
+
+	window:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
+
+	-- wezterm.log_info(close)
+
+	if res then
+		wezterm.time.call_after(0, function()
+			-- local new_win = mux.get_window(winid)
+			wezterm.log_info("balancing in " .. res.dir .. " id:" .. res.pane:pane_id())
+			balance.balance_panes(res.dir, pane:pane_id())(window, res.pane)
+		end)
+	end
+end)
+
+wezterm.on("split-h-even", function(window, pane)
+	pane:split({ direction = "Bottom" })
+	balance.balance_panes("y")(window, pane)
+end)
+
+wezterm.on("split-v-even", function(window, pane)
+	pane:split({ direction = "Right" })
+	balance.balance_panes("x")(window, pane)
 end)
 
 wezterm.on("ActivatePaneDirection-right", function(window, pane)
@@ -84,7 +101,6 @@ local config = {
 	window_decorations = "RESIZE",
 
 	keys = {
-
 		-- basic stuff
 		{ mods = "CMD", key = "h", action = act.HideApplication },
 		{ mods = "CMD", key = "q", action = act.QuitApplication },
@@ -94,19 +110,37 @@ local config = {
 		{ mods = "CMD", key = "=", action = act.IncreaseFontSize },
 		{ mods = "CMD", key = "0", action = act.ResetFontSize },
 		{ mods = "CMD", key = "-", action = act.DecreaseFontSize },
-		{ mods = "CMD", key = "w", action = act.CloseCurrentPane({ confirm = true }) },
+		-- { mods = "CMD", key = "w", action = act.CloseCurrentPane({ confirm = true }) },
+		{ mods = "CMD", key = "w", action = act.EmitEvent("close-even") },
 		{ mods = "CMD", key = "v", action = act.PasteFrom("Clipboard") },
 		{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
-		-- TODO implemetn the rest of the ints
 		{ mods = hyper, key = "l", action = act.ShowDebugOverlay },
 		-- { mods = hyper, key = "l", action = act.ShowLauncher },
-		{ mods = hyper, key = "Enter", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-		{ mods = hyper, key = "'", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		-- { mods = hyper, key = "Enter", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+		-- { mods = hyper, key = "'", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ mods = hyper, key = "Enter", action = act.EmitEvent("split-v-even") },
+		{ mods = hyper, key = '"', action = act.EmitEvent("split-h-even") },
 		{ mods = hyper, key = "|", action = act.EmitEvent("side-pane") },
 		{ mods = hyper, key = ";", action = act.RotatePanes("CounterClockwise") },
 		{ mods = hyper, key = "z", action = act.TogglePaneZoomState },
 		-- { mods = hyper, key = "t", action = act.EmitEvent("jordan-newtab") },
 		-- { mods = hyper, key = "F5", action = act.ReloadConfiguration },
+		-- rename pane
+		{
+			key = "r",
+			mods = hyper,
+			action = act.PromptInputLine({
+				description = "Enter new name for tab",
+				action = wezterm.action_callback(function(window, pane, line)
+					-- line will be `nil` if they hit escape without entering anything
+					-- An empty string if they just hit enter
+					-- Or the actual line of text they wrote
+					if line then
+						window:active_tab():set_title(line)
+					end
+				end),
+			}),
+		},
 
 		-- navigator
 		{ mods = "CTRL", key = "h", action = act.EmitEvent("ActivatePaneDirection-left") },
@@ -121,8 +155,11 @@ local config = {
 		{ mods = "CTRL", key = "6", action = act.ActivateTab(5) },
 		{ key = "LeftArrow", mods = hyper, action = act.MoveTabRelative(-1) },
 		{ key = "RightArrow", mods = hyper, action = act.MoveTabRelative(1) },
-		-- dunno about this one
-		{ key = "F9", action = wezterm.action.ShowTabNavigator },
+
+		-- tabs
+		{ key = "F9", action = wezterm.action.ShowTabNavigator }, -- dunno about this one
+		{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
+		{ key = "Tab", mods = "SHIFT|CTRL", action = act.ActivateTabRelative(-1) },
 
 		-- copy mode / hints / quickselect
 		-- kitty+e open URL hint
