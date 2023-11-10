@@ -54,6 +54,10 @@ M.disabled = {
     ["<leader>td"] = "",
     ["<leader>ph"] = "",
     ["<leader>rh"] = "",
+
+    -- nvim-tree
+    ["<C-n>"] = "",
+    ["<leader>e"] = "",
   },
   v = {
     ["<leader>ca"] = "",
@@ -262,7 +266,23 @@ M.nvimtree = {
     -- toggle
     ["<C-e>"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
     -- focus
-    ["<leader>e"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
+    ["<leader>ef"] = {
+      function()
+        -- find file path, change if outside the cwd
+        local dir = vim.fn.expand "%:p:h"
+        local curr_cwd = vim.fn.getcwd()
+        local cwd = vim.startswith(dir, curr_cwd) and curr_cwd or dir
+
+        local api = require "nvim-tree.api"
+        api.tree.change_root(cwd)
+        api.tree.find_file {
+          focus = true,
+          update_root = false,
+        }
+      end,
+      "Nvimtree [f]ind file",
+    },
+
     ["<C-0>"] = { "<cmd> NvimTreeFocus <CR>", "Focus nvimtree" },
   },
 }
@@ -551,7 +571,6 @@ M.spectre = {
         local _, le, ce = unpack(vim.fn.getpos ".")
         local visual = vim.api.nvim_buf_get_text(0, ls - 1, cs - 1, le - 1, ce, {})
         local text = visual[1] or ""
-        print("got search_text" .. text)
         require("spectre").open_visual { search_text = text }
       end,
       desc = "Find+Replace [w]ord",
