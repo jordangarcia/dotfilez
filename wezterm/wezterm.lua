@@ -2,6 +2,7 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
 local balance = require("plugins.balance")
+local palette = require("colors.palette")
 local act = wezterm.action
 local mux = wezterm.mux
 local mods = require("mods")
@@ -92,10 +93,73 @@ local config = {
 	disable_default_key_bindings = true,
 	adjust_window_size_when_changing_font_size = false,
 	font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
+	use_fancy_tab_bar = false,
 	-- font = wezterm.font_with_fallback({ { family = "Hack Nerd Font", weight = "Bold" } }),
 	font_size = 14,
+	harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
 	color_scheme = "jordan",
 	-- colors = require("colors.real-kanagawa").colors,
+	colors = {
+		selection_fg = "black",
+		-- selection_bg = "#FFA066",
+		selection_bg = "#fffacd",
+		split = palette.waveAqua1,
+		copy_mode_active_highlight_bg = { Color = "#000000" },
+		copy_mode_active_highlight_fg = { AnsiColor = "Black" },
+		copy_mode_inactive_highlight_bg = { Color = "#52ad70" },
+		copy_mode_inactive_highlight_fg = { AnsiColor = "White" },
+
+		quick_select_label_bg = { Color = palette.sakuraPink },
+		quick_select_label_fg = { Color = "white" },
+		quick_select_match_bg = { Color = palette.springBlue },
+		quick_select_match_fg = { Color = "white" },
+		tab_bar = {
+			inactive_tab_edge = palette.sumiInk3,
+			-- The color of the strip that goes along the top of the window
+			-- (does not apply when fancy tab bar is in use)
+			background = palette.sumiInk3,
+
+			-- The active tab is the one that has focus in the window
+			active_tab = {
+				bg_color = palette.crystalBlue,
+				fg_color = palette.sumiInk3,
+				intensity = "Normal",
+				underline = "None",
+				italic = false,
+				strikethrough = false,
+			},
+
+			-- Inactive tabs are the tabs that do not have focus
+			inactive_tab = {
+				bg_color = palette.sumiInk3,
+				fg_color = palette.fujiGray,
+			},
+
+			-- You can configure some alternate styling when the mouse pointer
+			-- moves over inactive tabs
+			inactive_tab_hover = {
+				bg_color = palette.sumiInk3,
+				fg_color = palette.crystalBlue,
+			},
+
+			-- The new tab button that let you create new tabs
+			new_tab = {
+				bg_color = palette.sumiInk3,
+				fg_color = palette.fujiGray,
+			},
+
+			-- You can configure some alternate styling when the mouse pointer
+			-- moves over the new tab button
+			new_tab_hover = {
+				bg_color = palette.sumiInk3,
+				fg_color = palette.crystalBlue,
+			},
+		},
+	},
+	inactive_pane_hsb = {
+		saturation = 1.0,
+		brightness = 0.6,
+	},
 	native_macos_fullscreen_mode = false,
 	cell_width = 1,
 	line_height = 1,
