@@ -44,7 +44,7 @@ local options = {
       i = {
         -- remap close
         -- default binding in normal also  has `<esc>`
-        ["q"] = require("telescope.actions").close,
+        ["q"] = false,
         ["<C-q>"] = require("telescope.actions").close,
         -- disable default close
         ["<C-c>"] = false,
