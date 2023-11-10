@@ -7,6 +7,7 @@ local mods = require("mods")
 local hyper = "CTRL|SHIFT"
 
 local new_tab = function(cmd)
+	print("hhihihi")
 	local tab, pane, window = mux.spawn_tab(cmd or {})
 	-- Create a split occupying the right 1/3 of the screen
 	pane:split({ size = 0.3 })
@@ -35,6 +36,24 @@ local function conditionalActivatePane(window, pane, pane_direction, vim_directi
 		window:perform_action(act.ActivatePaneDirection(pane_direction), pane)
 	end
 end
+
+-- open sidepane if only pane
+wezterm.on("side-pane", function(window, pane)
+	local win = mux.all_windows()
+	local tab = win[1]:active_tab()
+	local panes = tab:panes()
+	if #panes == 1 then
+		panes[1]:split({ size = 0.3 })
+		return
+	end
+
+	local right_pane = tab:get_pane_direction("Right")
+	wezterm.log_info(right_pane)
+
+	if #panes == 2 and right_pane then
+		right_pane:activate()
+	end
+end)
 
 wezterm.on("ActivatePaneDirection-right", function(window, pane)
 	conditionalActivatePane(window, pane, "Right", "l")
@@ -68,6 +87,7 @@ local config = {
 
 		-- basic stuff
 		{ mods = "CMD", key = "h", action = act.HideApplication },
+		{ mods = "CMD", key = "q", action = act.QuitApplication },
 		{ mods = "CMD", key = "k", action = act.ActivateCommandPalette },
 		{ mods = "CMD", key = "n", action = act.SpawnWindow },
 		{ mods = "CMD", key = "t", action = act.SpawnTab("CurrentPaneDomain") },
@@ -78,12 +98,15 @@ local config = {
 		{ mods = "CMD", key = "v", action = act.PasteFrom("Clipboard") },
 		{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
 		-- TODO implemetn the rest of the ints
-		{ mods = hyper, key = "F12", action = act.ShowDebugOverlay },
-		{ mods = hyper, key = "l", action = act.ShowLauncher },
+		{ mods = hyper, key = "l", action = act.ShowDebugOverlay },
+		-- { mods = hyper, key = "l", action = act.ShowLauncher },
 		{ mods = hyper, key = "Enter", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+		{ mods = hyper, key = "'", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ mods = hyper, key = "|", action = act.EmitEvent("side-pane") },
 		{ mods = hyper, key = ";", action = act.RotatePanes("CounterClockwise") },
 		{ mods = hyper, key = "z", action = act.TogglePaneZoomState },
-		{ mods = hyper, key = "t", action = new_tab },
+		-- { mods = hyper, key = "t", action = act.EmitEvent("jordan-newtab") },
+		-- { mods = hyper, key = "F5", action = act.ReloadConfiguration },
 
 		-- navigator
 		{ mods = "CTRL", key = "h", action = act.EmitEvent("ActivatePaneDirection-left") },
