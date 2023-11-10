@@ -68,6 +68,18 @@ local function walk_siblings(axis, tab, window, pane, do_func)
 	return siblings
 end
 
+function M.sibling_counts(window, pane)
+	print("sibling_counts" .. pane:pane_id())
+	local tab = window:active_tab()
+	local ysiblings = walk_siblings("y", tab, window, pane)
+	local xsiblings = walk_siblings("x", tab, window, pane)
+
+	return {
+		y = #ysiblings,
+		x = #xsiblings,
+	}
+end
+
 function M.close_direction()
 	return function(window, pane)
 		local tab = window:active_tab()

@@ -1,4 +1,5 @@
 unsetopt nomatch
+export TERM=wezterm
 export PATH=/opt/homebrew/bin:$PATH
 
 # shortcut to this dotfiles path is $ZSH

@@ -47,19 +47,19 @@ end)
 wezterm.on("close-even", function(window, pane)
 	local winid = window:window_id()
 	local res = balance.close_direction()(window, pane)
-	wezterm.log_info("closing" .. pane:pane_id())
+	local before = balance.sibling_counts(window, pane)
 
 	window:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
 
-	-- wezterm.log_info(close)
+	wezterm.time.call_after(0.02, function()
+		local after = balance.sibling_counts(window, pane)
+		local newX = before.x - after.x
+		local newY = before.y - after.y
 
-	if res then
-		wezterm.time.call_after(0, function()
-			-- local new_win = mux.get_window(winid)
-			wezterm.log_info("balancing in " .. res.dir .. " id:" .. res.pane:pane_id())
-			balance.balance_panes(res.dir, pane:pane_id())(window, res.pane)
-		end)
-	end
+		local dir = newY > 0 and "y" or "x"
+		wezterm.log_info("balancing in " .. dir)
+		balance.balance_panes(dir, pane:pane_id())(window, res.pane)
+	end)
 end)
 
 wezterm.on("split-h-even", function(window, pane)
@@ -124,7 +124,7 @@ local config = {
 		{ mods = hyper, key = ";", action = act.RotatePanes("CounterClockwise") },
 		{ mods = hyper, key = "z", action = act.TogglePaneZoomState },
 		-- { mods = hyper, key = "t", action = act.EmitEvent("jordan-newtab") },
-		-- { mods = hyper, key = "F5", action = act.ReloadConfiguration },
+		{ mods = hyper, key = "F5", action = act.ReloadConfiguration },
 		-- rename pane
 		{
 			key = "r",
