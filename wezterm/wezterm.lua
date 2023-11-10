@@ -95,6 +95,7 @@ local config = {
 	-- font = wezterm.font_with_fallback({ { family = "Hack Nerd Font", weight = "Bold" } }),
 	font_size = 14,
 	color_scheme = "jordan",
+	-- colors = require("colors.real-kanagawa").colors,
 	native_macos_fullscreen_mode = false,
 	cell_width = 1,
 	line_height = 1,
