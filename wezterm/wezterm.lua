@@ -126,6 +126,8 @@ end)
 
 -- This table will hold the configuration.
 local config = {
+	-- no bell
+	audible_bell = "Disabled",
 
 	-- use_ime = false,
 	-- start from scratch
@@ -150,7 +152,6 @@ local config = {
 	-- },
 	-- colors = require("colors.real-kanagawa").colors,
 	colors = {
-		audible_bell = "Disabled",
 
 		selection_fg = "black",
 		-- selection_bg = "#FFA066",
