@@ -55,6 +55,23 @@ local plugins = {
     enabled = false,
   },
 
+  -- dont enable which key for some things
+  {
+    "folke/which-key.nvim",
+
+    opts = function(_, opts)
+      return {
+        presets = {
+          operators = false, -- adds help for operators like d, y, ...
+          motions = false, -- adds help for motions
+          text_objects = true, -- help for text objects triggered after entering an operator
+          windows = true, -- default bindings on <c-w>
+          nav = true, -- misc bindings to work with windows
+        },
+      }
+    end,
+  },
+
   {
     "nvim-treesitter/nvim-treesitter",
     opts = overrides.treesitter,
@@ -74,9 +91,6 @@ local plugins = {
   {
     "numToStr/Navigator.nvim",
     event = "VeryLazy",
-    init = function(_)
-      require("core.utils").load_mappings "navigator"
-    end,
     config = function(_, opts)
       require("Navigator").setup {
         -- Disable navigation when the current mux pane is zoomed in

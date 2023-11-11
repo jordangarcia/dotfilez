@@ -3,6 +3,7 @@
 local wezterm = require("wezterm")
 local balance = require("plugins.balance")
 local palette = require("colors.palette")
+local k = require("joshwez.utils.keys")
 local act = wezterm.action
 local mux = wezterm.mux
 local mods = require("mods")
@@ -138,7 +139,9 @@ local config = {
 	harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
 	color_scheme = "jordan",
 	adjust_window_size_when_changing_font_size = false,
-
+	-- leader
+	-- leader is only used for quickselect
+	leader = { mods = hyper, key = "y" },
 	-- window_padding = {
 	-- 	left = 30,
 	-- 	right = 30,
@@ -304,6 +307,16 @@ local config = {
 		},
 		{ key = "F1", action = act.ActivateCopyMode },
 		{ mods = hyper, key = "phys:Space", action = act.QuickSelect },
+
+		-- convenience stuff
+		{
+			mods = "CMD",
+			key = "s",
+			action = act.Multiple({
+				act.SendKey({ key = "\x1b" }), -- escape
+				k.multiple_actions(":w"),
+			}),
+		},
 	},
 
 	-- keep defaults

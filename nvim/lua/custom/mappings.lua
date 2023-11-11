@@ -5,7 +5,9 @@ local M = {}
 local set_clipboard = function()
   vim.cmd [[ call system('pbcopy', @+ ]]
 end
-vim.cmd [[ nnoremap * :keepjumps normal! mi*`i<CR> ]]
+
+-- Don't move on *
+vim.cmd [[ nnoremap * *<c-o> ]]
 
 -- diasable default nvchad binds
 M.disabled = {
@@ -58,9 +60,15 @@ M.disabled = {
     -- nvim-tree
     ["<C-n>"] = "",
     ["<leader>e"] = "",
+
+    -- which key
+    ["<leader>/"] = "",
+    ["<leader>n"] = "",
+    ["<leader>rn"] = "",
   },
   v = {
     ["<leader>ca"] = "",
+    ["<leader>/"] = "",
   },
 }
 
@@ -98,11 +106,17 @@ M.general = {
     },
 
     -- scrolling
-    ["<leader>tn"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
-    ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
-    ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
-    ["<leader>tt"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
-    ["<leader>tq"] = { "<cmd> tabc <CR>", "[T]ab [q]uit" },
+    ["<leader><tab><tab>"] = { "<cmd> tabNext <CR>", "[Tab] Next]" },
+    ["<leader><tab>n"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
+    ["<leader><tab>p"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
+    ["<leader><tab>e"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
+    ["<leader><tab>t"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
+    ["<leader><tab>q"] = { "<cmd> tabc <CR>", "[T]ab [q]uit" },
+    -- ["<leader>tn"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
+    -- ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
+    -- ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
+    -- ["<leader>tt"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
+    -- ["<leader>tq"] = { "<cmd> tabc <CR>", "[T]ab [q]uit" },
 
     -- splitting
     ["<leader>v"] = { "<CMD> vsplit +enew <CR>", "v pslit" },
@@ -156,6 +170,23 @@ M.general = {
     ["<leader>bh"] = {
       require("custom.buffer_utils").close_hidden_buffers,
       "Close hidden buffers",
+    },
+    -- navigator
+    ["<C-h>"] = {
+      "<CMD> NavigatorLeft <CR>",
+      "Navigator left",
+    },
+    ["<C-j>"] = {
+      "<CMD> NavigatorDown <CR>",
+      "Navigator down",
+    },
+    ["<C-k>"] = {
+      "<CMD> NavigatorUp <CR>",
+      "Navigator up",
+    },
+    ["<C-l>"] = {
+      "<CMD> NavigatorRight <CR>",
+      "Navigator right",
     },
   },
 
@@ -426,6 +457,7 @@ M.autosession = {
   },
 }
 
+-- git things
 M.gitsigns = {
   plugin = true,
   --
@@ -471,6 +503,16 @@ M.gitsigns = {
       end,
       "Git [t]oggle deleted",
     },
+  },
+}
+
+M.fugitive = {
+  n = {
+    ["<leader>gd"] = { "<cmd> Gvdiffsplit <cr>", desc = "Git [d]iff" },
+    ["<leader>gb"] = { "<cmd> Git blame <cr>", desc = "Git [b]lame" },
+    ["<leader>gg"] = { "<cmd> Git <cr>", desc = "Git git" },
+    ["<leader>gl"] = { "<cmd> Gclog <cr>", desc = "Git [l]og" },
+    ["<leader>g3"] = { "<cmd> Gvdiffsplit! <cr>", desc = "Git diff [3]way" },
   },
 }
 
@@ -539,16 +581,6 @@ M.harpoon = {
   },
 }
 
-M.fugitive = {
-  n = {
-    ["<leader>gd"] = { "<cmd> Gvdiffsplit <cr>", desc = "Git [d]iff" },
-    ["<leader>gb"] = { "<cmd> Git blame <cr>", desc = "Git [b]lame" },
-    ["<leader>gg"] = { "<cmd> Git <cr>", desc = "Git git" },
-    ["<leader>gl"] = { "<cmd> Gclog <cr>", desc = "Git [l]og" },
-    ["<leader>g3"] = { "<cmd> Gvdiffsplit! <cr>", desc = "Git diff [3]way" },
-  },
-}
-
 -- vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
 --     desc = "Toggle Spectre"
 -- })
@@ -573,7 +605,7 @@ M.spectre = {
         local text = visual[1] or ""
         require("spectre").open_visual { search_text = text }
       end,
-      desc = "Find+Replace [w]ord",
+      "Find+Replace [w]ord",
     },
   },
   n = {
@@ -581,40 +613,19 @@ M.spectre = {
       function()
         require("spectre").open_file_search { select_word = true }
       end,
-      desc = "Find+Replace [f]ile",
+      "Find+Replace [f]ile",
     },
     ["<leader>rw"] = {
       function()
         require("spectre").open_visual { select_word = true }
       end,
-      desc = "Find+Replace [w]ord",
+      "Find+Replace [w]ord",
     },
     ["<leader>ra"] = {
       function()
         require("spectre").toggle()
       end,
-      desc = "Find+Replace [a]ll",
-    },
-  },
-}
-
-M.navigator = {
-  n = {
-    ["<C-h>"] = {
-      "<CMD> NavigatorLeft <CR>",
-      desc = "Navigator left",
-    },
-    ["<C-j>"] = {
-      "<CMD> NavigatorDown <CR>",
-      desc = "Navigator down",
-    },
-    ["<C-k>"] = {
-      "<CMD> NavigatorUp <CR>",
-      desc = "Navigator up",
-    },
-    ["<C-l>"] = {
-      "<CMD> NavigatorRight <CR>",
-      desc = "Navigator right",
+      "Find+Replace [a]ll",
     },
   },
 }
