@@ -346,7 +346,7 @@ M.telescope = {
       end,
       "Find symbols",
     },
-    ["<leader>fo"] = { "<cmd> Telescope oldfiles <CR>", "Find oldfiles" },
+    ["<leader>fo"] = { "<cmd> Telescope oldfiles hidden=true <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
     ["<leader>fr"] = { "<cmd> Telescope resume <CR>", "[r]esume picker" },

@@ -8,6 +8,45 @@ local mux = wezterm.mux
 local mods = require("mods")
 local hyper = "CTRL|SHIFT"
 
+local function padString(str, length)
+	local padding = length - string.len(str)
+	local leftPadding = math.floor(padding / 2)
+	local rightPadding = padding - leftPadding
+
+	local paddedString = string.rep(" ", leftPadding) .. str .. string.rep(" ", rightPadding)
+
+	return paddedString
+end
+
+-- tab titling
+local function tab_title(tab_info)
+	local title = tab_info.tab_title
+	-- if the tab title is explicitly set, take that
+	if title and #title > 0 then
+		return title
+	end
+	-- Otherwise, use the title from the active pane
+	-- in that tab
+	return tab_info.active_pane.title
+end
+
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local title = tab_title(tab)
+	local index = tab.tab_index + 1
+
+	if tab.is_active then
+		return {
+			{ Background = { Color = palette.carpYellow } },
+			{ Foreground = { Color = palette.sumiInk3 } },
+			{ Text = padString(index .. " " .. title, 16) },
+		}
+	end
+
+	return {
+		{ Text = padString(index .. " " .. title, 16) },
+	}
+end)
+
 local function isViProcess(pane)
 	-- get_foreground_process_name On Linux, macOS and Windows,
 	-- the process can be queried to determine this path. Other operating systems
@@ -38,7 +77,6 @@ wezterm.on("side-pane", function(window, pane)
 	end
 
 	local right_pane = tab:get_pane_direction("Right")
-	wezterm.log_info(right_pane)
 
 	if #panes == 2 and right_pane then
 		right_pane:activate()
@@ -58,7 +96,6 @@ wezterm.on("close-even", function(window, pane)
 		local newY = before.y - after.y
 
 		local dir = newY > 0 and "y" or "x"
-		wezterm.log_info("balancing in " .. dir)
 		balance.balance_panes(dir, pane:pane_id())(window, res.pane)
 	end)
 end)
@@ -88,18 +125,30 @@ end)
 
 -- This table will hold the configuration.
 local config = {
+
 	-- use_ime = false,
 	-- start from scratch
 	disable_default_key_bindings = true,
-	adjust_window_size_when_changing_font_size = false,
-	font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
+	-- tabs
 	use_fancy_tab_bar = false,
+	hide_tab_bar_if_only_one_tab = true,
 	-- font = wezterm.font_with_fallback({ { family = "Hack Nerd Font", weight = "Bold" } }),
+	font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
 	font_size = 14,
 	harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
 	color_scheme = "jordan",
+	adjust_window_size_when_changing_font_size = false,
+
+	-- window_padding = {
+	-- 	left = 30,
+	-- 	right = 30,
+	-- 	top = 20,
+	-- 	bottom = 0,
+	-- },
 	-- colors = require("colors.real-kanagawa").colors,
 	colors = {
+		audible_bell = "Disabled",
+
 		selection_fg = "black",
 		-- selection_bg = "#FFA066",
 		selection_bg = "#fffacd",
@@ -113,6 +162,7 @@ local config = {
 		quick_select_label_fg = { Color = "white" },
 		quick_select_match_bg = { Color = palette.springBlue },
 		quick_select_match_fg = { Color = "white" },
+
 		tab_bar = {
 			inactive_tab_edge = palette.sumiInk3,
 			-- The color of the strip that goes along the top of the window
@@ -123,10 +173,6 @@ local config = {
 			active_tab = {
 				bg_color = palette.crystalBlue,
 				fg_color = palette.sumiInk3,
-				intensity = "Normal",
-				underline = "None",
-				italic = false,
-				strikethrough = false,
 			},
 
 			-- Inactive tabs are the tabs that do not have focus
@@ -156,10 +202,10 @@ local config = {
 			},
 		},
 	},
-	inactive_pane_hsb = {
-		saturation = 1.0,
-		brightness = 0.6,
-	},
+	-- inactive_pane_hsb = {
+	-- 	saturation = 1.0,
+	-- 	brightness = 0.6,
+	-- },
 	native_macos_fullscreen_mode = false,
 	cell_width = 1,
 	line_height = 1,
@@ -172,6 +218,7 @@ local config = {
 		{ mods = "CMD", key = "k", action = act.ActivateCommandPalette },
 		{ mods = "CMD", key = "n", action = act.SpawnWindow },
 		{ mods = "CMD", key = "t", action = act.SpawnTab("CurrentPaneDomain") },
+		-- { mods = "CMD", key = "t", action = act.SpawnCommandInNewTab({ args = { "/bin/zsh -l" } }) },
 		{ mods = "CMD", key = "=", action = act.IncreaseFontSize },
 		{ mods = "CMD", key = "0", action = act.ResetFontSize },
 		{ mods = "CMD", key = "-", action = act.DecreaseFontSize },
@@ -179,7 +226,7 @@ local config = {
 		{ mods = "CMD", key = "w", action = act.EmitEvent("close-even") },
 		{ mods = "CMD", key = "v", action = act.PasteFrom("Clipboard") },
 		{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
-		{ mods = hyper, key = "l", action = act.ShowDebugOverlay },
+		{ mods = hyper, key = "F9", action = act.ShowDebugOverlay },
 		-- { mods = hyper, key = "l", action = act.ShowLauncher },
 		-- { mods = hyper, key = "Enter", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		-- { mods = hyper, key = "'", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
@@ -218,6 +265,12 @@ local config = {
 		{ mods = "CTRL", key = "4", action = act.ActivateTab(3) },
 		{ mods = "CTRL", key = "5", action = act.ActivateTab(4) },
 		{ mods = "CTRL", key = "6", action = act.ActivateTab(5) },
+		{ mods = "CMD", key = "1", action = act.ActivateTab(0) },
+		{ mods = "CMD", key = "2", action = act.ActivateTab(1) },
+		{ mods = "CMD", key = "3", action = act.ActivateTab(2) },
+		{ mods = "CMD", key = "4", action = act.ActivateTab(3) },
+		{ mods = "CMD", key = "5", action = act.ActivateTab(4) },
+		{ mods = "CMD", key = "6", action = act.ActivateTab(5) },
 		{ key = "LeftArrow", mods = hyper, action = act.MoveTabRelative(-1) },
 		{ key = "RightArrow", mods = hyper, action = act.MoveTabRelative(1) },
 
@@ -238,7 +291,6 @@ local config = {
 					},
 					action = wezterm.action_callback(function(window, pane)
 						local url = window:get_selection_text_for_pane(pane)
-						wezterm.log_info("opening: " .. url)
 						wezterm.open_with(url)
 					end),
 				},
