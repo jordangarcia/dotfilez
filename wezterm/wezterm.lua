@@ -211,6 +211,7 @@ local config = {
 	line_height = 1,
 	window_decorations = "RESIZE",
 
+	quick_select_alphabet = "123456789asdfqwerzxcvjklmiuopghtybn",
 	keys = {
 		-- basic stuff
 		{ mods = "CMD", key = "h", action = act.HideApplication },
@@ -253,6 +254,11 @@ local config = {
 				end),
 			}),
 		},
+		-- adjust pane sizes
+		{ mods = hyper, key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 5 }) },
+		{ mods = hyper, key = "DownArrow", action = act.AdjustPaneSize({ "Down", 5 }) },
+		{ mods = hyper, key = "UpArrow", action = act.AdjustPaneSize({ "Up", 5 }) },
+		{ mods = hyper, key = "RightArrow", action = act.AdjustPaneSize({ "Right", 5 }) },
 
 		-- navigator
 		{ mods = "CTRL", key = "h", action = act.EmitEvent("ActivatePaneDirection-left") },
@@ -271,8 +277,8 @@ local config = {
 		{ mods = "CMD", key = "4", action = act.ActivateTab(3) },
 		{ mods = "CMD", key = "5", action = act.ActivateTab(4) },
 		{ mods = "CMD", key = "6", action = act.ActivateTab(5) },
-		{ key = "LeftArrow", mods = hyper, action = act.MoveTabRelative(-1) },
-		{ key = "RightArrow", mods = hyper, action = act.MoveTabRelative(1) },
+		{ key = "LeftArrow", mods = "ALT|CMD", action = act.MoveTabRelative(-1) },
+		{ key = "RightArrow", mods = "ALT|CMD", action = act.MoveTabRelative(1) },
 
 		-- tabs
 		{ key = "F9", action = wezterm.action.ShowTabNavigator }, -- dunno about this one
