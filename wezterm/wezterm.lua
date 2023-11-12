@@ -124,7 +124,16 @@ wezterm.on("ActivatePaneDirection-down", function(window, pane)
 	conditionalActivatePane(window, pane, "Down", "j")
 end)
 
+wezterm.on("balance-all-panes", function(window, pane)
+	balance.balance_panes("x")(window, pane)
+	balance.balance_panes("y")(window, pane)
+end)
+
+local FILE_EXTENSION = "%.(?:[a-zA-Z0-9]{2,7}|[ahcmo])(?:%b|[^.])"
+local path_regex = "(?:%S*?/[%r%S]+)|(?:%S[%r%S]*" .. FILE_EXTENSION .. ")%b"
+
 -- This table will hold the configuration.
+
 local config = {
 	-- no bell
 	audible_bell = "Disabled",
@@ -157,15 +166,14 @@ local config = {
 		-- selection_bg = "#FFA066",
 		selection_bg = "#fffacd",
 		split = palette.waveAqua1,
-		copy_mode_active_highlight_bg = { Color = "#000000" },
+		copy_mode_active_highlight_bg = { Color = palette.springGreen },
 		copy_mode_active_highlight_fg = { AnsiColor = "Black" },
-		copy_mode_inactive_highlight_bg = { Color = "#52ad70" },
+		copy_mode_inactive_highlight_bg = { Color = "White" },
 		copy_mode_inactive_highlight_fg = { AnsiColor = "White" },
 
-		quick_select_label_bg = { Color = palette.sakuraPink },
-		quick_select_label_fg = { Color = "white" },
-		quick_select_match_bg = { Color = palette.springBlue },
-		quick_select_match_fg = { Color = "white" },
+		quick_select_label_bg = { Color = palette.springGreen },
+		quick_select_label_fg = { Color = palette.sumiInk2 },
+		quick_select_match_fg = { Color = palette.fujiWhite },
 
 		tab_bar = {
 			inactive_tab_edge = palette.sumiInk3,
@@ -230,6 +238,7 @@ local config = {
 		-- { mods = "CMD", key = "w", action = act.CloseCurrentPane({ confirm = true }) },
 		{ mods = "CMD", key = "w", action = act.EmitEvent("close-even") },
 		{ mods = "CMD", key = "v", action = act.PasteFrom("Clipboard") },
+		{ mods = hyper, key = "p", action = act.PasteFrom("Clipboard") },
 		{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
 		{ mods = hyper, key = "F9", action = act.ShowDebugOverlay },
 		-- { mods = hyper, key = "l", action = act.ShowLauncher },
@@ -301,7 +310,56 @@ local config = {
 					},
 					action = wezterm.action_callback(function(window, pane)
 						local url = window:get_selection_text_for_pane(pane)
+						window:perform_action(wezterm.action.ClearSelection, pane)
 						wezterm.open_with(url)
+					end),
+				},
+			}),
+		},
+		{
+			key = "F",
+			mods = hyper,
+			action = wezterm.action({
+				QuickSelectArgs = {
+					patterns = {
+						path_regex,
+					},
+					action = wezterm.action_callback(function(window, pane)
+						local filepath = window:get_selection_text_for_pane(pane)
+						window:perform_action(wezterm.action.CopyTo("Clipboard"), pane)
+						window:perform_action(wezterm.action.ClearSelection, pane)
+					end),
+				},
+			}),
+		},
+		{
+			key = "L", -- replace with your preferred key
+			mods = hyper, -- replace with your preferred modifier(s)
+			action = wezterm.action({
+				QuickSelectArgs = {
+					patterns = {
+						"(?m)^\\s*(.+)[\\s\x00]*$",
+					},
+					action = wezterm.action_callback(function(window, pane)
+						local line = window:get_selection_text_for_pane(pane)
+						window:perform_action(wezterm.action.CopyTo("Clipboard"), pane)
+						window:perform_action(wezterm.action.ClearSelection, pane)
+					end),
+				},
+			}),
+		},
+		{
+			key = "H", -- replace with your preferred key
+			mods = hyper, -- replace with your preferred modifier(s)
+			action = wezterm.action({
+				QuickSelectArgs = {
+					patterns = {
+						"[0-9a-f]{7,40}",
+					},
+					action = wezterm.action_callback(function(window, pane)
+						local line = window:get_selection_text_for_pane(pane)
+						window:perform_action(wezterm.action.CopyTo("Clipboard"), pane)
+						window:perform_action(wezterm.action.ClearSelection, pane)
 					end),
 				},
 			}),

@@ -136,24 +136,11 @@ M.general = {
     ["<leader>qw"] = { "<cmd> wqa! <CR>", "Quit and [w]rite all" },
 
     -- window things
-    ["<leader>wo"] = {
-      require("custom.buffer_utils").close_other_windows,
-      "Window [o]nly",
-    },
-    ["<leader>wh"] = {
-      require("custom.buffer_utils").close_hidden_buffers,
-      "Close [h]idden buffers",
-    },
     ['<C-w>"'] = { "<cmd> split <CR>", "Split window horizontally" },
     ["<C-w>v"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>k"] = { "", "" },
 
-    ["<leader>wq"] = {
-      require("custom.buffer_utils").smart_close_window,
-      "[W]indow [q]uit",
-    },
-    ["<leader>wv"] = { "<CMD> vs <CR>", "New [v]ertical window" },
     -- close buffer + hide terminal buffer
     ["<leader>q"] = {
       require("custom.buffer_utils").smart_close_buffer,
@@ -198,8 +185,6 @@ M.general = {
   v = {
     ["<A-down>"] = { ":m '>+1<CR>gv=gv", "Move lines down" },
     ["<A-up>"] = { ":m '<-2<CR>gv=gv", "Move lines up" },
-    ["<Up>"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
-    ["<Down>"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
   },
