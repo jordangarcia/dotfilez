@@ -269,10 +269,13 @@ M.override = {
     fg = "teal",
     bold = true,
   },
+  -- TabLine = { bg = syn.sumiInk6 },
 }
 
 ---@type HLTable
 M.add = {
+  -- fix Multi Visual tabline
+  TabLine = { link = "TbLineFill" },
   NvimTreeOpenedFolderName = { fg = "green", bold = true },
   NvimTreeRootFolder = { fg = "green", bold = true },
 
