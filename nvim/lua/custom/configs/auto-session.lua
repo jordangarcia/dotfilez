@@ -12,7 +12,10 @@ end
 
 local cleanup_buffers = buffer_utils.close_buffers(function(data)
   local name = data.name
-  return data.filetype == "help" or string.find(name, "fugitive://") or string.find(name, "private/var/folders")
+  return data.filetype == "help"
+    or data.filetype == "undotree"
+    or string.find(name, "fugitive://")
+    or string.find(name, "private/var/folders")
 end)
 
 return {

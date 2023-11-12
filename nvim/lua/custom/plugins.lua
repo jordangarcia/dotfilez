@@ -324,6 +324,9 @@ local plugins = {
   {
     "sbbill/undotree",
     event = "VeryLazy",
+    init = function(_)
+      require("core.utils").load_mappings "undotree"
+    end,
   },
 
   {

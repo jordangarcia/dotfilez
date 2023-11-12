@@ -630,4 +630,19 @@ M.spectre = {
   },
 }
 
+M.undotree = {
+  plugin = true,
+
+  n = {
+    ["<leader>ut"] = {
+      function()
+        vim.cmd [[ UndotreeShow ]]
+        vim.cmd [[ UndotreeFocus ]]
+        vim.cmd [[ NvimTreeClose ]]
+      end,
+      "Undo[t]ree",
+    },
+  },
+}
+
 return M
