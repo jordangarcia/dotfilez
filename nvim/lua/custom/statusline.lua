@@ -34,16 +34,22 @@ return function(modules)
   end)()
   -- show all lsps
   modules[8] = (function()
-    local clients = {}
-    if rawget(vim, "lsp") then
-      for _, client in ipairs(vim.lsp.get_active_clients()) do
-        if client.attached_buffers[stbufnr()] and client.name ~= "null-ls" then
-          table.insert(clients, client.name)
+    local status, result = pcall(function(...)
+      local clients = {}
+      if rawget(vim, "lsp") then
+        for _, client in ipairs(vim.lsp.get_active_clients()) do
+          if client.attached_buffers[stbufnr()] and client.name ~= "null-ls" then
+            table.insert(clients, client.name)
+          end
         end
+        local str = table.concat(clients, " ")
+        return (vim.o.columns > 100 and "%#St_LspStatus#" .. "   " .. str .. " ")
       end
-      local str = table.concat(clients, " ")
-      return (vim.o.columns > 100 and "%#St_LspStatus#" .. "   " .. str .. " ")
+    end)
+    if not status then
+      return ""
     end
+    return result
   end)()
 
   -- dont show cwd here
