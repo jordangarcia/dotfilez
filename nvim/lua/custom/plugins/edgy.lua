@@ -1,6 +1,7 @@
 return {
   "folke/edgy.nvim",
-  event = "VeryLazy",
+  lazy = false,
+  -- event = "VeryLazy",
   keys = {
     {
       "<leader>ue",
@@ -74,7 +75,6 @@ return {
         -- },
 
         {
-          title = "NvimTree",
           ft = "NvimTree",
           -- filter = function(buf)
           --   return vim.b[buf].neo_tree_source == "filesystem"

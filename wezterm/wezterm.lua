@@ -154,10 +154,10 @@ local config = {
 	-- leader is only used for quickselect
 	leader = { mods = hyper, key = "y" },
 	-- window_padding = {
-	-- 	left = 30,
-	-- 	right = 30,
-	-- 	top = 20,
-	-- 	bottom = 0,
+	--  left = 30,
+	--  right = 30,
+	--  top = 20,
+	--  bottom = 0,
 	-- },
 	-- colors = require("colors.real-kanagawa").colors,
 	colors = {
@@ -215,8 +215,8 @@ local config = {
 		},
 	},
 	-- inactive_pane_hsb = {
-	-- 	saturation = 1.0,
-	-- 	brightness = 0.6,
+	--  saturation = 1.0,
+	--  brightness = 0.6,
 	-- },
 	native_macos_fullscreen_mode = false,
 	cell_width = 1,
@@ -467,7 +467,7 @@ local config = {
 -- -- In newer versions of wezterm, use the config_builder which will
 -- -- help provide clearer error messages
 -- if wezterm.config_builder then
--- 	config = wezterm.config_builder()
+--  config = wezterm.config_builder()
 -- end
 
 -- This is where you actually apply your config choices
