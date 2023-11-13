@@ -620,13 +620,13 @@ M.undotree = {
   plugin = true,
 
   n = {
-    ["<leader>ut"] = {
+    ["<leader>eu"] = {
       function()
         vim.cmd [[ UndotreeShow ]]
         vim.cmd [[ UndotreeFocus ]]
         vim.cmd [[ NvimTreeClose ]]
       end,
-      "Undo[t]ree",
+      "[U]ndotree",
     },
   },
 }
