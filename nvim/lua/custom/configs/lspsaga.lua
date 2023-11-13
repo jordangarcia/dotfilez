@@ -62,8 +62,9 @@ return function()
       d = { "<cmd> Lspsaga peek_definition <CR>", "Lspsaga [d]efinition" },
       t = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga [t]ype definition" },
       a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
-      n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
-      p = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
+      -- use ]d and [d
+      -- n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
+      -- p = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
       ["wa"] = {
         function()
           vim.lsp.buf.add_workspace_folder()

@@ -39,10 +39,20 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.opt.swapfile = false
 
 vim.opt.list = true -- Show some invisible characters (tabs...
+vim.cmd [[
+  set listchars=""          " Reset the listchars
+  set listchars=tab:\ \     " a tab should display as "  ", trailing whitespace as "."
+  set listchars+=trail:.    " show trailing spaces as dots
+  set listchars+=extends:>  " The character to show in the last column when wrap is
+                            " off and the line continues beyond the right of the screen
+  set listchars+=precedes:< " The character to show in the last column when wrap is
+                            " off and the line continues beyond the right of the screen
+]]
+
 -- pmenu
 vim.opt.pumblend = 10 -- Popup blend
 vim.opt.pumheight = 7
-vim.opt.pumwidth = 20
+vim.opt.pumwidth = 30
 
 vim.opt.splitbelow = true
 vim.opt.number = true
@@ -54,6 +64,8 @@ vim.opt.scrolloff = 4
 vim.opt.sidescrolloff = 8 -- Columns of context
 vim.opt.autochdir = false
 
+-- this is for edgy
+vim.opt.splitkeep = "screen"
 vim.opt.wildmode = "longest:full,full" -- Command-line completion mode
 vim.opt.winminwidth = 5 -- Minimum window width
 vim.cmd [[set path+="/opt/homebrew/bin"]]

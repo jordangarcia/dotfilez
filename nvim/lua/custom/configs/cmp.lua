@@ -43,6 +43,8 @@ return {
   },
   sorting = {
     comparators = {
+      -- copied from cmp-under, but I don't think I need the plugin for this.
+      -- I might add some more of my own.
       function(entry1, entry2)
         local _, entry1_under = entry1.completion_item.label:find "^_+"
         local _, entry2_under = entry2.completion_item.label:find "^_+"
@@ -58,8 +60,6 @@ return {
       cmp.config.compare.exact,
       cmp.config.compare.score,
       cmp.config.compare.recently_used,
-      -- copied from cmp-under, but I don't think I need the plugin for this.
-      -- I might add some more of my own.
       cmp.config.compare.kind,
     },
   },
@@ -102,13 +102,14 @@ return {
   -- },
 
   sources = {
-    { name = "nvim_lsp", max_item_count = 5 },
+    { name = "nvim_lsp", max_item_count = 8, priority = 100 },
     -- { name = "luasnip", enabled =false},
     -- { name = "buffer", enabled = true, keyword_length = 3, max_item_count = 2 },
     {
       name = "buffer",
       keyword_length = 5,
       max_item_count = 2,
+      priority = 10,
       option = {
 
         get_bufnrs = function()
@@ -121,7 +122,7 @@ return {
       },
     },
     -- { name = "buffer", enabled = true, keyword_length = 2 },
-    { name = "nvim_lua" },
+    { name = "nvim_lua", priority = 150 },
     -- { name = "path" , enabled = false}
   },
 }

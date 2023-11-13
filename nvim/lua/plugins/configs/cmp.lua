@@ -10,6 +10,7 @@ local field_arrangement = {
   atom_colored = { "kind", "abbr", "menu" },
 }
 
+-- todo this should be in custom
 local formatting_style = {
   -- default fields order i.e completion word + item.kind + item.kind icons
   fields = field_arrangement[cmp_style] or { "abbr", "kind", "menu" },
@@ -24,7 +25,17 @@ local formatting_style = {
       item.kind = icon
     else
       icon = cmp_ui.lspkind_text and (" " .. icon .. " ") or icon
+      -- todo move this into custom
       item.kind = string.format("%s %s", icon, cmp_ui.lspkind_text and item.kind or "")
+    end
+
+    local MAX = 30
+
+    if #item.abbr > MAX then
+      item.abbr = item.abbr:sub(1, MAX - 1) .. " "
+    else
+      -- pad worMAX to 30 chars
+      item.abbr = item.abbr .. string.rep(" ", MAX - #item.abbr)
     end
 
     return item

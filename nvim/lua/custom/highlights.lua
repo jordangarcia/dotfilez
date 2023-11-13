@@ -231,7 +231,6 @@ M.override = {
   Search = { fg = palette.fujiWhite, bg = palette.waveBlue2 },
   Visual = { bg = palette.waveBlue1 },
   LineNr = { bg = M.base_16.base00 },
-  NvimTreeLineNr = { bg = M.base_16.base00 },
 
   -- diag
   --
@@ -264,12 +263,14 @@ M.override = {
   TelescopePromptPrefix = { fg = "nord_blue" },
 
   -- nvim tree
+  NvimTreeLineNr = { bg = M.base_16.base00 },
   NvimTreeGitDirty = { fg = palette.surimiOrange },
   NvimTreeRootFolder = {
     fg = "teal",
     bold = true,
   },
   -- TabLine = { bg = syn.sumiInk6 },
+  -- NvimTreeIndentMarker = { fg = palette.boatYellow1 },
 }
 
 ---@type HLTable
@@ -377,6 +378,8 @@ M.add = {
   ["zshFunction"] = { link = "@function" },
   -- ["zshSubstQuoted"] = { link = "Normal" },
   -- ["zshDeref"] = { link = "Variable" },
+
+  -- NvimTreeIndentMarker = { fg = palette.boatYellow1 },
 }
 
 return M

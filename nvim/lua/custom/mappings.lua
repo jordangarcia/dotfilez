@@ -47,7 +47,6 @@ M.disabled = {
     ["<leader>fo"] = "",
     ["<leader>fz"] = "",
     ["<leader>cm"] = "",
-    ["<leader>gt"] = "",
     ["<leader>pt"] = "",
     ["<leader>th"] = "",
     ["<leader>ma"] = "",
@@ -74,6 +73,7 @@ M.disabled = {
 
 M.general = {
   n = {
+    -- disable stuff
     -- scrolling
     ["n"] = { "nzzzv" },
     ["N"] = { "Nzzzv" },
@@ -241,14 +241,8 @@ M.lspconfig = {
       function()
         vim.lsp.buf.hover()
       end,
+      -- "<CMD> Lspsaga peek_type_definition <CR>",
       "LSP hover",
-    },
-
-    ["<C-.>"] = {
-      function()
-        vim.lsp.buf.code_action()
-      end,
-      "LSP code action",
     },
 
     ["<C-n>"] = {
@@ -313,6 +307,15 @@ M.telescope = {
       end,
       "Live grep",
     },
+    -- todo make this search under cursos
+    -- ["<leader>fi"] = {
+    --   function()
+    --     require("telescope").extensions.import.import {
+    --       prompt = vim.fn.expand "<cword>",
+    --     }
+    --   end,
+    --   "Live grep",
+    -- },
   },
   n = {
     ["<leader>fp"] = {
@@ -434,6 +437,12 @@ M.autosession = {
   plugin = true,
 
   n = {
+    ["<leader>sd"] = {
+      function()
+        vim.cmd [[ SessionDelete ]]
+      end,
+      "Session [d]elete",
+    },
     ["<leader>ss"] = {
       function()
         vim.cmd [[ SessionSave ]]
