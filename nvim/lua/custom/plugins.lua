@@ -134,6 +134,7 @@ local plugins = {
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
+    keys = { ":", "/" },
     dependencies = {
 
       {
@@ -165,8 +166,9 @@ local plugins = {
       {
         "hrsh7th/cmp-nvim-lua",
         "hrsh7th/cmp-nvim-lsp",
-        -- "hrsh7th/cmp-buffer",
-        -- "hrsh7th/cmp-path",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-cmdline",
+        "hrsh7th/cmp-path",
         -- "zbirenbaum/copilot-cmp",
       },
     },
@@ -176,9 +178,79 @@ local plugins = {
       return vim.tbl_deep_extend("force", opts, overides)
     end,
     config = function(_, opts)
+      local cmp = require "cmp"
       require("cmp").setup(opts)
       require("cmp").setup.filetype({ "gitcommit" }, {
         enabled = false,
+      })
+      cmp.setup.cmdline({ "/", "?" }, {
+        mapping = vim.tbl_deep_extend("force", cmp.mapping.preset.cmdline(), {
+          ["<C-l>"] = {
+            c = require("cmp.config.mapping").confirm { select = false },
+          },
+          ["<C-j>"] = {
+            c = function(fallback)
+              local cmp = require "cmp"
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                fallback()
+              end
+            end,
+          },
+          ["<C-k>"] = {
+            c = function(fallback)
+              local cmp = require "cmp"
+              if cmp.visible() then
+                cmp.select_prev_item()
+              else
+                fallback()
+              end
+            end,
+          },
+        }),
+        -- mapping = opts.mapping,
+        window = { completion = cmp.config.window.bordered { col_offset = 0 } },
+        formatting = { fields = { "abbr" } },
+        sources = {
+          { name = "buffer" },
+        },
+      })
+
+      cmp.setup.cmdline(":", {
+        mapping = vim.tbl_deep_extend("force", cmp.mapping.preset.cmdline(), {
+          ["<C-l>"] = {
+            c = require("cmp.config.mapping").confirm { select = false },
+          },
+          ["<C-j>"] = {
+            c = function(fallback)
+              local cmp = require "cmp"
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                fallback()
+              end
+            end,
+          },
+          ["<C-k>"] = {
+            c = function(fallback)
+              local cmp = require "cmp"
+              if cmp.visible() then
+                cmp.select_prev_item()
+              else
+                fallback()
+              end
+            end,
+          },
+        }),
+        -- mapping = opts.mapping,
+        window = { completion = cmp.config.window.bordered { col_offset = 0 } },
+        formatting = { fields = { "abbr" } },
+        sources = cmp.config.sources({
+          { name = "path" },
+        }, {
+          { name = "cmdline" },
+        }),
       })
     end,
   },
@@ -207,6 +279,7 @@ local plugins = {
         filetypes = {
           lua = true,
           javascript = true,
+          python = true,
           typescriptreact = true,
           typescript = true,
           json = true,

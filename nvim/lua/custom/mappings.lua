@@ -365,6 +365,7 @@ M.telescope = {
     ["<leader>fo"] = { "<cmd> Telescope oldfiles hidden=true <CR>", "Find oldfiles" },
     ["<leader>fa"] = { "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>", "Find all" },
     ["<leader>ff"] = { "<cmd> Telescope find_files <CR>", "Find files" },
+    ["<leader>fi"] = { "<cmd> Telescope import <CR>", "Find [i]mport" },
     ["<leader>fr"] = { "<cmd> Telescope resume <CR>", "[r]esume picker" },
     ["<leader>fu"] = { "<cmd> Telescope undo <CR>", "[U]ndo tree" },
     ["<leader>fd"] = {

@@ -66,7 +66,7 @@ lspconfig["jsonls"].setup {
   },
 }
 
-local servers = { "html", "cssls", "prismals", "pylsp" }
+local servers = { "html", "cssls", "prismals", "ruff_lsp", "pyright" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,

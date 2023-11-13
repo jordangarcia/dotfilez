@@ -128,6 +128,7 @@ return {
   "nvim-telescope/telescope.nvim",
   cmd = { "Telescope", "Easypick" },
   dependencies = {
+    "piersolenski/telescope-import.nvim",
     {
       "nvim-telescope/telescope-live-grep-args.nvim",
       -- This will not install any breaking changes.
@@ -169,7 +170,7 @@ return {
     local telescope = require "telescope"
     telescope.setup(opts)
 
-    local extensions = { "harpoon", "zoxide", "smart_open", "undo", "live_grep_args" }
+    local extensions = { "harpoon", "zoxide", "smart_open", "undo", "live_grep_args", "import" }
     -- load extensions
     for _, ext in ipairs(extensions) do
       telescope.load_extension(ext)

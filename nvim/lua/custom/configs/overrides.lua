@@ -43,7 +43,9 @@ M.mason = {
     "json-lsp",
 
     -- python stuff
-    "python-lsp-server",
+    "pyright",
+    "black",
+    "ruff-lsp",
     -- c/cpp stuff
     "clangd",
     "clang-format",

@@ -21,6 +21,7 @@ local opts = {
       },
     },
     null_ls.builtins.formatting.stylua,
+    null_ls.builtins.formatting.black,
   },
   on_attach = function(client, bufnr)
     -- this is buggy, instead just setup an auto cmd for EVERYTHING
