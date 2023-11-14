@@ -26,7 +26,7 @@ return function()
   -- vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
   require("which-key").register({
     l = {
-      name = "Lsp",
+      name = "+lsp",
       -- f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
       o = { "<cmd> Lspsaga outline <CR>", "Lspsaga [o]utline" },
       -- r = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
@@ -60,7 +60,12 @@ return function()
         "Lsp [s]ignature",
       },
       d = { "<cmd> Lspsaga peek_definition <CR>", "Lspsaga [d]efinition" },
-      t = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga [t]ype definition" },
+      D = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga type [D]efinition" },
+      t = {
+        name = "+typescript",
+        i = { "<cmd> TSToolsRemoveUnusedImports <CR>", "TS remove unused imports" },
+        r = { "<cmd> TSToolsRenameFile <CR>", "TS rename file" },
+      },
       a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
       -- use ]d and [d
       -- n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },

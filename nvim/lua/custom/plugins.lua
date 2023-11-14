@@ -416,7 +416,7 @@ local plugins = {
   require "custom.configs.noice",
 
   {
-    "sbbill/undotree",
+    "mbbill/undotree",
     event = "VeryLazy",
     init = function(_)
       require("core.utils").load_mappings "undotree"

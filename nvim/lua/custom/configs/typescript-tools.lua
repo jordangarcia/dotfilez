@@ -6,9 +6,9 @@ local config = function()
     on_attach = require("plugins.configs.lspconfig").on_attach,
     settings = {
       -- spawn additional tsserver instance to calculate diagnostics on it
-      separate_diagnostic_server = false,
+      separate_diagnostic_server = true,
       -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-      publish_diagnostic_on = "insert_leave",
+      -- publish_diagnostic_on = "insert_leve",
       tsserver_file_preferences = {
         -- autoImportFileExcludePatterns = { "**/dist/**" },
         importModuleSpecifierPreference = "relative",
