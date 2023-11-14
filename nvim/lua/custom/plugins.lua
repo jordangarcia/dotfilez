@@ -426,6 +426,7 @@ local plugins = {
   {
     "nvim-pack/nvim-spectre",
     event = "VeryLazy",
+    commit = "d20dcf7",
     init = function(_)
       require("core.utils").load_mappings "spectre"
     end,
