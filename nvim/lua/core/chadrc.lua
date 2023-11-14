@@ -38,6 +38,7 @@ M.ui = {
   telescope = { style = "borderless" }, -- borderless / bordered
 
   tabufline = {
+    enabled = true,
     lazyload = true,
     overriden_modules = function(modules)
       -- no close tab or switch colorscheme button

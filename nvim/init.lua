@@ -12,4 +12,9 @@ dofile(vim.g.base46_cache .. "defaults")
 vim.opt.rtp:prepend(lazypath)
 
 -- load plugins
-require("lazy").setup { import = "plugins" }
+require("lazy").setup {
+  spec = {
+    { import = "core.plugins" },
+    { import = "plugins" },
+  },
+}

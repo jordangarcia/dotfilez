@@ -182,6 +182,8 @@ return {
       vim.api.nvim_command "highlight link SagaNormal Normal"
 
       -- vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
+      --
+
       require("which-key").register({
         ["<F2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
 
@@ -211,6 +213,10 @@ return {
           end,
           "Goto next error",
         },
+      }, {
+        mode = { "n", "v" },
+      })
+      require("which-key").register({
         l = {
           name = "+lsp",
           -- f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },

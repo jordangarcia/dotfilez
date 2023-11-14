@@ -3,7 +3,6 @@ require "nvchad.lsp"
 local lspconfig = require "lspconfig"
 
 local M = {}
-local utils = require "core.utils"
 
 -- export on_attach & capabilities for custom lspconfigs
 

@@ -45,6 +45,7 @@ local palette = {
   dragonGray2 = "#9e9b93",
   roninYellow = "#FF9E3B",
 }
+
 M.base_30 = {
   white = "#DCD7BA",
   darker_black = "#191922",

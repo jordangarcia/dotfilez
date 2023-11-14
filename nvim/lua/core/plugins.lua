@@ -1,10 +1,7 @@
 ---@type LazyPluginSpec[]
 return {
-  { "rebelot/kanagawa.nvim", lazy = false },
-
   {
     "nvim-lua/plenary.nvim",
-    priority = 100,
     lazy = false,
   },
 
@@ -21,7 +18,6 @@ return {
     "NvChad/ui",
     branch = "v2.0",
     lazy = false,
-    priority = 100,
   },
 
   {

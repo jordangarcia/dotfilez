@@ -29,7 +29,14 @@ return {
       nav = true, -- misc bindings to work with windows
     },
     plugins = { spelling = true },
-    defaults = {
+  },
+  config = function(_, opts)
+    -- dont load colorscheme
+    -- dofile(vim.g.base46_cache .. "whichkey")
+
+    local wk = require "which-key"
+    wk.setup(opts)
+    wk.register {
       mode = { "n", "v" },
       ["]"] = { name = "+next" },
       ["["] = { name = "+prev" },
@@ -45,11 +52,6 @@ return {
       ["<leader>s"] = { name = "+session" },
       ["<leader>w"] = { name = "+windows" },
       ["<leader>y"] = { name = "+yank" },
-    },
-  },
-  config = function(_, opts)
-    local wk = require "which-key"
-    wk.setup(opts)
-    wk.register(opts.defaults)
+    }
   end,
 }
