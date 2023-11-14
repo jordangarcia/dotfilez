@@ -2,7 +2,7 @@
 local M = {}
 
 -- Path to overriding theme and highlights files
-local highlights = require "custom.highlights"
+local highlights = require "core.highlights"
 
 M.ui = {
   nvdash = {
@@ -15,7 +15,12 @@ M.ui = {
   hl_add = highlights.add,
 
   cmp = {
+    icons = true,
+    lspkind_text = true,
+    -- style = "default", -- default/flat_light/flat_dark/atom/atom_colored
     style = "flat_dark",
+    border_color = "grey_fg", -- only applicable for "default" style, use color names from base30 variables
+    selected_item_bg = "colored", -- colored / simple
   },
 
   statusline = {
@@ -30,6 +35,8 @@ M.ui = {
     overriden_modules = require "custom.statusline",
   },
 
+  telescope = { style = "borderless" }, -- borderless / bordered
+
   tabufline = {
     lazyload = true,
     overriden_modules = function(modules)
@@ -39,11 +46,19 @@ M.ui = {
       end)()
     end,
   },
+
+  lsp = {
+    -- show function signatures i.e args as you type
+    signature = {
+      disabled = false,
+      silent = true, -- silences 'no signature help available' message from appearing
+    },
+  },
 }
 
-M.plugins = "custom.plugins"
+M.plugins = {}
 
 -- check core.mappings for table structure
-M.mappings = require "custom.mappings"
+M.mappings = {}
 
 return M

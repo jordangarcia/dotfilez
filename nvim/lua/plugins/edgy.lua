@@ -11,7 +11,7 @@ return {
       desc = "Edgy Toggle",
     },
       -- stylua: ignore
-      { "<leader>uE", function() require("edgy").select() end, desc = "Edgy Select Window" },
+    { "<leader>uE", function() require("edgy").select() end, desc = "Edgy Select Window" },
   },
   opts = function()
     local opts = {

@@ -32,8 +32,10 @@ M.lazy = function(install_path)
   -- install plugins
   require "plugins"
 
+  -- dont do everything
+  vim.cmd "MasonInstallAll"
   -- mason packages & show post_boostrap screen
-  require "nvchad.post_install"()
+  -- require "nvchad.post_install"()
 end
 
 M.gen_chadrc_template = function()

@@ -1,10 +1,6 @@
 local M = {}
 local api = vim.api
-local devicons_present, devicons = pcall(require, "nvim-web-devicons")
 local fn = vim.fn
-local Path = require "plenary.path"
-
-dofile(vim.g.base46_cache .. "tbline")
 
 local isBufValid = function(bufnr)
   return vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted
@@ -18,6 +14,7 @@ local function new_hl(group1, group2)
 end
 
 local function add_fileInfo(name, bufnr)
+  local devicons_present, devicons = pcall(require, "nvim-web-devicons")
   local icon2 = ""
   if true and devicons_present then
     local icon, icon_hl = devicons.get_icon(name)
@@ -108,6 +105,7 @@ local winbar_file = function()
   -- filename only
   local name = (#api.nvim_buf_get_name(nr) ~= 0) and fn.fnamemodify(api.nvim_buf_get_name(nr), ":t") or ""
   local name = (#api.nvim_buf_get_name(nr) ~= 0) and api.nvim_buf_get_name(nr) or ""
+  local Path = require "plenary.path"
   name = Path:new(name):normalize(vim.fn.getcwd())
 
   if name == "" then

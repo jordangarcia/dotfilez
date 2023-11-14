@@ -207,4 +207,41 @@ local options = {
   },
 }
 
-return options
+return {
+  "nvim-tree/nvim-tree.lua",
+  cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+  keys = {
+    {
+      "<C-e>",
+      "<cmd> NvimTreeToggle <CR>",
+      desc = "Toggle nvimtree",
+      mode = "n",
+    },
+    {
+      "<leader>ef",
+      function()
+        local dir = vim.fn.expand "%:p:h"
+        local curr_cwd = vim.fn.getcwd()
+        local cwd = vim.startswith(dir, curr_cwd) and curr_cwd or dir
+        local api = require "nvim-tree.api"
+        api.tree.change_root(cwd)
+        api.tree.find_file {
+          focus = true,
+          update_root = false,
+        }
+      end,
+      desc = "Nvimtree [f]ind file",
+      mode = "n",
+    },
+    {
+      "<C-0>",
+      "<cmd> NvimTreeFocus <CR>",
+      desc = "Focus nvimtree",
+      mode = "n",
+    },
+  },
+  opts = options,
+  config = function(_, opts)
+    require("nvim-tree").setup(opts)
+  end,
+}
