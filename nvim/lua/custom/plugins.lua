@@ -3,7 +3,6 @@ local overrides = require "custom.configs.overrides"
 ---@type NvPluginSpec[]
 local plugins = {
   {
-
     "lukas-reineke/indent-blankline.nvim",
     enabled = true,
   },
