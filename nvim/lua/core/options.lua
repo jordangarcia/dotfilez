@@ -47,8 +47,12 @@ opt.splitbelow = true
 opt.number = true
 opt.rnu = true
 
-opt.wrap = false
+-- opt.wrap = false
+vim.cmd [[ set wrap linebreak nolist ]]
 opt.scrolljump = 5
+-- go to previous/next line with h,l,left arrow and right arrow
+-- when cursor reaches end/beginning of line
+opt.whichwrap:append "<>[]hl"
 opt.scrolloff = 4
 opt.sidescrolloff = 8 -- Columns of context
 opt.autochdir = false
@@ -79,10 +83,6 @@ opt.undofile = true
 
 -- interval for writing swap file to disk, also used by gitsigns
 opt.updatetime = 250
-
--- go to previous/next line with h,l,left arrow and right arrow
--- when cursor reaches end/beginning of line
-opt.whichwrap:append "<>[]hl"
 
 -- disable some default providers
 for _, provider in ipairs { "node", "perl", "python3", "ruby" } do

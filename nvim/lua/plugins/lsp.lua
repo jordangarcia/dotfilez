@@ -1,4 +1,4 @@
----@type LazyPluginSpec[]
+-- max_width = 0.4,
 return {
   {
     "williamboman/mason.nvim",
@@ -159,8 +159,8 @@ return {
     config = function()
       require("lspsaga").setup {
         diagnostic = {
-          max_show_width = 0.4,
-          max_width = 0.4,
+          max_show_width = 0.9,
+          max_width = 0.7,
         },
         lightbulb = {
           enable = false,

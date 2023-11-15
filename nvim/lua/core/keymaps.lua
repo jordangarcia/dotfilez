@@ -20,6 +20,7 @@ local function set_keymap_tbl(section_values, mapping_opt)
   end
 end
 
+-- disable all nvchad mappings
 set_keymap_tbl {
   -- lspconfig
   n = {
@@ -83,6 +84,9 @@ set_keymap_tbl {
 
 set_keymap_tbl {
   n = {
+    -- -- wrap shit
+    -- ["j"] = { 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', "Move down", opts = { expr = true } },
+    -- ["k"] = { 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', "Move up", opts = { expr = true } },
     -- disable stuff
     -- scrolling
     ["n"] = { "nzzzv" },
