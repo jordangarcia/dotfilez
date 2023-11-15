@@ -95,6 +95,8 @@ return {
 
     -- autopairing of (){}[] etc
     {
+      enabled = false,
+      -- use mini.pairs
       "windwp/nvim-autopairs",
       opts = {
         fast_wrap = {},
@@ -212,7 +214,7 @@ return {
 
       sources = {
         { name = "nvim_lsp", max_item_count = 8, priority = 100 },
-        -- { name = "luasnip", enabled =false},
+        { name = "luasnip" },
         -- { name = "buffer", enabled = true, keyword_length = 3, max_item_count = 2 },
         {
           name = "buffer",

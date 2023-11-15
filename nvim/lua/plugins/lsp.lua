@@ -107,6 +107,7 @@ return {
       },
       {
         "pmizio/typescript-tools.nvim",
+        enabled = false,
         -- event = "LspAttach",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
@@ -117,7 +118,7 @@ return {
             on_attach = require("plugins.configs.lspconfig").on_attach,
             settings = {
               -- spawn additional tsserver instance to calculate diagnostics on it
-              separate_diagnostic_server = true,
+              separate_diagnostic_server = false,
               -- "change"|"insert_leave" determine when the client asks the server about diagnostic
               -- publish_diagnostic_on = "insert_leve",
               tsserver_file_preferences = {
@@ -185,6 +186,8 @@ return {
       --
 
       require("which-key").register({
+        ["]d"] = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
+        ["[d"] = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
         ["<F2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
 
         ["<F11>"] = {
@@ -255,8 +258,20 @@ return {
           D = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga type [D]efinition" },
           t = {
             name = "+typescript",
-            i = { "<cmd> TSToolsRemoveUnusedImports <CR>", "TS remove unused imports" },
-            r = { "<cmd> TSToolsRenameFile <CR>", "TS rename file" },
+
+            i = {
+              function()
+                vim.lsp.buf.code_action {
+                  apply = true,
+                  context = {
+                    only = { "source.removeUnused.ts" },
+                    diagnostics = {},
+                  },
+                }
+              end,
+              "TS remove unused imports",
+            },
+            -- r = { "<cmd> TSToolsRenameFile <CR>", "TS rename file" },
           },
           a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
           -- use ]d and [d

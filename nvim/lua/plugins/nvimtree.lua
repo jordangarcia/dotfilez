@@ -48,6 +48,7 @@ local function my_on_attach(bufnr)
   vim.keymap.set("n", "s", api.node.open.vertical, opts "Open: Vertical Split")
   vim.keymap.set("n", "<C-x>", api.node.open.horizontal, opts "Open: Horizontal Split")
   vim.keymap.set("n", "<C-O>", api.node.run.system, opts "Run System")
+  vim.keymap.set("n", "<C-t>", api.node.open.tab, opts "Open: New Tab")
 
   -- rename
   vim.keymap.set("n", "<C-r>", api.fs.rename_sub, opts "Rename: Omit Filename")
@@ -98,7 +99,6 @@ local function my_on_attach(bufnr)
   -- vim.keymap.set("n", "<C-e>", api.node.open.replace_tree_buffer, opts "Open: In Place")
   vim.keymap.set("n", "<C-i>", api.node.show_info_popup, opts "Info")
 
-  -- vim.keymap.set("n", "<C-t>", api.node.open.tab, opts "Open: New Tab")
   -- vim.keymap.set("n", "<Tab>", api.node.open.preview, opts "Open Preview")
   -- vim.keymap.set("n", ">", api.node.navigate.sibling.next, opts "Next Sibling")
   -- vim.keymap.set("n", "<", api.node.navigate.sibling.prev, opts "Previous Sibling")

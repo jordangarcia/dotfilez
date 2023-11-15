@@ -120,6 +120,54 @@ lspconfig["jsonls"].setup {
   },
 }
 
+lspconfig["tsserver"].setup {
+  on_attach = M.on_attach,
+  capabilities = M.capabilities,
+  init_options = {
+    hostInfo = "neovim",
+    preferences = {
+      -- autoImportFileExcludePatterns = { "**/dist/**" },
+      importModuleSpecifierPreference = "relative",
+      format = {
+        typescript = {
+          format = {
+            indentSize = vim.o.shiftwidth,
+            convertTabsToSpaces = vim.o.expandtab,
+            tabSize = vim.o.tabstop,
+          },
+        },
+        javascript = {
+          format = {
+            indentSize = vim.o.shiftwidth,
+            convertTabsToSpaces = vim.o.expandtab,
+            tabSize = vim.o.tabstop,
+          },
+        },
+      },
+      completions = {
+        completeFunctionCalls = true,
+      },
+    },
+  },
+  -- handlers = {
+  --
+  --   documentFormattingProvider = true,
+  --   documentHighlightProvider = true,
+  --   -- ["textDocument/publishDiagnostics"] = api.filter_diagnostics { -- Ignore 'This may be converted to an async function' diagnostics.
+  --   --   --conver to esm
+  --   --   80001,
+  --   --   80006,
+  --   --   -- no implicit any on variable
+  --   --   7043,
+  --   -- },
+  --
+  --   -- ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+  --   --   severity_sort = true,
+  --   --   virtual_text = false,
+  --   -- }),
+  -- },
+}
+
 local servers = { "html", "cssls", "prismals", "ruff_lsp", "pyright" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {

@@ -42,11 +42,30 @@ return {
       },
       {
         filter = {
+          event = "msg_show",
+          kind = "",
+          find = "^/",
+        },
+        opts = { skip = true },
+      },
+      {
+        filter = {
           event = "notify",
           -- kind = "echo",
           find = "Format request failed",
         },
         opts = { skip = true },
+      },
+      {
+        filter = {
+          event = "msg_show",
+          any = {
+            { find = "%d+L, %d+B" },
+            { find = "; after #%d+" },
+            { find = "; before #%d+" },
+          },
+        },
+        view = "mini",
       },
     },
 

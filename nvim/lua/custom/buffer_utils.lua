@@ -152,7 +152,7 @@ M.smart_close_window = function()
   elseif is_shown_elsewhere(file) then
     vim.api.nvim_win_close(curr_window, true)
   else
-    M.close_buffer_with_confirm()
+    vim.cmd [[ q ]]
   end
 end
 
