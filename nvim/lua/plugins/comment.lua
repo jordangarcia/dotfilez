@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "numToStr/Comment.nvim",
+  enabled = true,
   dependencies = {
     "JoosepAlviste/nvim-ts-context-commentstring",
   },
@@ -22,10 +23,12 @@ return {
     {
       "<C-/>",
       function()
+        local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+        vim.api.nvim_feedkeys(esc, "nx", false)
         require("Comment.api").toggle.linewise(vim.fn.visualmode())
       end,
       desc = "Toggle comment",
-      mode = "v",
+      mode = "x",
     },
   },
 

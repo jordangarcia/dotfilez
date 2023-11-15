@@ -96,7 +96,7 @@ return {
         require("telescope-live-grep-args.shortcuts").grep_visual_selection()
       end,
       desc = "Live grep",
-      mode = "v",
+      mode = "x",
     },
     {
       "<leader>fp",

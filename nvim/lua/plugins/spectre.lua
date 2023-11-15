@@ -14,7 +14,7 @@ return {
         require("spectre").open_visual { search_text = text }
       end,
       desc = "Find+Replace [w]ord",
-      mode = "v",
+      mode = "x",
     },
     {
       "<leader>rf",

@@ -31,6 +31,7 @@ set_keymap_tbl {
     ["k"] = "",
     ["gi"] = "",
     ["<leader>cc"] = "",
+    ["<c-r>"] = "",
     ["<leader>y"] = "",
     ["<leader>b"] = "",
     ["<leader>ls"] = "",
