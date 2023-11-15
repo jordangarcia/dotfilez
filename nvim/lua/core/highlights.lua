@@ -271,7 +271,17 @@ M.override = {
     bold = true,
   },
   -- TabLine = { bg = syn.sumiInk6 },
+  --
   -- NvimTreeIndentMarker = { fg = palette.boatYellow1 },
+  BufferLineFill = {
+    bg = palette.sumiInk4,
+  },
+  BufferLineGroupSeparator = {
+    bg = palette.sumiInk4,
+  },
+  BufferLineBackground = {
+    bg = palette.sumiInk4,
+  },
 }
 
 ---@type HLTable
@@ -381,6 +391,10 @@ M.add = {
   -- ["zshDeref"] = { link = "Variable" },
 
   -- NvimTreeIndentMarker = { fg = palette.boatYellow1 },
+  BufferLineBackground = {
+    bg = palette.sumiInk5,
+  },
 }
 
+M.palette = palette
 return M

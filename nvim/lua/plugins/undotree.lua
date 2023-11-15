@@ -7,7 +7,7 @@ return {
       function()
         vim.cmd [[ UndotreeShow ]]
         vim.cmd [[ UndotreeFocus ]]
-        vim.cmd [[ NvimTreeClose ]]
+        -- vim.cmd [[ NvimTreeClose ]]
       end,
       desc = "[U]ndotree",
       mode = "n",

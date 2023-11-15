@@ -27,6 +27,10 @@ return {
       nvimtree.tree.open()
     end
 
+    local function close_edgy()
+      require("edgy").close()
+    end
+
     local function close_nvim_tree()
       local nvimtree = require "nvim-tree.api"
       nvimtree.tree.close()
@@ -36,6 +40,7 @@ return {
       local name = data.name
       return data.filetype == "help"
         or data.filetype == "undotree"
+        or data.filetype == "noice"
         or string.find(name, "fugitive://")
         or string.find(name, "private/var/folders")
     end)
@@ -52,6 +57,7 @@ return {
         "winc =",
       },
       pre_save_cmds = {
+        close_edgy,
         close_nvim_tree,
         cleanup_buffers,
       },
