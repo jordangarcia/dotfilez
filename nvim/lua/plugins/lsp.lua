@@ -156,6 +156,9 @@ return {
   },
   {
     "nvimdev/lspsaga.nvim",
+    dependencies = {
+      "folke/which-key.nvim",
+    },
     event = "LspAttach",
     config = function()
       require("lspsaga").setup {
@@ -258,7 +261,6 @@ return {
           D = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga type [D]efinition" },
           t = {
             name = "+typescript",
-
             i = {
               function()
                 vim.lsp.buf.code_action {
@@ -277,27 +279,6 @@ return {
           -- use ]d and [d
           -- n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
           -- p = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
-          ["wa"] = {
-            function()
-              vim.lsp.buf.add_workspace_folder()
-            end,
-            "Add workspace folder",
-          },
-
-          ["wr"] = {
-            function()
-              vim.lsp.buf.remove_workspace_folder()
-            end,
-            "Remove workspace folder",
-          },
-
-          ["wl"] = {
-            function()
-              print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-            end,
-            "List workspace folders",
-          },
-          ["<C-r>"] = { "<cmd> LspRestart <CR>", "Lsp[R]estart" },
         },
       }, {
         prefix = "<leader>",

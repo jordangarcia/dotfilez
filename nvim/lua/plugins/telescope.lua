@@ -151,7 +151,8 @@ return {
       "<C-t>",
       function()
         require("telescope.builtin").lsp_dynamic_workspace_symbols {
-          ignore_symbols = { "property ", "variable" },
+          sorter = require("telescope.sorters").get_substr_matcher(),
+          -- ignore_symbols = { "property ", "variable" },
         }
       end,
       desc = "Find symbols",

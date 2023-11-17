@@ -268,10 +268,10 @@ local config = {
 			}),
 		},
 		-- adjust pane sizes
-		{ mods = hyper, key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 5 }) },
-		{ mods = hyper, key = "DownArrow", action = act.AdjustPaneSize({ "Down", 5 }) },
-		{ mods = hyper, key = "UpArrow", action = act.AdjustPaneSize({ "Up", 5 }) },
-		{ mods = hyper, key = "RightArrow", action = act.AdjustPaneSize({ "Right", 5 }) },
+		{ mods = hyper, key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 12 }) },
+		{ mods = hyper, key = "DownArrow", action = act.AdjustPaneSize({ "Down", 12 }) },
+		{ mods = hyper, key = "UpArrow", action = act.AdjustPaneSize({ "Up", 12 }) },
+		{ mods = hyper, key = "RightArrow", action = act.AdjustPaneSize({ "Right", 12 }) },
 
 		-- navigator
 		{ mods = "CTRL", key = "h", action = act.EmitEvent("ActivatePaneDirection-left") },

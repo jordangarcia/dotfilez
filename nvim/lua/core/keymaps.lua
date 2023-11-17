@@ -139,10 +139,10 @@ set_keymap_tbl {
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
 
-    ["<C-Left>"] = { "<CMD> vertical resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
-    ["<C-Right>"] = { "<CMD> vertical resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
-    ["<C-Up>"] = { "<CMD> horizontal resize +3 <CR>", "Increase horiz size", opts = { silent = true } },
-    ["<C-Down>"] = { "<CMD> horizontal resize -3 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Left>"] = { "<CMD> vertical resize +12 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Right>"] = { "<CMD> vertical resize -12 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Up>"] = { "<CMD> horizontal resize +6 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Down>"] = { "<CMD> horizontal resize -6 <CR>", "Increase horiz size", opts = { silent = true } },
 
     -- Quitting
     ["<c-q>"] = { "", "Quit" },
@@ -240,6 +240,27 @@ set_keymap_tbl {
       "<CMD> NavigatorRight <CR>",
       "Navigator right",
     },
+    ["<leader>lwa"] = {
+      function()
+        vim.lsp.buf.add_workspace_folder()
+      end,
+      "Add workspace folder",
+    },
+
+    ["<leader>lwr"] = {
+      function()
+        vim.lsp.buf.remove_workspace_folder()
+      end,
+      "Remove workspace folder",
+    },
+
+    ["<leader>lwl"] = {
+      function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+      end,
+      "List workspace folders",
+    },
+    ["<leader>l<C-r>"] = { "<cmd> LspRestart <CR>", "Lsp[R]estart" },
   },
 
   i = {
