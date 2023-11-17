@@ -52,7 +52,7 @@ M.close_hidden_buffers = function()
     local is_hidden = not vim.tbl_contains(non_hidden_buffer, buf)
     local loaded = vim.api.nvim_buf_is_loaded(buf)
     local listed = vim.api.nvim_buf_get_option(buf, "buflisted")
-    local name = vim.api.nvim_buf_get_name(buf) -- Get the full path of the buffer
+    local name = vim.api.nvim_buf_get_name(buf)                   -- Get the full path of the buffer
     local modified = vim.api.nvim_buf_get_option(buf, "modified") -- Check if the buffer has been modified
     -- local line_count = vim.api.nvim_buf_line_count(buf) -- Get the total number of lines in the buffer
     -- vim.notify(
@@ -71,7 +71,10 @@ M.close_hidden_buffers = function()
     --     .. vim.inspect(loaded)
     -- )
     --
-    if is_hidden and not modified and loaded and listed then
+    if is_hidden and not modified and not loaded and listed and name ~= "" then
+      closed = closed + 1
+      vim.api.nvim_buf_delete(buf, { force = true })
+    elseif is_hidden and not modified and loaded and listed then
       closed = closed + 1
       -- vim.notify(
       --   "Closing buffer: "

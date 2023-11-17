@@ -60,6 +60,14 @@ return {
       {
         filter = {
           event = "notify",
+          kind = "info",
+          find = "NvimTree",
+        },
+        view = "mini",
+      },
+      {
+        filter = {
+          event = "notify",
           -- kind = "echo",
           find = "Format request failed",
         },

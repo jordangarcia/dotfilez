@@ -273,6 +273,19 @@ return {
               end,
               "TS remove unused imports",
             },
+
+            r = {
+              function()
+                vim.lsp.buf.code_action {
+                  apply = true,
+                  context = {
+                    only = { "source.removeUnused.ts" },
+                    diagnostics = {},
+                  },
+                }
+              end,
+              "TS remove unused imports",
+            },
             -- r = { "<cmd> TSToolsRenameFile <CR>", "TS rename file" },
           },
           a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
@@ -284,6 +297,16 @@ return {
         prefix = "<leader>",
         mode = { "n", "v" },
       })
+    end,
+  },
+  {
+    "antosha417/nvim-lsp-file-operations",
+    event = "VeryLazy",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("lsp-file-operations").setup()
     end,
   },
 }
