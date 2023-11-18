@@ -11,6 +11,10 @@ g.transparency = config.ui.transparency
 -------------------------------------- options ------------------------------------------
 g.mapleader = " "
 
+-- disable netrw
+g.loaded_netrwPlugin = 1
+g.loaded_netrw = 1
+
 opt.laststatus = 3 -- global statusline
 opt.showmode = false
 
@@ -60,7 +64,7 @@ opt.autochdir = false
 -- this is for edgy
 opt.splitkeep = "screen"
 opt.wildmode = "longest:full,full" -- Command-line completion mode
-opt.winminwidth = 5 -- Minimum window width
+opt.winminwidth = 5                -- Minimum window width
 
 opt.fillchars = { eob = " " }
 opt.ignorecase = true

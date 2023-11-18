@@ -11,7 +11,7 @@ local cmp_ui = {
   lspkind_text = true,
   -- style = "default", -- default/flat_light/flat_dark/atom/atom_colored
   style = "flat_dark",
-  border_color = "grey_fg", -- only applicable for "default" style, use color names from base30 variables
+  border_color = "grey_fg",     -- only applicable for "default" style, use color names from base30 variables
   selected_item_bg = "colored", -- colored / simple
 }
 
@@ -83,8 +83,8 @@ return {
         vim.api.nvim_create_autocmd("InsertLeave", {
           callback = function()
             if
-              require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
-              and not require("luasnip").session.jump_active
+                require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+                and not require("luasnip").session.jump_active
             then
               require("luasnip").unlink_current()
             end
@@ -95,7 +95,7 @@ return {
 
     -- autopairing of (){}[] etc
     {
-      enabled = false,
+      enabled = true,
       -- use mini.pairs
       "windwp/nvim-autopairs",
       opts = {
@@ -244,6 +244,10 @@ return {
       enabled = false,
     })
     cmp.setup.cmdline({ "/", "?" }, {
+      -- require tab to open
+      completion = {
+        autocomplete = false,
+      },
       mapping = vim.tbl_deep_extend("force", cmp.mapping.preset.cmdline(), {
         ["<C-l>"] = {
           c = require("cmp.config.mapping").confirm { select = false },
@@ -278,6 +282,10 @@ return {
     })
 
     cmp.setup.cmdline(":", {
+      -- require tab to open
+      completion = {
+        autocomplete = false,
+      },
       mapping = vim.tbl_deep_extend("force", cmp.mapping.preset.cmdline(), {
         ["<C-l>"] = {
           c = require("cmp.config.mapping").confirm { select = false },

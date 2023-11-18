@@ -173,6 +173,10 @@ set_keymap_tbl {
       "<cmd> NoiceHistory <CR>",
       "Noice [h]istory",
     },
+    ["<leader>um"] = {
+      "<cmd> messages <CR>",
+      "[m]essage history",
+    },
     ["<leader>ba"] = {
       function()
         require("custom.buffer_utils").toggle_buffer_pin()
@@ -185,22 +189,22 @@ set_keymap_tbl {
         -- local is_hidden = not vim.tbl_contains(non_hidden_buffer, buf)
         local loaded = vim.api.nvim_buf_is_loaded(buf)
         local listed = vim.api.nvim_buf_get_option(buf, "buflisted")
-        local name = vim.api.nvim_buf_get_name(buf) -- Get the full path of the buffer
+        local name = vim.api.nvim_buf_get_name(buf)                   -- Get the full path of the buffer
         local modified = vim.api.nvim_buf_get_option(buf, "modified") -- Check if the buffer has been modified
         vim.notify(
           "Buffer info\n"
-            .. "\nid: "
-            .. buf
-            .. "\nname: "
-            .. name
-            .. "\nfiletype: "
-            .. vim.api.nvim_buf_get_option(buf, "filetype")
-            .. "\nlisted: "
-            .. vim.inspect(listed)
-            -- .. "\nhidden: "
-            -- .. vim.inspect(is_hidden)
-            .. "\nloaded: "
-            .. vim.inspect(loaded)
+          .. "\nid: "
+          .. buf
+          .. "\nname: "
+          .. name
+          .. "\nfiletype: "
+          .. vim.api.nvim_buf_get_option(buf, "filetype")
+          .. "\nlisted: "
+          .. vim.inspect(listed)
+          -- .. "\nhidden: "
+          -- .. vim.inspect(is_hidden)
+          .. "\nloaded: "
+          .. vim.inspect(loaded)
         )
       end,
       "Buffer info",

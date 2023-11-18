@@ -206,6 +206,24 @@ return {
       desc = "Live grep",
       mode = "n",
     },
+
+    {
+      "<leader>fe",
+      function()
+        require("telescope.builtin").live_grep {
+          prompt_title = "live_grep buffers",
+          grep_open_files = true,
+        }
+      end,
+      desc = "Live grep op[e]n files",
+      mode = "n",
+    },
+    {
+      "<leader>fw",
+      "<cmd> Telescope live_grep_args <CR>",
+      desc = "Live grep",
+      mode = "n",
+    },
     {
       "<leader>fb",
       "<cmd> Telescope buffers <CR>",
