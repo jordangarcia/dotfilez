@@ -214,19 +214,19 @@ set_keymap_tbl {
       "Close hidden buffers",
     },
     -- cycle through buffers
-    -- ["<S-l>"] = {
-    --   function()
-    --     require("nvchad.tabufline").tabuflineNext()
-    --   end,
-    --   "Goto next buffer",
-    -- },
+    ["<S-l>"] = {
+      function()
+        require("nvchad.tabufline").tabuflineNext()
+      end,
+      "Goto next buffer",
+    },
     --
-    -- ["<S-h>"] = {
-    --   function()
-    --     require("nvchad.tabufline").tabuflinePrev()
-    --   end,
-    --   "Goto prev buffer",
-    -- },
+    ["<S-h>"] = {
+      function()
+        require("nvchad.tabufline").tabuflinePrev()
+      end,
+      "Goto prev buffer",
+    },
     -- navigator
     ["<C-h>"] = {
       "<CMD> NavigatorLeft <CR>",

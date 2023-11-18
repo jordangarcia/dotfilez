@@ -1,13 +1,12 @@
+-- this isn't currently being used because of chad tabline being good
 ---@type LazyPluginSpec[]
 return {
   -- This is what powers LazyVim's fancy-looking
   -- tabs, which include filetype icons and close buttons.
   {
     "akinsho/bufferline.nvim",
+    enabled = false,
     event = "VeryLazy",
-    dependencies = {
-      "tiagovla/scope.nvim",
-    },
     keys = {
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>",            desc = "Toggle pin" },
       { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
@@ -20,7 +19,10 @@ return {
       { "]b",         "<cmd>BufferLineCycleNext<cr>",            desc = "Next buffer" },
     },
     opts = {
+
       options = {
+        numbers = "ordinal",
+
         close_command = function(n)
           require("mini.bufremove").delete(n, false)
         end,
@@ -71,9 +73,23 @@ return {
       { "<leader>bD", function() require("mini.bufremove").delete(0, true) end, desc = "Delete Buffer (Force)" },
     },
   },
-  -- {
-  --   "tiagovla/scope.nvim",
-  --   lazy = false,
-  --   event = "VeryLazy",
-  -- },
+  {
+    "backdround/tabscope.nvim",
+    lazy = true,
+    event = "VeryLazy",
+    config = function()
+      -- todo this needs to go somewhere else
+      vim.api.nvim_set_hl(0, "TblineFill", { bg = "#16161D" })
+      vim.api.nvim_set_hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
+      vim.api.nvim_set_hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
+      vim.api.nvim_set_hl(0, "TbLineBufOff", { bg = "#17171e", fg = "#4c4c55" })
+      vim.api.nvim_set_hl(0, "TbLineBufOffClose", { link = "TbLineBufOff" })
+      -- vim.api.nvim_set_hl(0, "TblineFill", { bg = "#16161D" })
+      -- vim.cmd [[ hl TblineFill guibg=#16161D ]]
+      -- TblineFill = { bg = palette.sumiInk0 },
+      -- TbLineFill = { bg = palette.sumiInk0 },
+      -- TabLine = { bg = palette.sumiInk0 },
+      -- TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
+    end,
+  },
 }

@@ -259,6 +259,11 @@ M.override = {
   TbLineBufOnModified = { link = "TbLineBufOn" },
   TbLineBufOffModified = { link = "TbLineBufOff" },
 
+  TblineFill = { bg = palette.sumiInk0 },
+  TbLineFill = { bg = palette.sumiInk0 },
+  TabLine = { bg = palette.sumiInk0 },
+  TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
+
   -- telescope
   TelescopePromptTitle = { bg = "nord_blue" },
   TelescopePromptPrefix = { fg = "nord_blue" },
@@ -287,7 +292,7 @@ M.override = {
 ---@type HLTable
 M.add = {
   -- fix Multi Visual tabline
-  TabLine = { link = "TbLineFill" },
+  -- TabLine = { link = "TblineFill" },
   NvimTreeOpenedFolderName = { fg = "green", bold = true },
   NvimTreeRootFolder = { fg = "green", bold = true },
 
@@ -394,6 +399,13 @@ M.add = {
   BufferLineBackground = {
     bg = palette.sumiInk5,
   },
+  -- tabufline
+  -- TbLineFill = { bg = palette.sumiInk0 },
+  -- TbLineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
+  TblineFill = { bg = palette.sumiInk0 },
+  TbLineFill = { bg = palette.sumiInk0 },
+  TabLine = { bg = palette.sumiInk0 },
+  TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
 }
 
 M.palette = palette
