@@ -52,6 +52,15 @@ return {
       {
         filter = {
           event = "notify",
+          kind = "warn",
+          find = "lualine",
+        },
+        opts = { skip = true },
+      },
+
+      {
+        filter = {
+          event = "notify",
           kind = "info",
           find = "No information available",
         },

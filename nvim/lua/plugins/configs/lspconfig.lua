@@ -7,8 +7,8 @@ local M = {}
 -- export on_attach & capabilities for custom lspconfigs
 
 M.on_attach = function(client, bufnr)
-  -- client.server_capabilities.documentFormattingProvider = false
-  -- client.server_capabilities.documentRangeFormattingProvider = false
+  client.server_capabilities.documentFormattingProvider = false
+  client.server_capabilities.documentRangeFormattingProvider = false
   --
   -- if client.server_capabilities.signatureHelpProvider then
   --   require("nvchad.signature").setup(client)
@@ -69,17 +69,17 @@ lspconfig["lua_ls"].setup {
 }
 
 lspconfig["graphql"].setup {
-  on_attach = on_attach,
+  on_attach = M.on_attach,
   capabilities = capabilities,
   root_dir = require("lspconfig.util").root_pattern "package.json",
 }
 lspconfig["eslint"].setup {
-  on_attach = on_attach,
+  on_attach = M.on_attach,
   capabilities = capabilities,
   root_dir = require("lspconfig.util").root_pattern ".git",
 }
 lspconfig["jsonls"].setup {
-  on_attach = on_attach,
+  on_attach = M.on_attach,
   capabilities = capabilities,
   settings = {
     json = {
@@ -181,7 +181,7 @@ lspconfig["tsserver"].setup {
 local servers = { "html", "cssls", "prismals", "ruff_lsp", "pyright" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
-    on_attach = on_attach,
+    on_attach = M.on_attach,
     capabilities = capabilities,
   }
 end

@@ -95,8 +95,8 @@ return {
 
     -- autopairing of (){}[] etc
     {
-      enabled = true,
-      -- use mini.pairs
+      -- using lexima right now
+      enabled = false,
       "windwp/nvim-autopairs",
       opts = {
         fast_wrap = {},
