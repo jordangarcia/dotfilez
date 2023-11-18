@@ -55,9 +55,9 @@ return {
   event = "VeryLazy",
   config = function()
     require("lualine").setup {
-      -- options = {
-      -- theme = "auto",
-      -- },
+      options = {
+        theme = "base16",
+      },
       sections = {
         lualine_a = { first(visual_multi, cwd) },
         lualine_b = {
