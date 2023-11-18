@@ -41,7 +41,15 @@ return {
   -- enables sticky scroll
   {
     "nvim-treesitter/nvim-treesitter-context",
-    -- enabled = false,
-    event = "BufEnter",
+    -- cannot get this to work well
+    enabled = false,
+    -- keys = {
+    --   {
+    --     "<leader>us",
+    --     "<CMD> TSContextToggle <CR>",
+    --     desc = "Toggle [s]ticky scroll",
+    --   },
+    -- },
+    cmd = { "TSContextEnable", "TSContextDisable" and "TSContextToggle" },
   },
 }
