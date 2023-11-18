@@ -145,10 +145,8 @@ set_keymap_tbl {
     ["<C-Down>"] = { "<CMD> horizontal resize -6 <CR>", "Increase horiz size", opts = { silent = true } },
 
     -- Quitting
-    ["<c-q>"] = { "", "Quit" },
     ["<c-q><c-q>"] = { "<cmd> qa! <CR>", "Force [q]uit" },
     ["<c-q><c-w>"] = { "<cmd> wqa! <CR>", "Force [q]uit and [w]rite" },
-    ["<leader>qw"] = { "<cmd> wqa! <CR>", "Quit and [w]rite all" },
 
     -- window things
     ['<C-w>"'] = { "<cmd> split <CR>", "Split window horizontally" },
@@ -269,7 +267,9 @@ set_keymap_tbl {
 
   i = {
     -- save
-    ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
+    ["<C-s>"] = { "<esc> <cmd> w <CR>", "Save file" },
+    ["<c-q><c-q>"] = { "<esc> <cmd> qa! <CR>", "Force [q]uit" },
+    ["<c-q><c-w>"] = { "<esc> <cmd> wqa! <CR>", "Force [q]uit and [w]rite" },
   },
 
   v = {
