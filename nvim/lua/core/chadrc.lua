@@ -28,20 +28,22 @@ M.ui = {
     lspkind_text = true,
     -- style = "default", -- default/flat_light/flat_dark/atom/atom_colored
     style = "flat_dark",
-    border_color = "grey_fg",     -- only applicable for "default" style, use color names from base30 variables
+    border_color = "grey_fg", -- only applicable for "default" style, use color names from base30 variables
     selected_item_bg = "colored", -- colored / simple
   },
 
   statusline = {
-    theme = "default", -- default/vscode/vscode_colored/minimal
+    theme = "minimal", -- default/vscode/vscode_colored/minimal
     separator_style = "block",
 
-    -- default/round/block/arrow (separators work only for "default" statusline theme;
-    -- round and block will work for the minimal theme only)
-    -- separator_style = "block",
-    -- overriden_modules = nil,
-    -- modules arg here is the default table of modules
-    overriden_modules = require "custom.statusline",
+    -- there is no way to disable statusline, so just render nothing
+    overriden_modules = function(modules)
+      for i = 1, 11, 1 do
+        modules[i] = (function()
+          return ""
+        end)()
+      end
+    end,
   },
 
   telescope = { style = "borderless" }, -- borderless / bordered

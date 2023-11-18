@@ -38,7 +38,7 @@ M.close_other_windows = function()
 end
 
 M.close_hidden_buffers = function()
-  local buffers = vim.api.nvim_list_bufs()
+  local buffers = vim.t.bufs
 
   local api = vim.api
 
@@ -61,16 +61,16 @@ M.close_hidden_buffers = function()
 
     if is_hidden and not modified and name ~= "" then
       closed = closed + 1
-      -- vim.notify(
-      --   "Closing buffer: "
-      --   .. buf
-      --   .. " name: "
-      --   .. name
-      --   .. " filetype: "
-      --   .. vim.api.nvim_buf_get_option(buf, "filetype")
-      --   .. " loaded: "
-      --   .. vim.inspect(loaded)
-      -- )
+      vim.notify(
+        "Closing buffer: "
+          .. buf
+          .. " name: "
+          .. name
+          .. " filetype: "
+          .. vim.api.nvim_buf_get_option(buf, "filetype")
+          .. " loaded: "
+          .. vim.inspect(loaded)
+      )
       vim.api.nvim_buf_delete(buf, { force = true })
     end
   end
