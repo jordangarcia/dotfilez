@@ -64,7 +64,7 @@ opt.autochdir = false
 -- this is for edgy
 opt.splitkeep = "screen"
 opt.wildmode = "longest:full,full" -- Command-line completion mode
-opt.winminwidth = 5                -- Minimum window width
+opt.winminwidth = 5 -- Minimum window width
 
 opt.fillchars = { eob = " " }
 opt.ignorecase = true

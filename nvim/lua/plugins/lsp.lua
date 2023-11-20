@@ -235,11 +235,11 @@ return {
           --   end,
           --   "Lspsaga [r]ename",
           -- },
-          r = {
+          R = {
             function()
               vim.lsp.buf.references()
             end,
-            "Lsp [r]eferences",
+            "Lsp [R]eferences",
           },
           i = {
             "<CMD> EslintFixAll <CR>",

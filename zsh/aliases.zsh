@@ -62,3 +62,7 @@ alias lvim="NVIM_APPNAME=lazyvim nvim"
 alias myprs="gh pr list --author=@me | fzf | awk '{print $1}' | xargs -I {} gh pr view {} --web"
 alias prs="gh pr list | fzf | awk '{print $1}' | xargs -I {} gh pr view {} --web"
 
+alias ask="GITHUB_TOKEN='' gh copilot suggest -t shell"
+alias copilot="GITHUB_TOKEN='' gh copilot suggest "
+
+

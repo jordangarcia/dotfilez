@@ -15,13 +15,24 @@ local function cwd()
   return require("custom.path_utils").normalize_to_home(vim.fn.getcwd())
 end
 
-local function first(a, b)
+local function recording()
+  local recording_register = vim.fn.reg_recording()
+  if recording_register == "" then
+    return ""
+  else
+    return "Recording @" .. recording_register
+  end
+end
+
+local function first(...)
+  local args = { ... }
   return function()
-    local aResult = a()
-    if aResult ~= "" then
-      return aResult
+    for _, v in ipairs(args) do
+      local result = v()
+      if result ~= "" then
+        return result
+      end
     end
-    return b()
   end
 end
 
@@ -59,7 +70,7 @@ return {
         theme = "base16",
       },
       sections = {
-        lualine_a = { first(visual_multi, cwd) },
+        lualine_a = { first(recording, visual_multi, cwd) },
         lualine_b = {
           "branch",
           {
