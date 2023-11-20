@@ -3,6 +3,21 @@ return {
   lazy = false,
   keys = {
     {
+      "<leader>sr",
+      function()
+        -- set mark to come back to
+        vim.cmd [[ normal mR ]]
+        vim.cmd [[ SessionDelete ]]
+        vim.cmd [[ SessionSave ]]
+        vim.cmd [[ silent! NvimTreeOpen ]]
+        vim.cmd [[ winc = ]]
+        -- go back to mark
+        vim.cmd [[ normal 'R ]]
+      end,
+      desc = "Session [r]efresh",
+      mode = "n",
+    },
+    {
       "<leader>sd",
       function()
         vim.cmd [[ SessionDelete ]]

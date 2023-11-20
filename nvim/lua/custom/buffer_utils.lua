@@ -196,4 +196,11 @@ M.smart_close_buffer = function()
   require("nvchad.tabufline").close_buffer()
 end
 
+M.goto_buffer = function(n)
+  local bufnr = vim.t.bufs[n]
+  if bufnr then
+    vim.cmd("b" .. bufnr)
+  end
+end
+
 return M
