@@ -83,7 +83,7 @@ return {
           open = function()
             vim.api.nvim_input "<esc><c-e>"
           end,
-          size = { height = 0.5 },
+          -- size = { height = 0.5 },
         },
         { title = "Neotest Summary", ft = "neotest-summary" },
         -- {

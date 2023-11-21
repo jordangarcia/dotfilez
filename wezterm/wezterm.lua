@@ -89,7 +89,8 @@ wezterm.on("close-even", function(window, pane)
 	local res = balance.close_direction()(window, pane)
 	local before = balance.sibling_counts(window, pane)
 
-	window:perform_action(wezterm.action.CloseCurrentPane({ confirm = true }), pane)
+	-- confirm here makes the resize whack
+	window:perform_action(wezterm.action.CloseCurrentPane({ confirm = false }), pane)
 
 	wezterm.time.call_after(0.02, function()
 		local after = balance.sibling_counts(window, pane)
@@ -298,6 +299,8 @@ local config = {
 		{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
 		{ key = "Tab", mods = "SHIFT|CTRL", action = act.ActivateTabRelative(-1) },
 
+		-- remap for vim stuff
+		{ mods = "CMD", key = "p", action = act.SendKey({ mods = "CTRL", key = "p" }) },
 		-- copy mode / hints / quickselect
 		-- kitty+e open URL hint
 		{

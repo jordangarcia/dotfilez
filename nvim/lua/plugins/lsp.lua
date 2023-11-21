@@ -202,6 +202,11 @@ return {
           "<cmd> Telescope lsp_definitions <CR>",
           "LSP definition",
         },
+        -- open tag in new window
+        ["<F24>"] = {
+          [[ :exec "vert norm <C-V><C-W>]"<CR> ]],
+          "Jump to def (vsplit)",
+        },
 
         ["K"] = {
           function()
