@@ -65,4 +65,6 @@ alias prs="gh pr list | fzf | awk '{print $1}' | xargs -I {} gh pr view {} --web
 alias ask="GITHUB_TOKEN='' gh copilot suggest -t shell"
 alias copilot="GITHUB_TOKEN='' gh copilot suggest "
 
+alias lastcommit="git log --pretty=format:'%h' -n 1"
+
 

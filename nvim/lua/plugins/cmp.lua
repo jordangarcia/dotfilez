@@ -18,7 +18,7 @@ local cmp_ui = {
 -- todo this should be in custom
 local formatting_style = {
   -- default fields order i.e completion word + item.kind + item.kind icons
-  fields = { "abbr", "kind", "menu" },
+  fields = { "kind", "abbr", "menu" },
 
   format = function(_, item)
     local icons = require "nvchad.icons.lspkind"
@@ -26,7 +26,9 @@ local formatting_style = {
 
     icon = cmp_ui.lspkind_text and (" " .. icon .. " ") or icon
     -- todo move this into custom
-    item.kind = string.format("%s %s", icon, cmp_ui.lspkind_text and item.kind or "")
+    local kind = cmp_ui.lspkind_text and item.kind or ""
+    item.kind = icon
+    item.menu = kind
 
     local MAX = 30
 
@@ -214,23 +216,23 @@ return {
 
       sources = {
         { name = "nvim_lsp", max_item_count = 8, priority = 100 },
-        { name = "luasnip" },
+        -- { name = "luasnip" },
         -- { name = "buffer", enabled = true, keyword_length = 3, max_item_count = 2 },
-        {
-          name = "buffer",
-          keyword_length = 5,
-          max_item_count = 2,
-          priority = 10,
-          option = {
-            get_bufnrs = function()
-              local bufs = {}
-              for _, win in ipairs(vim.api.nvim_list_wins()) do
-                bufs[vim.api.nvim_win_get_buf(win)] = true
-              end
-              return vim.tbl_keys(bufs)
-            end,
-          },
-        },
+        -- {
+        --   name = "buffer",
+        --   keyword_length = 5,
+        --   max_item_count = 2,
+        --   priority = 10,
+        --   option = {
+        --     get_bufnrs = function()
+        --       local bufs = {}
+        --       for _, win in ipairs(vim.api.nvim_list_wins()) do
+        --         bufs[vim.api.nvim_win_get_buf(win)] = true
+        --       end
+        --       return vim.tbl_keys(bufs)
+        --     end,
+        --   },
+        -- },
         -- { name = "buffer", enabled = true, keyword_length = 2 },
         { name = "nvim_lua", priority = 150 },
         -- { name = "path" , enabled = false}

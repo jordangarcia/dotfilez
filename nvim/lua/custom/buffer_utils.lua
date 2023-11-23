@@ -59,7 +59,7 @@ M.close_hidden_buffers = function()
     local modified = vim.api.nvim_buf_get_option(buf, "modified") -- Check if the buffer has been modified
     -- local line_count = vim.api.nvim_buf_line_count(buf) -- Get the total number of lines in the buffer
 
-    if is_hidden and not modified and name ~= "" then
+    if is_hidden and not modified then
       closed = closed + 1
       -- vim.notify(
       --   "Closing buffer: "

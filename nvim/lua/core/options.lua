@@ -43,7 +43,7 @@ vim.cmd [[
 ]]
 
 -- pmenu
-opt.pumblend = 10 -- Popup blend
+opt.pumblend = 0 -- Popup blend
 opt.pumheight = 7
 opt.pumwidth = 30
 
