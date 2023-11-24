@@ -55,7 +55,7 @@ local palette = {
   roninYellow = "#FF9E3B",
 }
 
-M.base_30 = {
+local base_30 = {
   white = "#DCD7BA",
   darker_black = "#191922",
   black = "#1F1F28", --  nvim bg
@@ -153,6 +153,7 @@ local syn = {
 
 ---@type Base46HLGroupsList
 M.override = {
+  WinSeparator = { fg = palette.sumiInk4, bg = palette.sumiInk4 },
   Comment = {
     italic = true,
   },
@@ -283,29 +284,64 @@ M.override = {
   TelescopePromptTitle = { bg = "nord_blue" },
   TelescopePromptPrefix = { fg = "nord_blue" },
 
-  -- nvim tree
-  NvimTreeLineNr = { bg = M.base_16.base00 },
-  NvimTreeGitDirty = { fg = palette.surimiOrange },
-  NvimTreeRootFolder = {
-    fg = "teal",
-    bold = true,
-  },
-
+  -- tabline
   TblineFill = { bg = palette.sumiInk0 },
   TabLine = { bg = palette.sumiInk0 },
   TbLineBufOn = { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true },
-  TbLineBufOff = { bg = "#17171e", fg = M.base_30.grey_fg },
+  TbLineBufOff = { bg = "#17171e", fg = base_30.grey_fg },
   TbLineBufOffClose = { link = "TbLineBufOff" },
   -- vim.api.nvim_set_hl(0, "TbLineBufOffClose", { link = "TbLineBufOff" })
+  --
+  --
+  --nvim tree
+  NvimTreeEmptyFolderName = { fg = base_30.folder_bg },
+  NvimTreeEndOfBuffer = { fg = base_30.black },
+  NvimTreeFolderIcon = { fg = base_30.folder_bg },
+  NvimTreeFolderName = { fg = base_30.folder_bg },
+  NvimTreeFolderArrowOpen = { fg = base_30.folder_bg },
+  NvimTreeFolderArrowClosed = { fg = base_30.grey_fg },
+  NvimTreeGitDirty = { fg = base_30.sun },
+  NvimTreeIndentMarker = { fg = base_30.grey_fg },
+  NvimTreeNormal = { bg = base_30.black },
+  NvimTreeNormalNC = { bg = base_30.black },
+  NvimTreeOpenedFolderName = { fg = base_30.folder_bg },
+  NvimTreeGitIgnored = { fg = base_30.light_grey },
+
+  NvimTreeWinSeparator = {
+    link = "WinSeparator",
+  },
+
+  NvimTreeWindowPicker = {
+    fg = base_30.red,
+    bg = base_30.black2,
+  },
+
+  NvimTreeCursorLine = {
+    bg = palette.sumiInk4,
+  },
+
+  NvimTreeGitNew = {
+    fg = palette.springGreen,
+  },
+
+  NvimTreeGitDeleted = {
+    fg = base_30.red,
+  },
+
+  NvimTreeSpecialFile = {
+    fg = palette.carpYellow,
+    bold = true,
+  },
+
+  NvimTreeRootFolder = {
+    fg = base_30.purple,
+    bold = true,
+  },
 }
 
 ---@type HLTable
 M.add = {
   -- fix Multi Visual tabline
-  -- TabLine = { link = "TblineFill" },
-  NvimTreeOpenedFolderName = { fg = "green", bold = true },
-  NvimTreeRootFolder = { fg = "green", bold = true },
-
   St_paste_sep = {
     fg = "yellow",
     bg = "lightbg",

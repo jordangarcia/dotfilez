@@ -25,7 +25,7 @@ M.ui = {
   -- lsp_semantic_tokens = true, -- needs nvim v0.9, just adds highlight groups for lsp semantic tokens
   hl_override = highlights.override,
   hl_add = highlights.add,
-  transparency = true,
+  transparency = false,
 
   cmp = {
     icons = true,
@@ -56,6 +56,18 @@ M.ui = {
     enabled = true,
     lazyload = false,
     overriden_modules = function(modules)
+      local api = vim.api
+      local function getNvimTreeWidth()
+        for _, win in pairs(api.nvim_tabpage_list_wins(0)) do
+          if vim.bo[api.nvim_win_get_buf(win)].ft == "NvimTree" then
+            return api.nvim_win_get_width(win) + 1
+          end
+        end
+        return 0
+      end
+      modules[1] = (function()
+        return "%#NvimTreeNormal#" .. (vim.g.nvimtree_side == "right" and "" or string.rep(" ", getNvimTreeWidth() - 1))
+      end)()
       -- no close tab or switch colorscheme button
       modules[4] = (function()
         return ""

@@ -120,7 +120,7 @@ function M.statuscolumn()
         -- left = true,
         width = 2,
       }
-    components[1] = hl "StatusColumn" .. " "
+    components[1] = hl "StatusColumn" .. ""
     components[3] = output {
       text = git and git.text and string.sub(git.text, 1, 1) or "",
       left = true,

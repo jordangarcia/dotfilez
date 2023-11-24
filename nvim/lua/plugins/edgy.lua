@@ -48,7 +48,7 @@ return {
             return vim.api.nvim_win_get_config(win).relative == ""
           end,
         },
-        { ft = "qf",                title = "QuickFix" },
+        { ft = "qf", title = "QuickFix" },
         {
           ft = "help",
           size = { height = 25 },
@@ -57,7 +57,7 @@ return {
             return vim.bo[buf].buftype == "help"
           end,
         },
-        { title = "Spectre",        ft = "spectre_panel",        size = { height = 0.4 } },
+        { title = "Spectre", ft = "spectre_panel", size = { height = 0.4 } },
         { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
       },
       left = {
