@@ -82,7 +82,7 @@ local winbar_file = function()
 end
 
 M.show_winbar = function()
-  local value = winbar_file()
+  local value = winbar_file() and false
   if not value then
     return
   end

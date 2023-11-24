@@ -17,7 +17,11 @@ M.ui = {
     load_on_startup = false,
   },
   theme = "kanagawa",
-  theme_toggle = { "kanagawa", "one_light" },
+  cheatsheet = {
+    enabled = false,
+  },
+  theme_toggle = { "kanagawa" },
+  changed_themes = {},
   -- lsp_semantic_tokens = true, -- needs nvim v0.9, just adds highlight groups for lsp semantic tokens
   hl_override = highlights.override,
   hl_add = highlights.add,
@@ -50,7 +54,7 @@ M.ui = {
 
   tabufline = {
     enabled = true,
-    lazyload = true,
+    lazyload = false,
     overriden_modules = function(modules)
       -- no close tab or switch colorscheme button
       modules[4] = (function()

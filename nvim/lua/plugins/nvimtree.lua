@@ -235,22 +235,6 @@ return {
     },
 
     {
-      "<leader>ec",
-      function()
-        local lib_tree = require "nvim-tree.lib"
-        local tree_view = require "nvim-tree.view"
-
-        if tree_view.win_open() then
-          return lib_tree.Tree.cwd
-        else
-          return nil
-        end
-      end,
-      -- "<CMD> tcd %:h <CR>",
-      desc = "Sync [C]WD",
-      mode = "n",
-    },
-    {
       "<C-0>",
       "<cmd> NvimTreeFocus <CR>",
       desc = "Focus nvimtree",

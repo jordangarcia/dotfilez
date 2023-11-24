@@ -28,6 +28,15 @@ local palette = {
   oniViolet = "#957FB8",
   katanaGray = "#717C7C",
 
+  -- Diff and Git
+  winterGreen = "#2B3328",
+  winterYellow = "#49443C",
+  winterRed = "#43242B",
+  winterBlue = "#252535",
+  autumnGreen = "#76946A",
+  autumnRed = "#C34043",
+  autumnYellow = "#DCA561",
+
   oldWhite = "#C8C093",
   fujiWhite = "#DCD7BA",
   fujiGray = "#727169",
@@ -99,6 +108,12 @@ M.base_16 = {
   base0F = "#d8616b",
 }
 
+local diff = {
+  add = palette.winterGreen,
+  delete = palette.winterRed,
+  change = palette.winterBlue,
+  text = palette.winterYellow,
+}
 local diag = {
   ok = palette.springGreen,
   error = palette.samuraiRed,
@@ -259,10 +274,10 @@ M.override = {
   TbLineBufOnModified = { link = "TbLineBufOn" },
   TbLineBufOffModified = { link = "TbLineBufOff" },
 
-  TblineFill = { bg = palette.sumiInk0 },
-  TbLineFill = { bg = palette.sumiInk0 },
-  TabLine = { bg = palette.sumiInk0 },
-  TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
+  -- TblineFill = { bg = palette.sumiInk0 },
+  -- TbLineFill = { bg = palette.sumiInk0 },
+  -- TabLine = { bg = palette.sumiInk0 },
+  -- TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
 
   -- telescope
   TelescopePromptTitle = { bg = "nord_blue" },
@@ -275,18 +290,13 @@ M.override = {
     fg = "teal",
     bold = true,
   },
-  -- TabLine = { bg = syn.sumiInk6 },
-  --
-  -- NvimTreeIndentMarker = { fg = palette.boatYellow1 },
-  BufferLineFill = {
-    bg = palette.sumiInk4,
-  },
-  BufferLineGroupSeparator = {
-    bg = palette.sumiInk4,
-  },
-  BufferLineBackground = {
-    bg = palette.sumiInk4,
-  },
+
+  TblineFill = { bg = palette.sumiInk0 },
+  TabLine = { bg = palette.sumiInk0 },
+  TbLineBufOn = { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true },
+  TbLineBufOff = { bg = "#17171e", fg = M.base_30.grey_fg },
+  TbLineBufOffClose = { link = "TbLineBufOff" },
+  -- vim.api.nvim_set_hl(0, "TbLineBufOffClose", { link = "TbLineBufOff" })
 }
 
 ---@type HLTable
@@ -400,13 +410,27 @@ M.add = {
     bg = palette.sumiInk5,
   },
   -- tabufline
-  -- TbLineFill = { bg = palette.sumiInk0 },
-  -- TbLineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
-  TblineFill = { bg = palette.sumiInk0 },
-  TbLineFill = { bg = palette.sumiInk0 },
-  TabLine = { bg = palette.sumiInk0 },
-  TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
+  -- hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
 }
+
+M.load_custom_highlights = function()
+  -- manual syntax highlighting
+  local hl = vim.api.nvim_set_hl
+  local gutter_bg = palette.sumiInk4
+  hl(0, "StatusColumn", { bg = gutter_bg, fg = palette.sumiInk6 })
+  hl(0, "StatusColumnNr", { bg = gutter_bg, fg = palette.surimiOrange })
+  --
+  hl(0, "GitSignsAdd", { bg = gutter_bg, fg = palette.springGreen })
+  hl(0, "GitSignsDelete", { bg = gutter_bg, fg = palette.waveRed })
+  hl(0, "GitSignsChange", { bg = gutter_bg, fg = palette.autumnYellow })
+  hl(0, "GitSignsUntracked", { bg = gutter_bg, fg = palette.springGreen })
+
+  hl(0, "DiagnosticSignHint", { fg = diag.hint, bg = gutter_bg })
+  hl(0, "DiagnosticSignError", { fg = diag.error, bg = gutter_bg })
+  hl(0, "DiagnosticSignWarn", { fg = diag.warning, bg = gutter_bg })
+  hl(0, "DiagnosticSignInfo", { fg = diag.info, bg = gutter_bg })
+  -- hl(0, "CursorLineNr", { bg = gutter_bg, fg = palette.surimiOrange })
+end
 
 M.palette = palette
 return M

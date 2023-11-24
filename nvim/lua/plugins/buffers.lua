@@ -82,14 +82,15 @@ return {
   },
   {
     "backdround/tabscope.nvim",
+    -- enabled = false,
     event = "VeryLazy",
     config = function()
       -- todo this needs to go somewhere else
-      vim.api.nvim_set_hl(0, "TblineFill", { bg = "#16161D" })
-      vim.api.nvim_set_hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
-      vim.api.nvim_set_hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
-      vim.api.nvim_set_hl(0, "TbLineBufOff", { bg = "#17171e", fg = "#4c4c55" })
-      vim.api.nvim_set_hl(0, "TbLineBufOffClose", { link = "TbLineBufOff" })
+      -- vim.api.nvim_set_hl(0, "TblineFill", { bg = "#16161D" })
+      -- vim.api.nvim_set_hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
+      -- vim.api.nvim_set_hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
+      -- vim.api.nvim_set_hl(0, "TbLineBufOff", { bg = "#17171e", fg = "#4c4c55" })
+      -- vim.api.nvim_set_hl(0, "TbLineBufOffClose", { link = "TbLineBufOff" })
       -- vim.api.nvim_set_hl(0, "TblineFill", { bg = "#16161D" })
       -- vim.cmd [[ hl TblineFill guibg=#16161D ]]
       -- TblineFill = { bg = palette.sumiInk0 },

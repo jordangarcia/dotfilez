@@ -79,7 +79,11 @@ opt.ruler = false
 -- disable nvim intro
 opt.shortmess:append "sI"
 
+-- signcolumn
 opt.signcolumn = "yes"
+if vim.fn.has "nvim-0.9.0" == 1 then
+  vim.opt.statuscolumn = [[%!v:lua.require'custom.statuscolumn'.statuscolumn()]]
+end
 opt.splitright = true
 opt.termguicolors = true
 opt.timeoutlen = 400

@@ -80,7 +80,6 @@ return {
         "~/code/*",
         "~/code/gamma/packages/*",
         "~/code/*/packages/*",
-        "~/.local/share/**/*",
       },
       session_lens = {
         -- If load_on_setup is set to false, one needs to eventually call `require("auto-session").setup_session_lens()` if they want to use session-lens.
