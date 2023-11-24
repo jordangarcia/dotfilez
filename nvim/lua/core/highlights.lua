@@ -455,11 +455,12 @@ M.load_custom_highlights = function()
   local gutter_bg = palette.sumiInk4
   hl(0, "StatusColumn", { bg = gutter_bg, fg = palette.sumiInk6 })
   hl(0, "StatusColumnNr", { bg = gutter_bg, fg = palette.surimiOrange })
+  hl(0, "StatusColumnRight", { fg = gutter_bg, bg = palette.sumiInk3 })
   --
-  hl(0, "GitSignsAdd", { bg = gutter_bg, fg = palette.springGreen })
-  hl(0, "GitSignsDelete", { bg = gutter_bg, fg = palette.waveRed })
-  hl(0, "GitSignsChange", { bg = gutter_bg, fg = palette.autumnYellow })
-  hl(0, "GitSignsUntracked", { bg = gutter_bg, fg = palette.springGreen })
+  hl(0, "GitSignsAdd", { bg = palette.sumiInk3, fg = palette.springGreen })
+  hl(0, "GitSignsDelete", { bg = palette.sumiInk3, fg = palette.waveRed })
+  hl(0, "GitSignsChange", { bg = palette.sumiInk3, fg = palette.autumnYellow })
+  hl(0, "GitSignsUntracked", { bg = palette.sumiInk3, fg = palette.springGreen })
 
   hl(0, "DiagnosticSignHint", { fg = diag.hint, bg = gutter_bg })
   hl(0, "DiagnosticSignError", { fg = diag.error, bg = gutter_bg })

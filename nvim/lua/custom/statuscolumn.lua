@@ -121,10 +121,15 @@ function M.statuscolumn()
         width = 2,
       }
     components[1] = hl "StatusColumn" .. ""
+    local text = "▎"
+    if git and git.text then
+      text = string.sub(git.text, 1, 1) == "|" and "▎" or ""
+    end
+
     components[3] = output {
-      text = git and git.text and string.sub(git.text, 1, 1) or "",
+      text = text,
       left = true,
-      hl = git and git.texthl or "StatusColumn",
+      hl = git and git.texthl or "StatusColumnRight",
       width = 1,
     }
   end
