@@ -76,7 +76,12 @@ return {
         close_nvim_tree,
         cleanup_buffers,
       },
-      auto_session_allowed_dirs = { "~/code/*", "~/code/gamma/packages/*" },
+      auto_session_allowed_dirs = {
+        "~/code/*",
+        "~/code/gamma/packages/*",
+        "~/code/*/packages/*",
+        "~/.local/share/**/*",
+      },
       session_lens = {
         -- If load_on_setup is set to false, one needs to eventually call `require("auto-session").setup_session_lens()` if they want to use session-lens.
         buftypes_to_ignore = {}, -- list of buffer types what should not be deleted from current session

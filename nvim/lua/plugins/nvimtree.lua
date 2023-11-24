@@ -166,7 +166,7 @@ local options = {
   renderer = {
     root_folder_label = ":~:s?$?/",
     highlight_git = true,
-    highlight_opened_files = "none",
+    highlight_opened_files = "icon",
 
     indent_markers = {
       enable = false,
@@ -231,6 +231,23 @@ return {
         }
       end,
       desc = "Nvimtree [f]ind file",
+      mode = "n",
+    },
+
+    {
+      "<leader>ec",
+      function()
+        local lib_tree = require "nvim-tree.lib"
+        local tree_view = require "nvim-tree.view"
+
+        if tree_view.win_open() then
+          return lib_tree.Tree.cwd
+        else
+          return nil
+        end
+      end,
+      -- "<CMD> tcd %:h <CR>",
+      desc = "Sync [C]WD",
       mode = "n",
     },
     {
