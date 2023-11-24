@@ -42,7 +42,7 @@ return {
       {
         "<leader>gz",
         function()
-          vim.cmd "Gitsigns toggle_signs"
+          require("gitsigns.actions").toggle_signs()
         end,
         desc = "[G]itsigns toggle [z]enmode",
         mode = "n",
@@ -76,17 +76,24 @@ return {
       attach_to_untracked = true,
       signcolumn = false,
       signs = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "" },
-        topdelete = { text = "" },
-        changedelete = { text = "▎" },
-        untracked = { text = "▎" },
+        -- use basic signs here becuase we dont want multiple characters..
+        add = { text = "|" },
+        change = { text = "|" },
+        delete = { text = ">" },
+        topdelete = { text = ">" },
+        changedelete = { text = "|" },
+        untracked = { text = "|" },
+        -- add = { text = "▎" },
+        -- change = { text = "▎" },
+        -- delete = { text = "" },
+        -- topdelete = { text = "" },
+        -- changedelete = { text = "▎" },
+        -- untracked = { text = "▎" },
 
         -- add = { text = "│" },
         -- change = { text = "│" },
         -- delete = { text = "│" },
-        -- -- delete = { text = "󰍵│" },
+        -- delete = { text = "󰍵│" },
         -- topdelete = { text = "‾" },
         -- changedelete = { text = "~" },
         -- untracked = { text = "│" },
