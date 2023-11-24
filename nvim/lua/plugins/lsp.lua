@@ -271,27 +271,13 @@ return {
                 vim.lsp.buf.code_action {
                   apply = true,
                   context = {
-                    only = { "source.removeUnused.ts" },
+                    only = { "source.removeUnusedImports.ts" },
                     diagnostics = {},
                   },
                 }
               end,
               "TS remove unused imports",
             },
-
-            r = {
-              function()
-                vim.lsp.buf.code_action {
-                  apply = true,
-                  context = {
-                    only = { "source.removeUnused.ts" },
-                    diagnostics = {},
-                  },
-                }
-              end,
-              "TS remove unused imports",
-            },
-            -- r = { "<cmd> TSToolsRenameFile <CR>", "TS rename file" },
           },
           a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
           -- use ]d and [d
