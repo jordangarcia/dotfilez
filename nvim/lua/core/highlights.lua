@@ -447,8 +447,18 @@ M.add = {
   },
 
   WinBarBg = {
-    -- bg = gutter_bg,
+    bg = gutter_bg,
     fg = gutter_bg,
+  },
+
+  WinBar = {
+    bg = gutter_bg,
+    fg = base_30.white,
+  },
+
+  WinbarPath = {
+    bg = gutter_bg,
+    fg = base_30.grey_fg,
   },
   -- tabufline
   -- hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })

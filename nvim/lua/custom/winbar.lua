@@ -71,20 +71,23 @@ local winbar_file = function()
   local has_number = vim.opt.number:get() or vim.opt.rnu:get()
 
   return table.concat({
-    "%#WinBarBg#",
-    has_number and "███" or "",
-    "▎",
+    -- "%#WinBarBg#",
+    -- has_number and "███" or "",
+    -- "▎",
     -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
     -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
     -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
     -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+    -- "%#WinBar#",
     "%#WinBar#",
-    "%=" .. "",
+    -- "%=" .. "",
     -- "%=" .. icon2,
     "%#WinBarPath# ",
     base .. "/",
+    -- "%#WinBar#",
     "%#WinBar#",
     tail,
+    -- "%#WinBar#",
     "%#WinBar#",
     modified,
   }, "")
