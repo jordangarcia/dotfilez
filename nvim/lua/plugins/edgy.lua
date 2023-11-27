@@ -50,6 +50,14 @@ return {
         },
         { ft = "qf", title = "QuickFix" },
         {
+          ft = "markdown",
+          size = { height = 25 },
+          -- don't open help files in edgy that we're editing
+          filter = function(buf)
+            return vim.bo[buf].buftype == "help"
+          end,
+        },
+        {
           ft = "help",
           size = { height = 25 },
           -- don't open help files in edgy that we're editing

@@ -24,7 +24,7 @@ local line_no_only = function()
   return ""
 end
 
-local line_no = function()
+local line_no = function(diag_hl)
   local win = vim.g.statusline_winid
   local is_num = vim.wo[win].number
   local is_relnum = vim.wo[win].relativenumber
@@ -32,13 +32,14 @@ local line_no = function()
     if vim.v.relnum == 0 then -- the current line
       -- current line should be left aligned
       return table.concat({
-        hl "StatusColumnNr",
+        hl(diag_hl and diag_hl or "StatusColumnNr"),
         "%=",
         is_num and "%l" or "%r",
       }, "")
     else
       return table.concat({
-        hl "StatusColumn",
+        hl(diag_hl and diag_hl or "StatusColumn"),
+        -- hl "StatusColumn",
         "%=",
         is_relnum and "%r" or "%l",
       }, "")
@@ -49,7 +50,7 @@ local line_no = function()
       -- }
     end
   end
-  return ""
+  return hl "StatusColumn" .. ""
 end
 
 ---@param obj {text: string, hl: string, width: number, left?: boolean}
@@ -84,10 +85,10 @@ function M.statuscolumn()
 
   local components = { "", "", "" } -- left, middle, right
 
+  local diag
   if show_signs then
     ---@type Sign?,Sign?,Sign?
     local git = {}
-    local diag
     for _, s in ipairs(M.get_signs(buf, vim.v.lnum)) do
       if s.name and s.name:find "GitSign" then
         git = s
@@ -113,17 +114,21 @@ function M.statuscolumn()
       DiagnosticSignInfo = "",
     }
 
-    local diagnosticObj = diag and { text = icons[diag.name] .. " ", hl = diag.name, width = 2, left = true }
-      or {
-        text = "",
-        hl = "StatusColumn",
-        -- left = true,
-        width = 2,
-      }
+    -- local diagnosticObj = diag and { text = icons[diag.name] .. " ", hl = diag.name, width = 2, left = true }
+    --   or {
+    --     text = "",
+    --     hl = "StatusColumn",
+    --     -- left = true,
+    --     width = 2,
+    --   }
     components[1] = hl "StatusColumn" .. ""
-    local text = "▎"
+    local line = "│"
+    local thick = "▎"
+    local half = "▌"
+
+    local text = thick
     if git and git.text then
-      text = string.sub(git.text, 1, 1) == "|" and "▎" or ""
+      text = string.sub(git.text, 1, 1) == "|" and thick or ""
     end
 
     components[3] = output {
@@ -134,7 +139,7 @@ function M.statuscolumn()
     }
   end
 
-  components[2] = line_no()
+  components[2] = line_no(diag and diag.name or nil)
 
   return table.concat(components, "")
 end

@@ -192,10 +192,15 @@ return {
         ["<C-n>"] = cmp.mapping.select_next_item(),
       },
       sorting = {
+        priority_weight = 2,
         comparators = {
+          cmp.config.compare.offset,
+          cmp.config.compare.exact,
+          cmp.config.compare.scopes,
           -- copied from cmp-under, but I don't think I need the plugin for this.
           -- I might add some more of my own.
           function(entry1, entry2)
+            -- print("cmp" .. vim.inspect(entry1))
             local _, entry1_under = entry1.completion_item.label:find "^_+"
             local _, entry2_under = entry2.completion_item.label:find "^_+"
             entry1_under = entry1_under or 0
@@ -206,16 +211,33 @@ return {
               return true
             end
           end,
-          cmp.config.compare.offset,
-          cmp.config.compare.exact,
           cmp.config.compare.score,
           cmp.config.compare.recently_used,
           cmp.config.compare.kind,
+          cmp.config.compare.length,
+          cmp.config.compare.order,
+          -- compare.offset,
+          -- compare.exact,
+          -- -- compare.scopes,
+          -- compare.score,
+          -- compare.recently_used,
+          -- compare.locality,
+          -- compare.kind,
+          -- -- compare.sort_text,
+          -- compare.length,
+          -- compare.order,
         },
+      },
+      matching = {
+        disallow_fuzzy_matching = true,
+        disallow_fullfuzzy_matching = true,
+        disallow_partial_fuzzy_matching = true,
+        disallow_partial_matching = false,
+        disallow_prefix_unmatching = true,
       },
 
       sources = {
-        { name = "nvim_lsp", max_item_count = 8, priority = 100 },
+        { name = "nvim_lsp", max_item_count = 20, priority = 100 },
         -- { name = "luasnip" },
         -- { name = "buffer", enabled = true, keyword_length = 3, max_item_count = 2 },
         -- {

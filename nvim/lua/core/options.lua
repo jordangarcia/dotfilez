@@ -32,19 +32,9 @@ opt.swapfile = false
 
 opt.list = true -- Show some invisible characters (tabs...
 
-vim.cmd [[
-  set listchars=""          " Reset the listchars
-  set listchars=tab:\ \     " a tab should display as "  ", trailing whitespace as "."
-  set listchars+=trail:.    " show trailing spaces as dots
-  set listchars+=extends:>  " The character to show in the last column when wrap is
-                            " off and the line continues beyond the right of the screen
-  set listchars+=precedes:< " The character to show in the last column when wrap is
-                            " off and the line continues beyond the right of the screen
-]]
-
 -- pmenu
 opt.pumblend = 0 -- Popup blend
-opt.pumheight = 7
+opt.pumheight = 20
 opt.pumwidth = 30
 
 opt.splitbelow = true
@@ -66,7 +56,17 @@ opt.splitkeep = "screen"
 opt.wildmode = "longest:full,full" -- Command-line completion mode
 opt.winminwidth = 5 -- Minimum window width
 
-opt.fillchars = { eob = " " }
+vim.cmd [[
+  set listchars=""          " Reset the listchars
+  set listchars=tab:\ \     " a tab should display as "  ", trailing whitespace as "."
+  set listchars+=trail:.    " show trailing spaces as dots
+]]
+opt.fillchars = {
+  eob = " ",
+  vert = "🮊",
+  vertright = "🮊",
+  vertleft = "🮊",
+}
 opt.ignorecase = true
 opt.smartcase = true
 opt.mouse = "a"

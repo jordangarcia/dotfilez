@@ -19,7 +19,8 @@ local winbar_file = function()
   local win = vim.api.nvim_get_current_win()
   local nr = vim.api.nvim_win_get_buf(win)
   local ft = vim.api.nvim_buf_get_option(nr, "filetype")
-  if ft == "gitcommit" or ft == "help" then
+  local buftype = vim.api.nvim_buf_get_option(nr, "buftype")
+  if ft == "gitcommit" or ft == "help" or buftype == "help" then
     return ""
   end
 
@@ -67,22 +68,30 @@ local winbar_file = function()
   local right_align = ""
 
   local hl = "%#Comment#"
+  local has_number = vim.opt.number:get() or vim.opt.rnu:get()
 
-  return string.format(
-    "%s%s %s%s%s%s%s",
+  return table.concat({
+    "%#WinBarBg#",
+    has_number and "███" or "",
+    "▎",
+    -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+    -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+    -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+    -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
+    "%#WinBar#",
     "%=" .. "",
     -- "%=" .. icon2,
-    "%#WinBarPath#",
+    "%#WinBarPath# ",
     base .. "/",
     "%#WinBar#",
     tail,
     "%#WinBar#",
-    modified
-  )
+    modified,
+  }, "")
 end
 
 M.show_winbar = function()
-  local value = winbar_file() and false
+  local value = winbar_file()
   if not value then
     return
   end

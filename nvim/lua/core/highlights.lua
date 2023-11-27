@@ -151,9 +151,11 @@ local syn = {
   special3 = palette.peachRed,
 }
 
+local gutter_bg = palette.sumiInk4
+
 ---@type Base46HLGroupsList
 M.override = {
-  WinSeparator = { fg = palette.sumiInk4, bg = palette.sumiInk4 },
+  WinSeparator = { fg = palette.sumiInk4, bg = palette.sumiInk3 },
   Comment = {
     italic = true,
   },
@@ -270,10 +272,6 @@ M.override = {
   IndentBlanklineContextStart = { bg = "NONE" },
 
   -- remove colors
-  -- bufferline
-  TbLineBufOnClose = { link = "TbLineBufOn" },
-  TbLineBufOnModified = { link = "TbLineBufOn" },
-  TbLineBufOffModified = { link = "TbLineBufOff" },
 
   -- TblineFill = { bg = palette.sumiInk0 },
   -- TbLineFill = { bg = palette.sumiInk0 },
@@ -288,11 +286,13 @@ M.override = {
   TblineFill = { bg = palette.sumiInk0 },
   TabLine = { bg = palette.sumiInk0 },
   TbLineBufOn = { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true },
-  TbLineBufOff = { bg = "#17171e", fg = base_30.grey_fg },
+  TbLineBufOff = { bg = palette.sumiInk2, fg = base_30.grey_fg },
+  -- TbLineBufOff = { bg = "#17171e", fg = base_30.grey_fg },
   TbLineBufOffClose = { link = "TbLineBufOff" },
-  -- vim.api.nvim_set_hl(0, "TbLineBufOffClose", { link = "TbLineBufOff" })
-  --
-  --
+  TbLineBufOnClose = { link = "TbLineBufOn" },
+  TbLineBufOnModified = { link = "TbLineBufOn" },
+  TbLineBufOffModified = { link = "TbLineBufOff" },
+
   --nvim tree
   NvimTreeEmptyFolderName = { fg = base_30.folder_bg },
   NvimTreeEndOfBuffer = { fg = base_30.black },
@@ -445,6 +445,11 @@ M.add = {
   BufferLineBackground = {
     bg = palette.sumiInk5,
   },
+
+  WinBarBg = {
+    -- bg = gutter_bg,
+    fg = gutter_bg,
+  },
   -- tabufline
   -- hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
 }
@@ -452,7 +457,6 @@ M.add = {
 M.load_custom_highlights = function()
   -- manual syntax highlighting
   local hl = vim.api.nvim_set_hl
-  local gutter_bg = palette.sumiInk4
   hl(0, "StatusColumn", { bg = gutter_bg, fg = palette.sumiInk6 })
   hl(0, "StatusColumnNr", { bg = gutter_bg, fg = palette.surimiOrange })
   hl(0, "StatusColumnRight", { fg = gutter_bg, bg = palette.sumiInk3 })
