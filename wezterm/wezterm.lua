@@ -141,6 +141,8 @@ local config = {
 
 	-- use_ime = false,
 	-- start from scratch
+	default_prog = { "/bin/zsh", "-l" },
+
 	disable_default_key_bindings = true,
 	-- tabs
 	use_fancy_tab_bar = false,
@@ -303,6 +305,13 @@ local config = {
 		{ mods = "CMD", key = "p", action = act.SendKey({ mods = "CTRL", key = "p" }) },
 		-- copy mode / hints / quickselect
 		-- kitty+e open URL hint
+		{
+			key = "g",
+			mods = hyper,
+			action = wezterm.action_callback(function(window, pane)
+				require("layouts").setup_gamma()
+			end),
+		},
 		{
 			key = "E",
 			mods = hyper,

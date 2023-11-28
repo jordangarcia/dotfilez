@@ -194,9 +194,10 @@ return {
       sorting = {
         priority_weight = 2,
         comparators = {
+          cmp.config.compare.locality,
+          cmp.config.compare.scopes,
           cmp.config.compare.offset,
           cmp.config.compare.exact,
-          cmp.config.compare.scopes,
           -- copied from cmp-under, but I don't think I need the plugin for this.
           -- I might add some more of my own.
           function(entry1, entry2)
@@ -221,7 +222,6 @@ return {
           -- -- compare.scopes,
           -- compare.score,
           -- compare.recently_used,
-          -- compare.locality,
           -- compare.kind,
           -- -- compare.sort_text,
           -- compare.length,
@@ -244,7 +244,7 @@ return {
           name = "buffer",
           keyword_length = 3,
           max_item_count = 2,
-          priority = 10,
+          priority = 1,
           option = {
             get_bufnrs = function()
               local bufs = {}

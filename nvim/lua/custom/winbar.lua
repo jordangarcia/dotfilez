@@ -69,6 +69,11 @@ local winbar_file = function()
 
   local hl = "%#Comment#"
   local has_number = vim.opt.number:get() or vim.opt.rnu:get()
+  local line_count = vim.api.nvim_buf_line_count(0)
+
+  -- if line count < 100 two spaces, if less than 1000 3 spaces, less than 10000 4 spaces
+  local line_count_width = line_count < 1000 and 3 or line_count < 10000 and 4 or 5
+  local left_pad = string.rep(" ", line_count_width)
 
   return table.concat({
     -- "%#WinBarBg#",
@@ -80,7 +85,8 @@ local winbar_file = function()
     -- "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔",
     -- "%#WinBar#",
     "%#WinBar#",
-    -- "%=" .. "",
+    left_pad,
+    "%=" .. "",
     -- "%=" .. icon2,
     "%#WinBarPath# ",
     base .. "/",
@@ -90,6 +96,8 @@ local winbar_file = function()
     -- "%#WinBar#",
     "%#WinBar#",
     modified,
+    left_pad,
+    "%=" .. "",
   }, "")
 end
 
@@ -106,8 +114,6 @@ M.show_winbar = function()
 end
 
 M.setup = function()
-  api.nvim_set_hl(0, "WinBarPath", { fg = "#4c4c55" })
-
   vim.api.nvim_create_autocmd({ "DirChanged", "BufWinEnter", "BufFilePost", "InsertEnter", "BufWritePost" }, {
     callback = function()
       M.show_winbar()

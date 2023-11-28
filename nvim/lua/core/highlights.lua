@@ -458,7 +458,7 @@ M.add = {
 
   WinbarPath = {
     bg = gutter_bg,
-    fg = base_30.grey_fg,
+    fg = palette.sumiInk6,
   },
   -- tabufline
   -- hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
