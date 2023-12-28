@@ -43,6 +43,12 @@ autocmd("FileType", {
   end,
 })
 
+autocmd("TabEnter", {
+  callback = function(opts)
+    print "tab enter cmdheight"
+    vim.cmd [[ set cmdheight=0 ]]
+  end,
+})
 -- reload some chadrc options on-save
 autocmd("BufWritePost", {
   pattern = vim.tbl_map(function(path)
