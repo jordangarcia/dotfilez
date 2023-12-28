@@ -1,5 +1,62 @@
 local M = {}
 
+local get_listed_bufs = function()
+  local all_bufs = vim.api.nvim_list_bufs()
+
+  return vim.tbl_filter(function(buf)
+    local name = vim.api.nvim_buf_get_name(buf)
+    local listed = vim.api.nvim_buf_get_option(buf, "buflisted")
+    local is_loaded = vim.api.nvim_buf_is_loaded(buf)
+    local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+    local is_fugitive = string.find(name, "fugitive://") ~= nil
+    local is_private = string.find(name, "private/var/folders") ~= nil
+    return is_loaded and listed
+    -- return is_loaded and listed and ft ~= "help" and ft ~= "qf" and not is_fugitive and not is_private
+  end, all_bufs)
+end
+
+local get_bufs_to_win = function()
+  local api = require "tabby.module.api"
+  local tabs = api.get_tabs()
+
+  local bufs_to_win = {}
+
+  for _, tab in ipairs(tabs) do
+    local tab_wins = api.get_tab_wins(tab)
+
+    for _, win in ipairs(tab_wins) do
+      local bufnr = vim.api.nvim_win_get_buf(win)
+      bufs_to_win[bufnr] = bufs_to_win[bufnr] or {}
+      table.insert(bufs_to_win[bufnr], {
+        win = win,
+        tab = tab,
+      })
+    end
+  end
+
+  return bufs_to_win
+end
+
+M.ls = function()
+  local bufs = get_listed_bufs()
+  local bufs_to_win = get_bufs_to_win()
+
+  return vim.tbl_map(function(buf)
+    local modified = vim.api.nvim_buf_get_option(buf, "modified")
+    local hidden = vim.api.nvim_buf_get_option(buf, "bufhidden")
+    return {
+      bufnr = buf,
+      name = vim.api.nvim_buf_get_name(buf),
+      is_loaded = vim.api.nvim_buf_is_loaded(buf),
+      is_valid = vim.api.nvim_buf_is_valid(buf),
+      filetype = vim.api.nvim_buf_get_option(buf, "filetype"),
+      hidden = hidden,
+      modified = modified,
+      displayed = bufs_to_win[buf],
+    }
+  end, bufs)
+end
+
 M.close_buffers = function(check)
   return function()
     local buffers = vim.api.nvim_list_bufs()
@@ -175,25 +232,42 @@ M.smart_close_buffer = function()
     vim.cmd "q"
     return
   end
+  --
+  -- local bufnr = vim.api.nvim_get_current_buf()
+  -- local file = vim.api.nvim_buf_get_name(0)
+  --
+  -- local api = require "tabby.module.api"
+  -- local tabs = api.get_tabs()
+  -- local curr_tab = api.get_current_tab()
+  -- local tab_wins = api.get_tab_wins(curr_tab)
+  -- local bufs = vim.api.nvim_list_bufs()
 
-  local bufnr = vim.api.nvim_get_current_buf()
-  local file = vim.api.nvim_buf_get_name(0)
+  local bfs = M.ls()
+  print(vim.inspect(bfs))
 
-  local curr_buf_ind = require("nvchad.tabufline").getBufIndex(bufnr)
-  -- if its shown somewhere else goto prev buf
-  if is_shown_elsewhere(file) then
-    if #vim.t.bufs > 1 then
-      -- goto other buffer
-      local offset = curr_buf_ind == #vim.t.bufs and -1 or 1
-      vim.cmd("b" .. vim.t.bufs[curr_buf_ind + offset])
-    else
-      -- if the only buffer we have open is open in more than one window, just close window
-      vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
-    end
-    return
-  end
-
-  require("nvchad.tabufline").close_buffer()
+  -- print(vim.inspect {
+  --   bufs = bufs,
+  --   tabs = tabs,
+  --   curr_tab = curr_tab,
+  --   tab_wins = tab_wins,
+  -- })
+  return
+  --
+  -- local curr_buf_ind = require("nvchad.tabufline").getBufIndex(bufnr)
+  -- -- if its shown somewhere else goto prev buf
+  -- if is_shown_elsewhere(file) then
+  --   if #vim.t.bufs > 1 then
+  --     -- goto other buffer
+  --     local offset = curr_buf_ind == #vim.t.bufs and -1 or 1
+  --     vim.cmd("b" .. vim.t.bufs[curr_buf_ind + offset])
+  --   else
+  --     -- if the only buffer we have open is open in more than one window, just close window
+  --     vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
+  --   end
+  --   return
+  -- end
+  --
+  -- require("nvchad.tabufline").close_buffer()
 end
 
 M.goto_buffer = function(n)
