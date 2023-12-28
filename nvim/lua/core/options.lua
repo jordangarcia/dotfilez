@@ -1,5 +1,6 @@
 local opt = vim.opt
 local g = vim.g
+local o = vim.o
 local config = require "core.chadrc"
 
 -------------------------------------- globals -----------------------------------------
@@ -75,6 +76,9 @@ opt.mouse = "a"
 opt.number = true
 opt.numberwidth = 2
 opt.ruler = false
+
+-- tabline
+o.showtabline = 2
 
 -- disable nvim intro
 opt.shortmess:append "sI"

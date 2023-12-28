@@ -53,7 +53,7 @@ M.ui = {
   telescope = { style = "borderless" }, -- borderless / bordered
 
   tabufline = {
-    enabled = true,
+    enabled = false,
     lazyload = false,
     overriden_modules = function(modules)
       local api = vim.api

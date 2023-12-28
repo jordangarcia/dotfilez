@@ -82,17 +82,17 @@ return {
         --   -- size = { height = 0.5 },
         -- },
 
-        {
-          ft = "NvimTree",
-          -- filter = function(buf)
-          --   return vim.b[buf].neo_tree_source == "filesystem"
-          -- end,
-          pinned = true,
-          open = function()
-            vim.api.nvim_input "<esc><c-e>"
-          end,
-          -- size = { height = 0.5 },
-        },
+        -- {
+        --   ft = "NvimTree",
+        --   -- filter = function(buf)
+        --   --   return vim.b[buf].neo_tree_source == "filesystem"
+        --   -- end,
+        --   pinned = true,
+        --   open = function()
+        --     vim.api.nvim_input "<esc><c-e>"
+        --   end,
+        --   -- size = { height = 0.5 },
+        -- },
         { title = "Neotest Summary", ft = "neotest-summary" },
         -- {
         --   title = "Neo-Tree Git",

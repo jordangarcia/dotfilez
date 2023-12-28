@@ -147,17 +147,17 @@ return {
       desc = "Find buffers",
       mode = "n",
     },
-    {
-      "<C-t>",
-      function()
-        require("telescope.builtin").lsp_dynamic_workspace_symbols {
-          sorter = require("telescope.sorters").get_substr_matcher(),
-          -- ignore_symbols = { "property ", "variable" },
-        }
-      end,
-      desc = "Find symbols",
-      mode = "n",
-    },
+    -- {
+    --   "<C-t>",
+    --   function()
+    --     require("telescope.builtin").lsp_dynamic_workspace_symbols {
+    --       sorter = require("telescope.sorters").get_substr_matcher(),
+    --       -- ignore_symbols = { "property ", "variable" },
+    --     }
+    --   end,
+    --   desc = "Find symbols",
+    --   mode = "n",
+    -- },
     {
       "<leader>fo",
       "<cmd> Telescope oldfiles hidden=true <CR>",

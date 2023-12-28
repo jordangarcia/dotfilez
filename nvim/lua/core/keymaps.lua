@@ -115,7 +115,7 @@ set_keymap_tbl {
 
     ["<leader>yy"] = {
       function()
-        vim.cmd [[ call system('pbcopy', @+ ]]
+        vim.cmd [[ call system('pbcopy', @+) ]]
       end,
       "Yank -> Clipboard",
     },
@@ -156,42 +156,42 @@ set_keymap_tbl {
 
     -- close buffer + hide terminal buffer
 
-    ["<C-1>"] = {
-      function()
-        require("custom.buffer_utils").goto_buffer(1)
-      end,
-      "Buffer 1",
-    },
-    ["<C-2>"] = {
-      function()
-        require("custom.buffer_utils").goto_buffer(2)
-      end,
-      "Buffer 2",
-    },
-    ["<C-3>"] = {
-      function()
-        require("custom.buffer_utils").goto_buffer(3)
-      end,
-      "Buffer 3",
-    },
-    ["<C-4>"] = {
-      function()
-        require("custom.buffer_utils").goto_buffer(4)
-      end,
-      "Buffer 4",
-    },
-    ["<C-5>"] = {
-      function()
-        require("custom.buffer_utils").goto_buffer(5)
-      end,
-      "Buffer 5",
-    },
-    ["<C-6>"] = {
-      function()
-        require("custom.buffer_utils").goto_buffer(6)
-      end,
-      "Buffer 6",
-    },
+    -- ["<C-1>"] = {
+    --   function()
+    --     require("custom.buffer_utils").goto_buffer(1)
+    --   end,
+    --   "Buffer 1",
+    -- },
+    -- ["<C-2>"] = {
+    --   function()
+    --     require("custom.buffer_utils").goto_buffer(2)
+    --   end,
+    --   "Buffer 2",
+    -- },
+    -- ["<C-3>"] = {
+    --   function()
+    --     require("custom.buffer_utils").goto_buffer(3)
+    --   end,
+    --   "Buffer 3",
+    -- },
+    -- ["<C-4>"] = {
+    --   function()
+    --     require("custom.buffer_utils").goto_buffer(4)
+    --   end,
+    --   "Buffer 4",
+    -- },
+    -- ["<C-5>"] = {
+    --   function()
+    --     require("custom.buffer_utils").goto_buffer(5)
+    --   end,
+    --   "Buffer 5",
+    -- },
+    -- ["<C-6>"] = {
+    --   function()
+    --     require("custom.buffer_utils").goto_buffer(6)
+    --   end,
+    --   "Buffer 6",
+    -- },
     ["<leader>q"] = {
       require("custom.buffer_utils").smart_close_buffer,
       "Close buffer",
@@ -244,6 +244,10 @@ set_keymap_tbl {
       end,
       "Buffer info",
     },
+    ["<leader>bs"] = {
+      "<CMD> source % <CR>",
+      "Buffer [s]ource",
+    },
     ["<leader>bh"] = {
       require("custom.buffer_utils").close_hidden_buffers,
       "Close hidden buffers",
@@ -251,17 +255,34 @@ set_keymap_tbl {
     -- cycle through buffers
     ["<S-l>"] = {
       function()
-        require("nvchad.tabufline").tabuflineNext()
+        vim.cmd [[ tabnext ]]
+        -- require("nvchad.tabufline").tabuflineNext()
       end,
       "Goto next buffer",
     },
     --
     ["<S-h>"] = {
       function()
-        require("nvchad.tabufline").tabuflinePrev()
+        vim.cmd [[ tabprev ]]
+        -- require("nvchad.tabufline").tabuflinePrev()
       end,
       "Goto prev buffer",
     },
+    -- TODO figure out bnext/prev
+    -- ["<S-NL>"] = {
+    --   function()
+    --     vim.cmd [[ bprev ]]
+    --     -- require("nvchad.tabufline").tabuflinePrev()
+    --   end,
+    --   "Goto prev buffer",
+    -- },
+    -- ["<S-j>"] = {
+    --   function()
+    --     vim.cmd [[ bnext ]]
+    --     -- require("nvchad.tabufline").tabuflinePrev()
+    --   end,
+    --   "Goto next buffer",
+    -- },
     -- navigator
     ["<C-h>"] = {
       "<CMD> NavigatorLeft <CR>",

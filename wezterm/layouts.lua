@@ -32,9 +32,10 @@ M.setup_gamma = function()
 	local pane42 = pane4:split({ direction = "Right", cwd = dir_client })
 	local pane43 = pane42:split({ direction = "Bottom", cwd = dir_hocus })
 
-	pane4:send_text("echo start\n")
-	pane42:send_text("echo start\n")
-	pane43:send_text("echo start\n")
+	-- send enter + clear to get rid of direnv spam
+	pane4:send_text("\nclear\n")
+	pane42:send_text("\nclear\n")
+	pane43:send_text("\nclear\n")
 
 	pane4:send_text("yarn dev:no-kafka\n")
 	pane42:send_text("yarn dev:light\n")

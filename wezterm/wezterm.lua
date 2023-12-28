@@ -73,7 +73,8 @@ wezterm.on("side-pane", function(window, pane)
 	local tab = window:active_tab()
 	local panes = tab:panes()
 	if #panes == 1 then
-		panes[1]:split({ size = 0.3 })
+		local new_pane = panes[1]:split({ size = 0.3 })
+		new_pane:send_text("\nclear\n")
 		return
 	end
 
@@ -303,6 +304,18 @@ local config = {
 
 		-- remap for vim stuff
 		{ mods = "CMD", key = "p", action = act.SendKey({ mods = "CTRL", key = "p" }) },
+		{
+			mods = "CTRL",
+			key = "-",
+			action = act.SendKey({ key = "F11" }),
+		},
+
+		{
+			mods = "CTRL",
+			key = "=",
+			action = act.SendKey({ key = "F12" }),
+		},
+
 		-- copy mode / hints / quickselect
 		-- kitty+e open URL hint
 		{

@@ -300,4 +300,20 @@ return {
       require("lsp-file-operations").setup()
     end,
   },
+  {
+    "mhanberg/output-panel.nvim",
+    event = "VeryLazy",
+    keys = {
+      {
+        "<leader>lO",
+        function()
+          vim.cmd [[ OutputPanel ]]
+        end,
+        desc = "Output panel",
+      },
+    },
+    config = function()
+      require("output_panel").setup()
+    end,
+  },
 }

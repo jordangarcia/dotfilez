@@ -276,6 +276,7 @@ M.override = {
   -- TblineFill = { bg = palette.sumiInk0 },
   -- TbLineFill = { bg = palette.sumiInk0 },
   -- TabLine = { bg = palette.sumiInk0 },
+  TabLine = { bg = palette.sumiInk0, fg = palette.sumiInk4 },
   -- TblineBufOn = { bg = palette.sumiInk3, fg = palette.fujiWhite },
 
   -- telescope
@@ -283,15 +284,16 @@ M.override = {
   TelescopePromptPrefix = { fg = "nord_blue" },
 
   -- tabline
-  TblineFill = { bg = palette.sumiInk0 },
-  TabLine = { bg = palette.sumiInk0 },
-  TbLineBufOn = { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true },
-  TbLineBufOff = { bg = palette.sumiInk2, fg = base_30.grey_fg },
+  -- TblineFill = { bg = palette.sumiInk0 },
+  -- TablineFill = { bg = palette.sumiInk0 },
+  -- TabLine = { bg = palette.sumiInk0 },
+  -- TbLineBufOn = { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true },
+  -- TbLineBufOff = { bg = palette.sumiInk2, fg = base_30.grey_fg },
   -- TbLineBufOff = { bg = "#17171e", fg = base_30.grey_fg },
-  TbLineBufOffClose = { link = "TbLineBufOff" },
-  TbLineBufOnClose = { link = "TbLineBufOn" },
-  TbLineBufOnModified = { link = "TbLineBufOn" },
-  TbLineBufOffModified = { link = "TbLineBufOff" },
+  -- TbLineBufOffClose = { link = "TbLineBufOff" },
+  -- TbLineBufOnClose = { link = "TbLineBufOn" },
+  -- TbLineBufOnModified = { link = "TbLineBufOn" },
+  -- TbLineBufOffModified = { link = "TbLineBufOff" },
 
   --nvim tree
   NvimTreeEmptyFolderName = { fg = base_30.folder_bg },
@@ -462,6 +464,14 @@ M.add = {
   },
   -- tabufline
   -- hl(0, "TbLineBufOn", { bg = "#1F1F28", fg = "#C8C3A6", italic = true, bold = true })
+  TablineFill = { bg = palette.sumiInk0, fg = palette.sumiInk4 },
+  TabLine = { bg = palette.sumiInk0, fg = palette.sumiInk4 },
+  TabLineSel = { bg = palette.sumiInk4 },
+  -- TablineFill = { bg = palette.sumiInk0 },
+  -- TabLine = { bg = palette.sumiInk0 },
+  -- TabLineSel = { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true },
+  -- TbLineBufOff = { bg = palette.sumiInk2, fg = base_30.grey_fg },
+  -- TabLineOff = {},
 }
 
 M.load_custom_highlights = function()
@@ -480,7 +490,18 @@ M.load_custom_highlights = function()
   hl(0, "DiagnosticSignError", { fg = diag.error, bg = gutter_bg })
   hl(0, "DiagnosticSignWarn", { fg = diag.warning, bg = gutter_bg })
   hl(0, "DiagnosticSignInfo", { fg = diag.info, bg = gutter_bg })
+
+  hl(0, "TabLineSel", { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true })
+  hl(0, "TabLineSelIcon", { bg = palette.sumiInk4, fg = "#7fb4ca" })
+  hl(0, "TabLineSelSep", { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true })
+
+  hl(0, "TabLineOff", { bg = palette.sumiInk3, fg = base_30.grey_fg })
+  hl(0, "TabLineOffIcon", { bg = palette.sumiInk3, fg = "#7fb4ca" })
+  hl(0, "TabLineOffSep", { bg = palette.sumiInk3, fg = palette.sumiInk5 })
+
   -- hl(0, "CursorLineNr", { bg = gutter_bg, fg = palette.surimiOrange })
+  -- hl(0, "TabLine", { bg = palette.sumiInk2, fg = palette.sumiInk4 })
+  -- hl(0, "DiagnosticSignInfo", { fg = diag.info, bg = gutter_bg })
 end
 
 M.palette = palette
