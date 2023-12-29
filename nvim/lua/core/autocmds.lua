@@ -15,7 +15,10 @@ autocmd("FileType", {
 -- Auto resize panes when resizing nvim window
 autocmd("VimResized", {
   pattern = "*",
-  command = "tabdo wincmd =",
+  callback = function()
+    -- get current tab and run winc =
+    vim.cmd "wincmd ="
+  end,
 })
 
 autocmd("FileType", {
