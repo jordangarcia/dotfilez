@@ -134,43 +134,39 @@ end
 M.smart_close_window = function()
   local bufnr = vim.api.nvim_get_current_buf()
   local wins = vim.api.nvim_tabpage_list_wins(0)
+  local winnr = vim.api.nvim_get_current_win()
   local bufs = M.ls()
 
-  local info = bufs[bufnr]
+  local this_buf_info = bufs[bufnr]
 
-  if not info then
+  if not this_buf_info then
     -- we're not on a file buffer
     vim.cmd [[ q ]]
     return
   end
 
-  if string.find(info.name, "fugitive://") ~= nil then
-    print "closing fugitive buf"
+  if string.find(this_buf_info.name, "fugitive://") ~= nil then
     M.close_all_fugitive_buffers()
     return
   end
 
-  local win_bufs = vim.tbl_map(function(win)
-    return vim.api.nvim_win_get_buf(win)
+  -- filter out the current window and other non file windows
+  local other_win_bufs = vim.tbl_filter(function(win)
+    local buf = vim.api.nvim_win_get_buf(win)
+    return (win ~= winnr and bufs[buf] ~= nil)
   end, wins)
-  local other_win_bufs = vim.tbl_filter(function(buf)
-    if buf == bufnr then
-      return false
-    end
 
-    -- only consider bufs that are shown
-    if bufs[buf] == nil then
-      return false
-    end
-
-    local buf_info = bufs[buf]
-    return buf_info.filetype ~= "NvimTree" and buf_info.filetype ~= "qf"
-  end, win_bufs)
-
-  if #other_win_bufs == 0 then
-    vim.cmd [[ tabc ]]
-  else
+  -- close if there are other windows in this tab
+  if #other_win_bufs > 0 then
     vim.cmd [[ q ]]
+    return
+  end
+
+  -- if there are only one tab
+  if #vim.api.nvim_list_tabpages() == 1 then
+    vim.notify("Cannot close last tab", vim.log.levels.WARN)
+  else
+    vim.cmd [[ tabc ]]
   end
 end
 
