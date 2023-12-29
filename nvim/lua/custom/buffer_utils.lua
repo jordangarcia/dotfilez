@@ -4,14 +4,9 @@ local get_listed_bufs = function()
   local all_bufs = vim.api.nvim_list_bufs()
 
   return vim.tbl_filter(function(buf)
-    local name = vim.api.nvim_buf_get_name(buf)
     local listed = vim.api.nvim_buf_get_option(buf, "buflisted")
     local is_loaded = vim.api.nvim_buf_is_loaded(buf)
-    local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-    local is_fugitive = string.find(name, "fugitive://") ~= nil
-    local is_private = string.find(name, "private/var/folders") ~= nil
     return is_loaded and listed
-    -- return is_loaded and listed and ft ~= "help" and ft ~= "qf" and not is_fugitive and not is_private
   end, all_bufs)
 end
 
@@ -105,49 +100,15 @@ M.close_hidden_buffers = function()
   local bufs = M.ls()
   -- vim.notify(vim.inspect(bufs))
 
-  for _, buf in ipairs(bufs) do
+  local closed = 0
+  for _, buf in pairs(bufs) do
     if buf.displayed == nil then
-      print("closing buffer: " .. buf.name)
-      -- vim.api.nvim_buf_delete(buf.bufnr, { force = true })
+      closed = closed + 1
+      vim.api.nvim_buf_delete(buf.bufnr, { force = true })
     end
   end
 
-  -- local api = vim.api
-  --
-  -- local closed = 0
-  -- local non_hidden_buffer = {}
-  -- for _, win in ipairs(api.nvim_list_wins()) do
-  --   table.insert(non_hidden_buffer, api.nvim_win_get_buf(win))
-  -- end
-  -- for _, buf in ipairs(buffers) do
-  --   -- check if index exists in tab
-  --   local is_hidden = not vim.tbl_contains(non_hidden_buffer, buf)
-  --   -- local listed = vim.api.nvim_buf_get_option(buf, 'buflisted')
-  --   -- local name = vim.api.nvim_buf_get_name(buf) -- Get the full path of the buffer
-  --   local modified = vim.api.nvim_buf_get_option(buf, "modified") -- Check if the buffer has been modified
-  --   local loaded = vim.api.nvim_buf_is_loaded(buf)
-  --   local listed = vim.api.nvim_buf_get_option(buf, "buflisted")
-  --   local name = vim.api.nvim_buf_get_name(buf) -- Get the full path of the buffer
-  --   local modified = vim.api.nvim_buf_get_option(buf, "modified") -- Check if the buffer has been modified
-  --   -- local line_count = vim.api.nvim_buf_line_count(buf) -- Get the total number of lines in the buffer
-  --
-  --   if is_hidden and not modified then
-  --     closed = closed + 1
-  --     -- vim.notify(
-  --     --   "Closing buffer: "
-  --     --     .. buf
-  --     --     .. " name: "
-  --     --     .. name
-  --     --     .. " filetype: "
-  --     --     .. vim.api.nvim_buf_get_option(buf, "filetype")
-  --     --     .. " loaded: "
-  --     --     .. vim.inspect(loaded)
-  --     -- )
-  --     vim.api.nvim_buf_delete(buf, { force = true })
-  --   end
-  -- end
-  -- vim.notify(string.format("Closed %s buffers", closed))
-  -- vim.cmd "redrawtabline"
+  vim.notify(string.format("Closed %s buffers", closed))
 end
 
 M.close_all_fugitive_blame_buffers = function()
@@ -170,42 +131,24 @@ M.close_all_fugitive_buffers = function()
   end
 end
 
-local is_shown_elsewhere = function(file)
-  local curr_window = vim.api.nvim_get_current_win()
-
-  -- get all windows in current tab
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    local win_file = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
-    if win ~= curr_window and win_file == file then
-      -- is open in another tab
-      -- close the current window
-      return true
-    end
-  end
-
-  return false
-end
-
--- check if its last window on tab, excluding nvim tree
-local is_last_window = function()
-  local curr_window = vim.api.nvim_get_current_win()
-  local wins = vim.api.nvim_tabpage_list_wins(0)
-  local num_wins = #wins
-  for _, win in ipairs(wins) do
-    local ft = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(win), "filetype")
-    if win == curr_window or ft == "NvimTree" then
-      num_wins = num_wins - 1
-    end
-  end
-
-  return num_wins == 0
-end
-
 M.smart_close_window = function()
   local bufnr = vim.api.nvim_get_current_buf()
-  local bufs_to_win = get_bufs_to_win()
   local wins = vim.api.nvim_tabpage_list_wins(0)
   local bufs = M.ls()
+
+  local info = bufs[bufnr]
+
+  if not info then
+    -- we're not on a file buffer
+    vim.cmd [[ q ]]
+    return
+  end
+
+  if string.find(info.name, "fugitive://") ~= nil then
+    print "closing fugitive buf"
+    M.close_all_fugitive_buffers()
+    return
+  end
 
   local win_bufs = vim.tbl_map(function(win)
     return vim.api.nvim_win_get_buf(win)
@@ -220,102 +163,28 @@ M.smart_close_window = function()
       return false
     end
 
-    local info = buf_info(buf, bufs_to_win)
-    return info.filetype ~= "NvimTree" and info.filetype ~= "qf"
+    local buf_info = bufs[buf]
+    return buf_info.filetype ~= "NvimTree" and buf_info.filetype ~= "qf"
   end, win_bufs)
 
   if #other_win_bufs == 0 then
-    -- print "close tab"
     vim.cmd [[ tabc ]]
   else
-    -- print "close in"
     vim.cmd [[ q ]]
   end
-  --
-  -- -- if there is only one window, and only buffer
-  -- if is_last_window() then
-  --   -- close the buffer and either show a new buffer or newfile
-  --   M.close_buffer_with_confirm()
-  -- elseif is_shown_elsewhere(file) then
-  --   vim.api.nvim_win_close(curr_window, true)
-  -- else
-  --   vim.cmd [[ q ]]
-  -- end
 end
 
 M.close_buffer_with_confirm = function()
-  local bd = require("mini.bufremove").delete
   if vim.bo.modified then
     local choice = vim.fn.confirm(("Save changes to %q?"):format(vim.fn.bufname()), "&Yes\n&No\n&Cancel")
     if choice == 1 then -- Yes
       vim.cmd.write()
-      bd(0)
+      vim.api.nvim_buf_delete(0)
     elseif choice == 2 then -- No
-      bd(0, true)
+      vim.api.nvim_buf_delete(0, { force = true })
     end
   else
-    bd(0)
-  end
-end
-
--- this function does its best to close the buffer and not change the layout
--- if the buffer is open in another window, it will cycle to the previous
--- if only one buffer is shown in multiple windows it will
-M.smart_close_buffer = function()
-  local filepath = vim.fn.expand "%"
-  local ft = vim.api.nvim_buf_get_option(0, "filetype")
-  local is_fugitive = string.find(filepath, "fugitive://") ~= nil
-  -- fugitive blame shows up like this
-  local is_private = string.find(filepath, "private/var/folders") ~= nil
-  if is_fugitive then
-    M.close_all_fugitive_buffers()
-    return
-  elseif ft == "help" or ft == "qf" or ft == "noice" or is_private then
-    vim.cmd "q"
-    return
-  end
-  --
-  -- local bufnr = vim.api.nvim_get_current_buf()
-  -- local file = vim.api.nvim_buf_get_name(0)
-  --
-  -- local api = require "tabby.module.api"
-  -- local tabs = api.get_tabs()
-  -- local curr_tab = api.get_current_tab()
-  -- local tab_wins = api.get_tab_wins(curr_tab)
-  -- local bufs = vim.api.nvim_list_bufs()
-
-  local bfs = M.ls()
-  print(vim.inspect(bfs))
-
-  -- print(vim.inspect {
-  --   bufs = bufs,
-  --   tabs = tabs,
-  --   curr_tab = curr_tab,
-  --   tab_wins = tab_wins,
-  -- })
-  return
-  --
-  -- local curr_buf_ind = require("nvchad.tabufline").getBufIndex(bufnr)
-  -- -- if its shown somewhere else goto prev buf
-  -- if is_shown_elsewhere(file) then
-  --   if #vim.t.bufs > 1 then
-  --     -- goto other buffer
-  --     local offset = curr_buf_ind == #vim.t.bufs and -1 or 1
-  --     vim.cmd("b" .. vim.t.bufs[curr_buf_ind + offset])
-  --   else
-  --     -- if the only buffer we have open is open in more than one window, just close window
-  --     vim.api.nvim_win_close(vim.api.nvim_get_current_win(), true)
-  --   end
-  --   return
-  -- end
-  --
-  -- require("nvchad.tabufline").close_buffer()
-end
-
-M.goto_buffer = function(n)
-  local bufnr = vim.t.bufs[n]
-  if bufnr then
-    vim.cmd("b" .. bufnr)
+    vim.api.nvim_buf_delete(0)
   end
 end
 

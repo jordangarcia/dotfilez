@@ -193,7 +193,7 @@ set_keymap_tbl {
     --   "Buffer 6",
     -- },
     ["<leader>q"] = {
-      require("custom.buffer_utils").smart_close_buffer,
+      require("custom.buffer_utils").smart_close_window,
       "Close buffer",
     },
     ["<C-w><C-q>"] = {
@@ -217,6 +217,12 @@ set_keymap_tbl {
         require("custom.buffer_utils").toggle_buffer_pin()
       end,
       "Pin buffer",
+    },
+    ["<leader>bd"] = {
+      function()
+        vim.cmd [[ bdelete ]]
+      end,
+      "Buffer [s]ource",
     },
     ["<leader>bl"] = {
       function()
