@@ -17,7 +17,8 @@ return {
   {
     "nanozuki/tabby.nvim",
     enabled = true,
-    event = "VeryLazy",
+    lazy = false,
+    -- event = "VeryLazy",
     keys = {
       {
         "<C-t>",

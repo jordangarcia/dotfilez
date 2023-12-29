@@ -121,12 +121,12 @@ set_keymap_tbl {
     },
 
     -- scrolling
-    ["<leader><tab><tab>"] = { "<cmd> tabNext <CR>", "[Tab] Next]" },
-    ["<leader><tab>n"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
-    ["<leader><tab>p"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
-    ["<leader><tab>e"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
-    ["<leader><tab>t"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
-    ["<leader><tab>q"] = { "<cmd> tabc <CR>", "[T]ab [q]uit" },
+    -- ["<leader><tab><tab>"] = { "<cmd> tabNext <CR>", "[Tab] Next]" },
+    -- ["<leader><tab>n"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
+    -- ["<leader><tab>p"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
+    -- ["<leader><tab>e"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },
+    -- ["<leader><tab>t"] = { "<cmd> tabNext <CR>", "[Tab] Nex[T]" },
+    -- ["<leader><tab>q"] = { "<cmd> tabc <CR>", "[T]ab [q]uit" },
     -- ["<leader>tn"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
     -- ["<leader>tp"] = { "<cmd> tabprevious <CR>", "[T]ab [P]rev" },
     -- ["<leader>te"] = { "<cmd> tabe <CR>", "[Tab] Creat[E]" },

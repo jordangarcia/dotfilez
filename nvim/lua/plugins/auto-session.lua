@@ -65,11 +65,11 @@ return {
       auto_session_suppress_dirs = { "~/", "~/code", "~/Downloads", "/" },
 
       post_restore_cmds = {
-        restore_nvim_tree,
-        "winc l",
+        -- restore_nvim_tree,
+        -- "winc l",
         -- for some reason the first buffer doesnt start lsp
-        "silent! LspStart",
-        "winc =",
+        -- "silent! LspStart",
+        -- "winc =",
       },
       pre_save_cmds = {
         close_edgy,
