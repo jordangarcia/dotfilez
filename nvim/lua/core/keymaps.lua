@@ -218,6 +218,12 @@ set_keymap_tbl {
       end,
       "Pin buffer",
     },
+    ["<leader>bl"] = {
+      function()
+        vim.notify("Buffer info\n" .. vim.inspect(require("custom.buffer_utils").ls()))
+      end,
+      "Buffer info",
+    },
     ["<leader>bi"] = {
       function()
         local buf = vim.api.nvim_get_current_buf()
@@ -249,7 +255,9 @@ set_keymap_tbl {
       "Buffer [s]ource",
     },
     ["<leader>bh"] = {
-      require("custom.buffer_utils").close_hidden_buffers,
+      function()
+        require("custom.buffer_utils").close_hidden_buffers()
+      end,
       "Close hidden buffers",
     },
     -- cycle through buffers
@@ -269,20 +277,20 @@ set_keymap_tbl {
       "Goto prev buffer",
     },
     -- TODO figure out bnext/prev
-    -- ["<S-NL>"] = {
-    --   function()
-    --     vim.cmd [[ bprev ]]
-    --     -- require("nvchad.tabufline").tabuflinePrev()
-    --   end,
-    --   "Goto prev buffer",
-    -- },
-    -- ["<S-j>"] = {
-    --   function()
-    --     vim.cmd [[ bnext ]]
-    --     -- require("nvchad.tabufline").tabuflinePrev()
-    --   end,
-    --   "Goto next buffer",
-    -- },
+    ["[b"] = {
+      function()
+        vim.cmd [[ bprev ]]
+        -- require("nvchad.tabufline").tabuflinePrev()
+      end,
+      "Goto prev buffer",
+    },
+    ["]b"] = {
+      function()
+        vim.cmd [[ bnext ]]
+        -- require("nvchad.tabufline").tabuflinePrev()
+      end,
+      "Goto next buffer",
+    },
     -- navigator
     ["<C-h>"] = {
       "<CMD> NavigatorLeft <CR>",

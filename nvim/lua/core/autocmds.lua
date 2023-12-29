@@ -43,9 +43,9 @@ autocmd("FileType", {
   end,
 })
 
+-- fix for session restore + noice
 autocmd("TabEnter", {
   callback = function(opts)
-    print "tab enter cmdheight"
     vim.cmd [[ set cmdheight=0 ]]
   end,
 })

@@ -143,7 +143,7 @@ return {
     },
     {
       "<C-b>",
-      "<cmd> Telescope buffers sort_mru=true cwd_only=true <CR>",
+      "<cmd> Telescope buffers show_all_buffers=false sort_mru=true cwd_only=true <CR>",
       desc = "Find buffers",
       mode = "n",
     },
