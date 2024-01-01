@@ -18,6 +18,7 @@ return {
         "prisma-language-server",
         "graphql-language-service-cli",
         "json-lsp",
+        "terraform-ls",
 
         -- python stuff
         "pyright",

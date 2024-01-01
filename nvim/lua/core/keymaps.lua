@@ -154,44 +154,30 @@ set_keymap_tbl {
     ["<C-w>s"] = { "<cmd> vsplit <CR>", "Split window vertically" },
     ["<C-w>k"] = { "", "" },
 
-    -- close buffer + hide terminal buffer
-
-    -- ["<C-1>"] = {
-    --   function()
-    --     require("custom.buffer_utils").goto_buffer(1)
-    --   end,
-    --   "Buffer 1",
-    -- },
-    -- ["<C-2>"] = {
-    --   function()
-    --     require("custom.buffer_utils").goto_buffer(2)
-    --   end,
-    --   "Buffer 2",
-    -- },
-    -- ["<C-3>"] = {
-    --   function()
-    --     require("custom.buffer_utils").goto_buffer(3)
-    --   end,
-    --   "Buffer 3",
-    -- },
-    -- ["<C-4>"] = {
-    --   function()
-    --     require("custom.buffer_utils").goto_buffer(4)
-    --   end,
-    --   "Buffer 4",
-    -- },
-    -- ["<C-5>"] = {
-    --   function()
-    --     require("custom.buffer_utils").goto_buffer(5)
-    --   end,
-    --   "Buffer 5",
-    -- },
-    -- ["<C-6>"] = {
-    --   function()
-    --     require("custom.buffer_utils").goto_buffer(6)
-    --   end,
-    --   "Buffer 6",
-    -- },
+    ["<leader>1"] = {
+      "<CMD>tabn 1<CR>",
+      "Buffer 1",
+    },
+    ["<leader>2"] = {
+      "<CMD>tabn 2<CR>",
+      "Buffer 2",
+    },
+    ["<leader>3"] = {
+      "<CMD>tabn 3<CR>",
+      "Buffer 3",
+    },
+    ["<leader>4"] = {
+      "<CMD>tabn 4<CR>",
+      "Buffer 4",
+    },
+    ["<leader>5"] = {
+      "<CMD>tabn 5<CR>",
+      "Buffer 5",
+    },
+    ["<leader>6"] = {
+      "<CMD>tabn 6<CR>",
+      "Buffer 6",
+    },
     ["<leader>q"] = {
       require("custom.buffer_utils").smart_close_window,
       "Close buffer",

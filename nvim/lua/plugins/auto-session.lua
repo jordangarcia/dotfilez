@@ -79,6 +79,7 @@ return {
       auto_session_allowed_dirs = {
         "~/code/*",
         "~/code/gamma/packages/*",
+        "~/code/requestnow/*",
         "~/code/*/packages/*",
       },
       session_lens = {

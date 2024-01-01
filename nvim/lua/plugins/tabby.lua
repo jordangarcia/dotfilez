@@ -30,6 +30,16 @@ return {
         "<CMD> tabc <CR>",
         desc = "Tab [q]uit",
       },
+      {
+        "<leader>t<S-l>",
+        "<CMD> +tabmove <CR>",
+        desc = "Tab move right",
+      },
+      {
+        "<leader>t<S-h>",
+        "<CMD> -tabmove <CR>",
+        desc = "Tab move left",
+      },
     },
     config = function(self, opts)
       local theme = {

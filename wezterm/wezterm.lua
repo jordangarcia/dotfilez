@@ -252,7 +252,7 @@ local config = {
 		{ mods = hyper, key = '"', action = act.EmitEvent("split-h-even") },
 		{ mods = hyper, key = "|", action = act.EmitEvent("side-pane") },
 		{ mods = hyper, key = ";", action = act.RotatePanes("CounterClockwise") },
-		{ mods = hyper, key = "z", action = act.TogglePaneZoomState },
+		{ mods = hyper, key = "=", action = act.TogglePaneZoomState },
 		-- { mods = hyper, key = "t", action = act.EmitEvent("jordan-newtab") },
 		{ mods = hyper, key = "F5", action = act.ReloadConfiguration },
 		-- rename pane
