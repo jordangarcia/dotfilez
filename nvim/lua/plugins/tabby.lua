@@ -40,6 +40,18 @@ return {
         "<CMD> -tabmove <CR>",
         desc = "Tab move left",
       },
+      {
+        "<leader>to",
+        "<CMD> tabonly <CR>",
+        desc = "Tab [o]nly",
+      },
+      {
+        "<leader>tr",
+        function()
+          require("custom.buffer_utils").close_right_tabs()
+        end,
+        desc = "Tab [o]nly",
+      },
     },
     config = function(self, opts)
       local theme = {

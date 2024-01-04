@@ -16,6 +16,7 @@ M.on_attach = function(client, bufnr)
 end
 
 local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+
 local capabilities = vim.tbl_deep_extend(
   "force",
   {},
@@ -25,6 +26,7 @@ local capabilities = vim.tbl_deep_extend(
 )
 
 M.capabilities = capabilities
+
 -- M.capabilities = vim.lsp.protocol.make_client_capabilities()
 --
 -- M.capabilities.textDocument.completion.completionItem = {
@@ -76,7 +78,7 @@ lspconfig["graphql"].setup {
 lspconfig["eslint"].setup {
   on_attach = M.on_attach,
   capabilities = capabilities,
-  root_dir = require("lspconfig.util").root_pattern ".git",
+  -- root_dir = require("lspconfig.util").root_pattern ".git",
 }
 lspconfig["jsonls"].setup {
   on_attach = M.on_attach,
@@ -176,6 +178,11 @@ lspconfig["tsserver"].setup {
   --   --   virtual_text = false,
   --   -- }),
   -- },
+}
+
+lspconfig["terraformls"].setup {
+  -- omit on_attach to allow document formatting provider
+  capabilities = capabilities,
 }
 
 local servers = { "html", "cssls", "prismals", "ruff_lsp", "pyright" }

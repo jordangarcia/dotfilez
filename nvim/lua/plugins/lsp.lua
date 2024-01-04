@@ -48,6 +48,7 @@ return {
       -- format & linting
       {
         "jose-elias-alvarez/null-ls.nvim",
+        enabled = true,
         opts = function()
           local null_ls = require "null-ls"
           return {
@@ -192,7 +193,7 @@ return {
       require("which-key").register({
         ["]d"] = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
         ["[d"] = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
-        ["<F2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
+        ["<C-2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
 
         ["<F11>"] = {
           "<cmd> Lspsaga finder tyd+def+ref <CR>",

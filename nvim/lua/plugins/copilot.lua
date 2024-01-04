@@ -1,5 +1,7 @@
 ---@type LazyPluginSpec
 return {
+  -- TODO
+  -- https://azamuddin.com/en/blog/050623-setting-up-copilot-on-nvchad
   "zbirenbaum/copilot.lua",
   cmd = "Copilot",
   enabled = true,
@@ -33,7 +35,7 @@ return {
         css = true,
         ["*"] = false,
       },
-      panel = { enabled = true },
+      panel = { enabled = false },
     }
   end,
 }

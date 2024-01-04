@@ -184,4 +184,24 @@ M.close_buffer_with_confirm = function()
   end
 end
 
+local function find_index(val, tbl)
+  for i, v in ipairs(tbl) do
+    if v == val then
+      return i
+    end
+  end
+end
+
+M.close_right_tabs = function()
+  local tabby_api = require "tabby.module.api"
+  local tabs = tabby_api.get_tabs()
+  local curr = tabby_api.get_current_tab()
+  local curr_index = find_index(curr, tabs)
+
+  for i = curr_index + 1, #tabs do
+    -- tabclose the next one n number of times
+    vim.cmd "tabclose +"
+  end
+end
+
 return M
