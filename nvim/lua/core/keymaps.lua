@@ -139,10 +139,10 @@ set_keymap_tbl {
     -- save
     ["<C-s>"] = { "<cmd> w <CR>", "Save file" },
 
-    ["<C-Left>"] = { "<CMD> vertical resize +12 <CR>", "Increase horiz size", opts = { silent = true } },
-    ["<C-Right>"] = { "<CMD> vertical resize -12 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Left>"] = { "<CMD> vertical resize -12 <CR>", "Decrease vert size", opts = { silent = true } },
+    ["<C-Right>"] = { "<CMD> vertical resize +12 <CR>", "Increase vert size", opts = { silent = true } },
     ["<C-Up>"] = { "<CMD> horizontal resize +6 <CR>", "Increase horiz size", opts = { silent = true } },
-    ["<C-Down>"] = { "<CMD> horizontal resize -6 <CR>", "Increase horiz size", opts = { silent = true } },
+    ["<C-Down>"] = { "<CMD> horizontal resize -6 <CR>", "Descrease horiz size", opts = { silent = true } },
 
     -- Quitting
     ["<c-q><c-q>"] = { "<cmd> qa! <CR>", "Force [q]uit" },

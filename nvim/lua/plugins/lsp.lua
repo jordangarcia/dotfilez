@@ -176,7 +176,8 @@ return {
           right_width = 0.7,
           keys = {
             toggle_or_open = "<CR>",
-            vsplit = "s",
+            vsplit = "<C-v>",
+            tabe = "<C-t>",
             shuttle = "<TAB>",
           },
         },

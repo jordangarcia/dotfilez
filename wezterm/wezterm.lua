@@ -231,6 +231,7 @@ local config = {
 	keys = {
 		-- basic stuff
 		{ mods = "CMD", key = "h", action = act.HideApplication },
+		{ mods = "CMD", key = "m", action = act.Hide },
 		{ mods = "CMD", key = "q", action = act.QuitApplication },
 		{ mods = "CMD", key = "k", action = act.ActivateCommandPalette },
 		{ mods = "CMD", key = "n", action = act.SpawnWindow },
