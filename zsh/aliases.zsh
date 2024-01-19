@@ -66,5 +66,6 @@ alias ask="GITHUB_TOKEN='' gh copilot suggest -t shell"
 alias copilot="GITHUB_TOKEN='' gh copilot suggest "
 
 alias lastcommit="git log --pretty=format:'%h' -n 1"
+alias lzd="lazydocker"
 
 

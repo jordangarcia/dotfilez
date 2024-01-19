@@ -46,7 +46,7 @@ local function my_on_attach(bufnr)
   vim.keymap.set("n", "O", api.node.open.no_window_picker, opts "Open: No Window Picker")
   vim.keymap.set("n", "<C-v>", api.node.open.vertical, opts "Open: Vertical Split")
   vim.keymap.set("n", "s", api.node.open.vertical, opts "Open: Vertical Split")
-  vim.keymap.set("n", "<C-h>", api.node.open.horizontal, opts "Open: Horizontal Split")
+  vim.keymap.set("n", "<C-s>", api.node.open.horizontal, opts "Open: Horizontal Split")
   vim.keymap.set("n", "<C-O>", api.node.run.system, opts "Run System")
   vim.keymap.set("n", "<C-t>", api.node.open.tab, opts "Open: New Tab")
 

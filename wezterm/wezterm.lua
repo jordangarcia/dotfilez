@@ -391,7 +391,15 @@ local config = {
 			}),
 		},
 		{ key = "F1", action = act.ActivateCopyMode },
+		{ key = "1", mods = "CTRL", action = act.ActivateCopyMode },
 		{ mods = hyper, key = "phys:Space", action = act.QuickSelect },
+		{
+			key = "d",
+			mods = hyper,
+			action = wezterm.action.SpawnCommandInNewTab({
+				args = { "lazydocker" },
+			}),
+		},
 
 		-- convenience stuff
 		{

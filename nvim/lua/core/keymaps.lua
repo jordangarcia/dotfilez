@@ -113,6 +113,13 @@ set_keymap_tbl {
       "[Y]ank [f]ile path to keyboard",
     },
 
+    ["<leader>yt"] = {
+      function()
+        vim.cmd [[ let @+ = "yarn test:watch -- " . expand('%') ]]
+      end,
+      "[Y]ank [f]ile path to keyboard",
+    },
+
     ["<leader>yy"] = {
       function()
         vim.cmd [[ call system('pbcopy', @+) ]]
