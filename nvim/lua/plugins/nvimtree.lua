@@ -245,5 +245,6 @@ return {
   config = function(_, opts)
     dofile(vim.g.base46_cache .. "nvimtree")
     require("nvim-tree").setup(opts)
+    require("plugins.configs.vtsls-rename").setup()
   end,
 }

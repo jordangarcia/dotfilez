@@ -12,7 +12,8 @@ return {
         -- web dev stuff
         "css-lsp",
         "html-lsp",
-        "typescript-language-server",
+        -- "typescript-language-server",
+        "vtsls",
         "prettier",
         "eslint-lsp",
         "prisma-language-server",
@@ -46,6 +47,7 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       -- format & linting
+      { "yioneko/nvim-vtsls" },
       {
         "jose-elias-alvarez/null-ls.nvim",
         enabled = true,
@@ -153,6 +155,7 @@ return {
       require("core.utils").lazy_load "nvim-lspconfig"
     end,
     config = function()
+      print "loading LSP CONFIG"
       require "plugins.configs.lspconfig"
     end,
   },
@@ -274,7 +277,7 @@ return {
                 vim.lsp.buf.code_action {
                   apply = true,
                   context = {
-                    only = { "source.removeUnusedImports.ts" },
+                    only = { "source.removeUnusedImports" },
                     diagnostics = {},
                   },
                 }
@@ -294,7 +297,9 @@ return {
     end,
   },
   {
+    -- this is now covered by the vstls-rename
     "antosha417/nvim-lsp-file-operations",
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",

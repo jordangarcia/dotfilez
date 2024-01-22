@@ -132,53 +132,53 @@ lspconfig["jsonls"].setup {
   },
 }
 
-lspconfig["tsserver"].setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
-  init_options = {
-    hostInfo = "neovim",
-    preferences = {
-      -- autoImportFileExcludePatterns = { "**/dist/**" },
-      importModuleSpecifierPreference = "relative",
-      format = {
-        typescript = {
-          format = {
-            indentSize = vim.o.shiftwidth,
-            convertTabsToSpaces = vim.o.expandtab,
-            tabSize = vim.o.tabstop,
-          },
-        },
-        javascript = {
-          format = {
-            indentSize = vim.o.shiftwidth,
-            convertTabsToSpaces = vim.o.expandtab,
-            tabSize = vim.o.tabstop,
-          },
-        },
-      },
-      completions = {
-        completeFunctionCalls = true,
-      },
-    },
-  },
-  -- handlers = {
-  --
-  --   documentFormattingProvider = true,
-  --   documentHighlightProvider = true,
-  --   -- ["textDocument/publishDiagnostics"] = api.filter_diagnostics { -- Ignore 'This may be converted to an async function' diagnostics.
-  --   --   --conver to esm
-  --   --   80001,
-  --   --   80006,
-  --   --   -- no implicit any on variable
-  --   --   7043,
-  --   -- },
-  --
-  --   -- ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-  --   --   severity_sort = true,
-  --   --   virtual_text = false,
-  --   -- }),
-  -- },
-}
+-- lspconfig["tsserver"].setup {
+--   on_attach = M.on_attach,
+--   capabilities = M.capabilities,
+--   init_options = {
+--     hostInfo = "neovim",
+--     preferences = {
+--       -- autoImportFileExcludePatterns = { "**/dist/**" },
+--       importModuleSpecifierPreference = "relative",
+--       format = {
+--         typescript = {
+--           format = {
+--             indentSize = vim.o.shiftwidth,
+--             convertTabsToSpaces = vim.o.expandtab,
+--             tabSize = vim.o.tabstop,
+--           },
+--         },
+--         javascript = {
+--           format = {
+--             indentSize = vim.o.shiftwidth,
+--             convertTabsToSpaces = vim.o.expandtab,
+--             tabSize = vim.o.tabstop,
+--           },
+--         },
+--       },
+--       completions = {
+--         completeFunctionCalls = true,
+--       },
+--     },
+--   },
+--   -- handlers = {
+--   --
+--   --   documentFormattingProvider = true,
+--   --   documentHighlightProvider = true,
+--   --   -- ["textDocument/publishDiagnostics"] = api.filter_diagnostics { -- Ignore 'This may be converted to an async function' diagnostics.
+--   --   --   --conver to esm
+--   --   --   80001,
+--   --   --   80006,
+--   --   --   -- no implicit any on variable
+--   --   --   7043,
+--   --   -- },
+--   --
+--   --   -- ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+--   --   --   severity_sort = true,
+--   --   --   virtual_text = false,
+--   --   -- }),
+--   -- },
+-- }
 
 lspconfig["terraformls"].setup {
   -- omit on_attach to allow document formatting provider
@@ -192,6 +192,32 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
+require("lspconfig.configs").vtsls = require("vtsls").lspconfig -- set default server config, optional but recommended
+
+-- If the lsp setup is taken over by other plugin, it is the same to call the counterpart setup function
+require("lspconfig").vtsls.setup {
+  root_dir = function(startpath)
+    -- print("root_dir" .. startpath)
+    local makeRootPattern = require("lspconfig.util").root_pattern
+
+    -- regex match against /gamma/packages/client/
+    local in_client = string.match(startpath, "gamma/packages/client/")
+
+    -- for gamma the client version is in the root folder, and the server version is in local node_modules
+    if in_client ~= nil then
+      return makeRootPattern ".git"(startpath)
+    else
+      return makeRootPattern "package.json"(startpath)
+    end
+  end,
+
+  settings = {
+    vtsls = {
+      autoUseWorkspaceTsdk = true,
+    },
+  },
+}
 
 vim.diagnostic.config {
   virtual_text = false,
