@@ -197,6 +197,7 @@ require("lspconfig.configs").vtsls = require("vtsls").lspconfig -- set default s
 
 -- If the lsp setup is taken over by other plugin, it is the same to call the counterpart setup function
 require("lspconfig").vtsls.setup {
+  on_attach = M.on_attach,
   root_dir = function(startpath)
     -- print("root_dir" .. startpath)
     local makeRootPattern = require("lspconfig.util").root_pattern
@@ -215,6 +216,10 @@ require("lspconfig").vtsls.setup {
   settings = {
     vtsls = {
       autoUseWorkspaceTsdk = true,
+      format = {
+        indentSize = 2,
+        tabSize = 2,
+      },
     },
   },
 }

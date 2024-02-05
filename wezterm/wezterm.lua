@@ -243,8 +243,9 @@ local config = {
 		-- { mods = "CMD", key = "w", action = act.CloseCurrentPane({ confirm = true }) },
 		{ mods = "CMD", key = "w", action = act.EmitEvent("close-even") },
 		{ mods = "CMD", key = "v", action = act.PasteFrom("Clipboard") },
-		{ mods = "CMD", key = "p", action = act.PasteFrom("Clipboard") },
+		{ mods = hyper, key = "p", action = act.PasteFrom("Clipboard") },
 		{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
+
 		{ mods = hyper, key = "F9", action = act.ShowDebugOverlay },
 		-- { mods = hyper, key = "l", action = act.ShowLauncher },
 		-- { mods = hyper, key = "Enter", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
@@ -295,6 +296,9 @@ local config = {
 		{ mods = "CMD", key = "4", action = act.ActivateTab(3) },
 		{ mods = "CMD", key = "5", action = act.ActivateTab(4) },
 		{ mods = "CMD", key = "6", action = act.ActivateTab(5) },
+		{ mods = "CMD", key = "7", action = act.ActivateTab(6) },
+		{ mods = "CMD", key = "8", action = act.ActivateTab(7) },
+		{ mods = "CMD", key = "9", action = act.ActivateTab(8) },
 		{ key = "LeftArrow", mods = "ALT|CMD", action = act.MoveTabRelative(-1) },
 		{ key = "RightArrow", mods = "ALT|CMD", action = act.MoveTabRelative(1) },
 

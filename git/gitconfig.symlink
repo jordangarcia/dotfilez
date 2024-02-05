@@ -26,7 +26,7 @@
   editor = nvim
 	precomposeunicode = true
 	ignorecase = false
-  pager = delta
+  # pager = delta
 [push]
 	default = current
 [apply]

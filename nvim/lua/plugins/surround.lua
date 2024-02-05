@@ -6,6 +6,7 @@ return {
     event = "VeryLazy",
     config = function()
       require("nvim-surround").setup {
+        move_cursor = false,
         -- Configuration here, or leave empty to use defaults
       }
     end,

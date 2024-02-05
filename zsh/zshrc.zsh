@@ -67,3 +67,11 @@ if [ -f '/Users/jordan/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jo
 
 # fix JQ colors
 export JQ_COLORS="1;33:0;37:0;37:0;37:0;32:1;37:1;37:1;33"
+
+# bun completions
+[ -s "/Users/jordan/.bun/_bun" ] && source "/Users/jordan/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
