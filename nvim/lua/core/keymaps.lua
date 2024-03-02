@@ -117,7 +117,14 @@ set_keymap_tbl {
       function()
         vim.cmd [[ let @+ = "yarn test:watch -- " . expand('%') ]]
       end,
-      "[Y]ank [f]ile path to keyboard",
+      "[Y]ank [t]est command",
+    },
+
+    ["<leader>yr"] = {
+      function()
+        vim.cmd [[ let @+ = "npx tsx " . expand('%') ]]
+      end,
+      "[Y]ank [r]un file",
     },
 
     ["<leader>yy"] = {

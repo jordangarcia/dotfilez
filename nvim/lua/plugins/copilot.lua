@@ -4,7 +4,6 @@ return {
   -- https://azamuddin.com/en/blog/050623-setting-up-copilot-on-nvchad
   "zbirenbaum/copilot.lua",
   cmd = "Copilot",
-  enabled = true,
   event = "InsertEnter",
   config = function()
     require("copilot").setup {

@@ -68,4 +68,4 @@ alias copilot="GITHUB_TOKEN='' gh copilot suggest "
 alias lastcommit="git log --pretty=format:'%h' -n 1"
 alias lzd="lazydocker"
 
-
+alias pbq="pbpaste | jq"
