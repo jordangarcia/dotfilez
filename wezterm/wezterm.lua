@@ -299,8 +299,12 @@ local config = {
 		{ mods = "CMD", key = "7", action = act.ActivateTab(6) },
 		{ mods = "CMD", key = "8", action = act.ActivateTab(7) },
 		{ mods = "CMD", key = "9", action = act.ActivateTab(8) },
-		{ key = "LeftArrow", mods = "ALT|CMD", action = act.MoveTabRelative(-1) },
-		{ key = "RightArrow", mods = "ALT|CMD", action = act.MoveTabRelative(1) },
+		{ key = "LeftArrow", mods = "CTRL|ALT|CMD", action = act.MoveTabRelative(-1) },
+		{ key = "RightArrow", mods = "CTRL|ALT|CMD", action = act.MoveTabRelative(1) },
+		{ key = "LeftArrow", mods = "ALT|CMD", action = act.ActivateTabRelative(-1) },
+		{ key = "RightArrow", mods = "ALT|CMD", action = act.ActivateTabRelative(1) },
+		{ key = "h", mods = "ALT|CMD", action = act.ActivateTabRelative(-1) },
+		{ key = "l", mods = "ALT|CMD", action = act.ActivateTabRelative(1) },
 
 		-- tabs
 		{ key = "F9", action = wezterm.action.ShowTabNavigator }, -- dunno about this one

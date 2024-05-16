@@ -104,6 +104,7 @@ return {
 
           vim.api.nvim_create_autocmd("BufWritePre", {
             callback = function(ev)
+              -- TODO create a keybind that toggles format on save right
               vim.lsp.buf.format { bufnr = ev.buf, async = false }
             end,
           })

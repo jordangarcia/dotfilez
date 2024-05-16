@@ -32,7 +32,7 @@ return {
         yaml = true,
         html = true,
         css = true,
-        ["*"] = false,
+        ["*"] = true,
       },
       panel = { enabled = false },
     }

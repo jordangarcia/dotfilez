@@ -201,18 +201,19 @@ require("lspconfig").vtsls.setup {
   root_dir = function(startpath)
     -- print("root_dir" .. startpath)
     local makeRootPattern = require("lspconfig.util").root_pattern
-    return makeRootPattern ".git"(startpath)
 
     -- were on the same typescript everywhere woo!
     -- -- regex match against /gamma/packages/client/
-    -- local in_client = string.match(startpath, "gamma/packages/client/")
+    local in_requestnow = string.match(startpath, "requestnow/ui")
+
     --
     -- -- for gamma the client version is in the root folder, and the server version is in local node_modules
-    -- if in_client ~= nil then
-    --   return makeRootPattern ".git"(startpath)
-    -- else
+    if in_requestnow ~= nil then
+      return makeRootPattern "package.json"(startpath)
+    end
     --   return makeRootPattern "package.json"(startpath)
     -- end
+    return makeRootPattern ".git"(startpath)
   end,
 
   settings = {

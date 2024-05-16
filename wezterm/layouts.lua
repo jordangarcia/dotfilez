@@ -41,10 +41,11 @@ M.setup_gamma = function()
 	pane42:send_text("yarn dev:light\n")
 	pane43:send_text("yarn dev\n")
 
-	local tab5, pane5 = window:spawn_tab({ cwd = dir_dotfilez })
-	tab5:set_title("dotfilez")
+	local tab5, pane5 = window:spawn_tab({ cwd = dir_hocus })
+	tab5:set_title("hocus")
 
 	local tab6, pane6 = window:spawn_tab({ cwd = dir_code })
+	tab5:set_title("code")
 end
 
 return M
