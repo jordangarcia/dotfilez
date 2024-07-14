@@ -70,6 +70,11 @@ lspconfig["lua_ls"].setup {
   },
 }
 
+lspconfig["biome"].setup {
+  on_attach = M.on_attach,
+  capabilities = capabilities,
+}
+
 lspconfig["graphql"].setup {
   on_attach = M.on_attach,
   capabilities = capabilities,
