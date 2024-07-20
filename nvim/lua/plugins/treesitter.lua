@@ -33,6 +33,30 @@ return {
         enable = true,
       },
     },
+    keys = {
+      {
+        "<leader>td",
+        function()
+          vim.cmd "TSBufDisable highlight"
+          vim.cmd "TSBufDisable indent"
+          vim.cmd "TSBufDisable incremental_selection"
+          print "Treesitter disabled for buffer"
+        end,
+        desc = "[T]reesitter [d]isable",
+        mode = "n",
+      },
+      {
+        "<leader>te",
+        function()
+          vim.cmd "TSBufEnable highlight"
+          vim.cmd "TSBufEnable indent"
+          vim.cmd "TSBufEnable incremental_selection"
+          print "Treesitter enabled for buffer"
+        end,
+        desc = "[T]reesitter [e]nable",
+        mode = "n",
+      },
+    },
     config = function(_, opts)
       dofile(vim.g.base46_cache .. "syntax")
       require("nvim-treesitter.configs").setup(opts)
