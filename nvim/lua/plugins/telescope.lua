@@ -34,6 +34,17 @@ return {
   },
   keys = {
     {
+      "<leader>fv",
+      function()
+        require("telescope.builtin").find_files {
+          cwd = vim.fn.stdpath "config",
+        }
+      end,
+      desc = "[v]im files",
+      mode = "n",
+    },
+
+    {
       "<leader>fw",
       function()
         require("telescope-live-grep-args.shortcuts").grep_visual_selection()

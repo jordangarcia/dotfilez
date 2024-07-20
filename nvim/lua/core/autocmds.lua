@@ -67,7 +67,7 @@ autocmd("BufWritePost", {
 
     require("plenary.reload").reload_module "base46"
     require("plenary.reload").reload_module(module)
-    require("plenary.reload").reload_module "custom.chadrc"
+    require("plenary.reload").reload_module "core.chadrc"
 
     config = require("core.utils").load_config()
 

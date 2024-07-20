@@ -62,6 +62,7 @@ lspconfig["lua_ls"].setup {
           [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
           [vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types"] = true,
           [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+          unpack(vim.api.nvim_get_runtime_file("", true)),
         },
         maxPreload = 100000,
         preloadFileSize = 10000,
