@@ -27,63 +27,6 @@ return {
       },
     },
     {
-      "ThePrimeagen/harpoon",
-      keys = {
-        {
-          "<leader>h1",
-          function()
-            require("harpoon.ui").nav_file(1)
-          end,
-          desc = "[H]arpoon file [1]",
-          mode = "n",
-        },
-        {
-          "<leader>h2",
-          function()
-            require("harpoon.ui").nav_file(2)
-          end,
-          desc = "[H]arpoon file [2]",
-          mode = "n",
-        },
-        {
-          "<leader>h3",
-          function()
-            require("harpoon.ui").nav_file(3)
-          end,
-          desc = "[H]arpoon file [3]",
-          mode = "n",
-        },
-        {
-          "<leader>h4",
-          function()
-            require("harpoon.ui").nav_file(4)
-          end,
-          desc = "[H]arpoon file [4]",
-          mode = "n",
-        },
-        {
-          "<leader>h5",
-          function()
-            require("harpoon.ui").nav_file(5)
-          end,
-          desc = "[H]arpoon file [5]",
-          mode = "n",
-        },
-        {
-          "<leader>ha",
-          function()
-            require("harpoon.mark").add_file()
-          end,
-          desc = "[H]arpoon [a]dd",
-          mode = "n",
-        },
-      },
-      opts = {
-        mark_branch = true,
-      },
-      config = function() end,
-    },
-    {
       "prochri/telescope-all-recent.nvim",
       dependencies = { "kkharji/sqlite.lua" },
       config = function() end,
@@ -120,17 +63,6 @@ return {
         }
       end,
       desc = "Find smart open",
-      mode = "n",
-    },
-    {
-      "<C-S-P>",
-      function()
-        require("telescope").extensions.harpoon.marks {
-          layout_strategy = "vertical",
-          layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
-        }
-      end,
-      desc = "Find harpoon",
       mode = "n",
     },
     {
@@ -325,13 +257,6 @@ return {
             ["<C-q>"] = require("telescope.actions").close,
             -- disable default close
             ["<C-c>"] = false,
-            -- for some reason this does not work in insert mode
-            ["<C-S-P>"] = function()
-              require("telescope").extensions.harpoon.marks {
-                layout_strategy = "vertical",
-                layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
-              }
-            end,
             ["<C-l>"] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist,
 
             -- custom movements
@@ -352,12 +277,6 @@ return {
             -- disable default close
             ["<C-c>"] = false,
             ["<c-x>"] = require("telescope.actions").delete_buffer,
-            ["<C-S-P>"] = function()
-              require("telescope").extensions.harpoon.marks {
-                layout_strategy = "vertical",
-                layout_config = { prompt_position = "top", width = 0.3, height = 0.4 },
-              }
-            end,
             ["<C-l>"] = require("telescope.actions").send_selected_to_qflist + require("telescope.actions").open_qflist,
             -- ["<C-r>"] = "cycle_history_prev",
             -- custom movements
@@ -431,7 +350,7 @@ return {
     local telescope = require "telescope"
     telescope.setup(opts)
 
-    local extensions = { "harpoon", "zoxide", "smart_open", "undo", "live_grep_args", "import" }
+    local extensions = { "zoxide", "smart_open", "undo", "live_grep_args", "import" }
     -- load extensions
     for _, ext in ipairs(extensions) do
       telescope.load_extension(ext)
