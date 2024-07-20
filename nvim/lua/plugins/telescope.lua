@@ -359,5 +359,14 @@ return {
     -- load autosession
     require("auto-session").setup_session_lens()
     require("telescope-all-recent").setup {}
+
+    -- disable lexima in telescope prompt
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "TelescopePrompt",
+      callback = function()
+        print "disable lexima"
+        vim.b.lexima_disabled = 1
+      end,
+    })
   end,
 }
