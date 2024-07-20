@@ -375,7 +375,6 @@ return {
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "TelescopePrompt",
       callback = function()
-        print "disable lexima"
         vim.b.lexima_disabled = 1
       end,
     })
