@@ -499,6 +499,8 @@ M.load_custom_highlights = function()
   hl(0, "TabLineOffIcon", { bg = palette.sumiInk3, fg = "#7fb4ca" })
   hl(0, "TabLineOffSep", { bg = palette.sumiInk3, fg = palette.sumiInk5 })
 
+  hl(0, "CodeActionNormal", { fg = palette.fujiWhite })
+  hl(0, "CodeActionShortcut", { fg = palette.carpYellow })
   -- hl(0, "CursorLineNr", { bg = gutter_bg, fg = palette.surimiOrange })
   -- hl(0, "TabLine", { bg = palette.sumiInk2, fg = palette.sumiInk4 })
   -- hl(0, "DiagnosticSignInfo", { fg = diag.info, bg = gutter_bg })

@@ -156,7 +156,6 @@ return {
       require("core.utils").lazy_load "nvim-lspconfig"
     end,
     config = function()
-      print "loading LSP CONFIG"
       require "plugins.configs.lspconfig"
     end,
   },
@@ -196,8 +195,22 @@ return {
       --
 
       require("which-key").register({
-        ["]d"] = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
-        ["[d"] = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
+        ["]d"] = {
+          function()
+            vim.diagnostic.goto_next {
+              float = false,
+            }
+          end,
+          "[n]ext diagnostic",
+        },
+        ["[d"] = {
+          function()
+            vim.diagnostic.goto_prev {
+              float = false,
+            }
+          end,
+          "[p]rev diagnostic",
+        },
         ["<C-2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
 
         ["<F11>"] = {
@@ -223,7 +236,7 @@ return {
           "LSP hover",
         },
 
-        ["<C-n>"] = {
+        ["<leader>ll"] = {
           function()
             require("lspsaga.diagnostic"):goto_next {
               severity = 1, -- error
@@ -231,6 +244,14 @@ return {
           end,
           "Goto next error",
         },
+        -- ["<C-n>"] = {
+        --   function()
+        --     require("lspsaga.diagnostic"):goto_next {
+        --       severity = 1, -- error
+        --     }
+        --   end,
+        --   "Goto next error",
+        -- },
       }, {
         mode = { "n", "v" },
       })
