@@ -163,8 +163,10 @@ return {
           select = true,
         },
         ["<Tab>"] = cmp.mapping(function(fallback)
-          if require("copilot.suggestion").is_visible() then
-            require("copilot.suggestion").accept_line()
+          local suggestion = require "supermaven-nvim.completion_preview"
+
+          if suggestion.has_suggestion() then
+            suggestion.on_accept_suggestion()
           elseif cmp.visible() then
             cmp.select_next_item()
           elseif require("luasnip").expand_or_jumpable() then
