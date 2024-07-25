@@ -93,6 +93,13 @@ return {
     }
   end,
   config = function(_, opts)
-    require("auto-session").setup(opts)
+    -- check env DISABLE_AUTO_SESSION
+    local override = {}
+    if os.getenv "DISABLE_AUTO_SESSION" == "1" then
+      override.auto_session_enabled = false
+      return
+    end
+
+    require("auto-session").setup(vim.tbl_deep_extend("force", opts, override))
   end,
 }

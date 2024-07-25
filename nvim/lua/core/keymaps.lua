@@ -342,6 +342,15 @@ set_keymap_tbl {
       "Add workspace folder",
     },
 
+    ["<leader>xf"] = {
+      function()
+        vim.cmd [[ source % ]]
+        local file = vim.fn.expand "%"
+        vim.notify("sourcing: " .. file)
+      end,
+      "Source [f]ile",
+    },
+
     ["<leader>lwr"] = {
       function()
         vim.lsp.buf.remove_workspace_folder()

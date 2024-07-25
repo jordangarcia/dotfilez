@@ -16,6 +16,9 @@ fi
 alias vim='nvim'
 alias vi='nvim'
 
+# vim with no session
+alias newvi='DISABLE_AUTO_SESSION=1 nvim'
+
 # vim with no plugins
 alias vinalla='nvim -u NONE'
 alias vimilla='nvim -u NONE'

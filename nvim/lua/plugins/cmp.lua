@@ -136,6 +136,7 @@ return {
           winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:PmenuSel",
           scrollbar = false,
         },
+
         documentation = {
           border = border "CmpDocBorder",
           winhighlight = "Normal:CmpDoc",
@@ -162,6 +163,7 @@ return {
           behavior = cmp.ConfirmBehavior.Insert,
           select = true,
         },
+
         ["<Tab>"] = cmp.mapping(function(fallback)
           local suggestion = require "supermaven-nvim.completion_preview"
 
