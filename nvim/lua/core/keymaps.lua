@@ -97,28 +97,7 @@ set_keymap_tbl {
 
     ["<S-i>"] = {
       function()
-        local line = vim.fn.line "."
-        local col = vim.fn.col "."
-        local synID = vim.fn.synID(line, col, 1)
-        local synName = vim.fn.synIDattr(synID, "name")
-
-        local output = {}
-        table.insert(output, "Highlight group: " .. synName)
-        table.insert(output, "Highlight details:")
-
-        -- Get highlight information
-        local hl_info = vim.api.nvim_get_hl(0, { name = synName })
-
-        for key, value in pairs(hl_info) do
-          if type(value) == "number" then
-            table.insert(output, string.format("  %s: #%06x", key, value))
-          else
-            table.insert(output, string.format("  %s: %s", key, tostring(value)))
-          end
-        end
-
-        -- Join all lines and notify
-        vim.notify(table.concat(output, "\n"), vim.log.levels.INFO, { title = "Highlight Inspection" })
+        vim.cmd [[ Inspect ]]
       end,
       "Inspect",
     },
