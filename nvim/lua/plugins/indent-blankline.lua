@@ -23,8 +23,8 @@ return {
     buftype_exclude = { "terminal", "noice" },
     show_trailing_blankline_indent = false,
     show_first_indent_level = false,
-    show_current_context = false,
-    show_current_context_start = true,
+    show_current_context = true,
+    show_current_context_start = false,
   },
   config = function(_, opts)
     dofile(vim.g.base46_cache .. "blankline")

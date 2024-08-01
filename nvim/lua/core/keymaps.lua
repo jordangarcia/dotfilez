@@ -358,6 +358,16 @@ set_keymap_tbl {
     ["<A-up>"] = { ":m '<-2<CR>gv=gv", "Move lines up" },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
+
+    ["<leader>xn"] = {
+      function()
+        -- run !node over selection range
+        vim.cmd "normal! :!node <CR>"
+        -- vim.cmd "!node"
+        vim.notify "executing in node"
+      end,
+      "E[x]ecute [n]ode",
+    },
   },
 
   x = {
