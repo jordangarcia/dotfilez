@@ -24,24 +24,33 @@ local line_no_only = function()
   return ""
 end
 
-local line_no = function(diag_hl)
+local line_no = function(diag_hl, text)
   local win = vim.g.statusline_winid
   local is_num = vim.wo[win].number
   local is_relnum = vim.wo[win].relativenumber
   if (is_num or is_relnum) and vim.v.virtnum == 0 then
+    local num_text = text
+    if not num_text then
+      if vim.v.relnum == 0 then -- the current line
+        num_text = is_num and "%l" or "%r"
+      else
+        num_text = is_relnum and "%r" or "%l"
+      end
+    end
+
     if vim.v.relnum == 0 then -- the current line
       -- current line should be left aligned
       return table.concat({
         hl(diag_hl and diag_hl or "StatusColumnNr"),
         "%=",
-        is_num and "%l" or "%r",
+        num_text,
       }, "")
     else
       return table.concat({
         hl(diag_hl and diag_hl or "StatusColumn"),
         -- hl "StatusColumn",
         "%=",
-        is_relnum and "%r" or "%l",
+        num_text,
       }, "")
       -- components[2] = output {
       --   -- left = true,
@@ -70,12 +79,17 @@ end
 ---@alias Sign {name:string, text:string, texthl:string, priority:number}
 --
 function M.statuscolumn()
-  local disabled_fts = { "gitcommit", "NvimTree" }
+  local disabled_fts = { "gitcommit", "NvimTree", "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes" }
 
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
   local is_file = vim.bo[buf].buftype == ""
   local ft = vim.bo[buf].filetype
+
+  -- local line_no_enabled = vim.wo[win].number or vim.wo[win].rnu
+  -- if not line_no_enabled then
+  --   return ""
+  -- end
 
   if vim.tbl_contains(disabled_fts, ft) then
     return line_no_only()
@@ -86,14 +100,21 @@ function M.statuscolumn()
   local components = { "", "", "" } -- left, middle, right
 
   local diag
+  local line_hl
+  local line_text = nil
+
   if show_signs then
     ---@type Sign?,Sign?,Sign?
     local git = {}
     for _, s in ipairs(M.get_signs(buf, vim.v.lnum)) do
       if s.name and s.name:find "GitSign" then
         git = s
+      elseif s.name and s.name:find "Dap" then
+        line_hl = "DapSignColumn"
+        line_text = s.text
       else
-        diag = s
+        line_hl = s.name
+        -- dont change text for diagnostic
       end
     end
     -- if vim.v.virtnum ~= 0 then
@@ -139,7 +160,7 @@ function M.statuscolumn()
     }
   end
 
-  components[2] = line_no(diag and diag.name or nil)
+  components[2] = line_no(line_hl, line_text)
 
   return table.concat(components, "")
 end
@@ -177,6 +198,7 @@ function M.get_signs(buf, lnum)
     { lnum - 1, -1 },
     { details = true, type = "sign" }
   )
+
   for _, extmark in pairs(extmarks) do
     signs[#signs + 1] = {
       name = extmark[4].sign_hl_group or "",
@@ -191,9 +213,18 @@ function M.get_signs(buf, lnum)
     return (a.priority or 0) < (b.priority or 0)
   end)
 
-  return vim.tbl_filter(function(sign)
+  local res = vim.tbl_filter(function(sign)
     return sign.name ~= "DiagnosticSignInfo" and sign.name ~= "DiagnosticSignHint"
   end, signs)
+
+  -- uncomment to debug what signs are showing
+  -- local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
+  -- if #res > 0 then
+  --   if cursor_lnum == lnum then
+  --     vim.notify(vim.inspect(res))
+  --   end
+  -- end
+  return res
 end
 
 ---@return Sign?

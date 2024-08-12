@@ -25,9 +25,13 @@ return {
         "pyright",
         "black",
         "ruff-lsp",
+        "basedpyright",
         -- c/cpp stuff
         "clangd",
         "clang-format",
+
+        -- toml
+        "taplo",
       },
     },
     config = function(_, opts)
@@ -73,8 +77,10 @@ return {
                   "txt",
                 },
               },
+              null_ls.builtins.formatting.ruff,
               null_ls.builtins.formatting.stylua,
-              null_ls.builtins.formatting.black,
+              -- null_ls.builtins.formatting.taplo,
+              -- null_ls.builtins.formatting.black,
             },
             on_attach = function(client, bufnr)
               -- this is buggy, instead just setup an auto cmd for EVERYTHING

@@ -127,6 +127,13 @@ set_keymap_tbl {
       "[Y]ank [r]un file",
     },
 
+    ["<leader>yp"] = {
+      function()
+        vim.cmd [[ let @+ = "PYTHONPATH=src pdm run python " . expand('%') ]]
+      end,
+      "[Y]ank [p]ython run file",
+    },
+
     ["<leader>yy"] = {
       function()
         vim.cmd [[ call system('pbcopy', @+) ]]

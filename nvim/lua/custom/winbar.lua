@@ -70,10 +70,25 @@ local winbar_file = function()
   local hl = "%#Comment#"
   local has_number = vim.opt.number:get() or vim.opt.rnu:get()
   local line_count = vim.api.nvim_buf_line_count(0)
+  local buftype = vim.api.nvim_buf_get_option(0, "buftype")
 
+  -- ft starts with dap
+  local is_dap = buftype == "nofile" or string.match(ft, "^dap") or ft == ""
+
+  local base_str = buftype == "nofile" and "" or "%#WinBarPath# " .. base .. "/"
   -- if line count < 100 two spaces, if less than 1000 3 spaces, less than 10000 4 spaces
   local line_count_width = line_count < 1000 and 3 or line_count < 10000 and 4 or 5
   local left_pad = string.rep(" ", line_count_width)
+
+  if is_dap then
+    return table.concat({
+      "%=",
+      "",
+      tail,
+      "%=",
+      "",
+    }, "")
+  end
 
   return table.concat({
     -- "%#WinBarBg#",
@@ -88,8 +103,9 @@ local winbar_file = function()
     left_pad,
     "%=" .. "",
     -- "%=" .. icon2,
-    "%#WinBarPath# ",
-    base .. "/",
+    -- "%#WinBarPath# ",
+    -- base .. "/",
+    base_str,
     -- "%#WinBar#",
     "%#WinBar#",
     tail,

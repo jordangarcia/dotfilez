@@ -5,6 +5,15 @@ local lspconfig = require "lspconfig"
 local M = {}
 
 -- export on_attach & capabilities for custom lspconfigs
+--
+M.on_attach_no_formatting = function(client, bufnr)
+  client.server_capabilities.documentFormattingProvider = false
+  client.server_capabilities.documentRangeFormattingProvider = false
+  --
+  -- if client.server_capabilities.signatureHelpProvider then
+  --   require("nvchad.signature").setup(client)
+  -- end
+end
 
 M.on_attach = function(client, bufnr)
   client.server_capabilities.documentFormattingProvider = false
@@ -144,62 +153,26 @@ lspconfig["jsonls"].setup {
   },
 }
 
--- lspconfig["tsserver"].setup {
---   on_attach = M.on_attach,
---   capabilities = M.capabilities,
---   init_options = {
---     hostInfo = "neovim",
---     preferences = {
---       -- autoImportFileExcludePatterns = { "**/dist/**" },
---       importModuleSpecifierPreference = "relative",
---       format = {
---         typescript = {
---           format = {
---             indentSize = vim.o.shiftwidth,
---             convertTabsToSpaces = vim.o.expandtab,
---             tabSize = vim.o.tabstop,
---           },
---         },
---         javascript = {
---           format = {
---             indentSize = vim.o.shiftwidth,
---             convertTabsToSpaces = vim.o.expandtab,
---             tabSize = vim.o.tabstop,
---           },
---         },
---       },
---       completions = {
---         completeFunctionCalls = true,
---       },
---     },
---   },
---   -- handlers = {
---   --
---   --   documentFormattingProvider = true,
---   --   documentHighlightProvider = true,
---   --   -- ["textDocument/publishDiagnostics"] = api.filter_diagnostics { -- Ignore 'This may be converted to an async function' diagnostics.
---   --   --   --conver to esm
---   --   --   80001,
---   --   --   80006,
---   --   --   -- no implicit any on variable
---   --   --   7043,
---   --   -- },
---   --
---   --   -- ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
---   --   --   severity_sort = true,
---   --   --   virtual_text = false,
---   --   -- }),
---   -- },
--- }
-
 lspconfig["terraformls"].setup {
   -- omit on_attach to allow document formatting provider
   capabilities = capabilities,
 }
 
-local servers = { "html", "cssls", "prismals", "ruff_lsp", "pyright" }
+-- setup python
+lspconfig["pyright"].setup {
+  on_attach = M.on_attach_no_formatting,
+  capabilities = capabilities,
+}
+
+lspconfig["ruff_lsp"].setup {
+  -- dont setup on_attach becuase it disables the formatting provider
+  capabilities = capabilities,
+}
+
+local servers = { "html", "cssls", "prismals" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
+    -- allow prettier
     on_attach = M.on_attach,
     capabilities = capabilities,
   }
@@ -208,8 +181,9 @@ end
 require("lspconfig.configs").vtsls = require("vtsls").lspconfig -- set default server config, optional but recommended
 
 -- If the lsp setup is taken over by other plugin, it is the same to call the counterpart setup function
-require("lspconfig").vtsls.setup {
-  on_attach = M.on_attach,
+lspconfig["vtsls"].setup {
+  -- allow prettier
+  on_attach = M.on_attach_no_formatting,
   root_dir = function(startpath)
     -- print("root_dir" .. startpath)
     local makeRootPattern = require("lspconfig.util").root_pattern

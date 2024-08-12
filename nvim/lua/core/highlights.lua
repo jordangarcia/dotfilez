@@ -478,6 +478,7 @@ M.load_custom_highlights = function()
   -- manual syntax highlighting
   local hl = vim.api.nvim_set_hl
   hl(0, "StatusColumn", { bg = gutter_bg, fg = palette.sumiInk6 })
+  hl(0, "SignColumn", { bg = gutter_bg, fg = palette.sumiInk6 })
   hl(0, "StatusColumnNr", { bg = gutter_bg, fg = palette.surimiOrange })
   hl(0, "StatusColumnRight", { fg = gutter_bg, bg = palette.sumiInk3 })
   --
@@ -490,6 +491,8 @@ M.load_custom_highlights = function()
   hl(0, "DiagnosticSignError", { fg = diag.error, bg = gutter_bg })
   hl(0, "DiagnosticSignWarn", { fg = diag.warning, bg = gutter_bg })
   hl(0, "DiagnosticSignInfo", { fg = diag.info, bg = gutter_bg })
+
+  hl(0, "DapSignColumn", { bg = gutter_bg, fg = palette.fujiWhite })
 
   hl(0, "TabLineSel", { bg = palette.sumiInk4, fg = palette.fujiWhite, italic = true, bold = true })
   hl(0, "TabLineSelIcon", { bg = palette.sumiInk4, fg = "#7fb4ca" })
