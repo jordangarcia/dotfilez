@@ -351,6 +351,7 @@ set_keymap_tbl {
       "List workspace folders",
     },
     ["<leader>lr"] = { "<cmd> LspRestart <CR>", "Lsp [r]estart" },
+    ["<S-Tab>"] = { "<<", "Unindent" },
   },
 
   i = {
@@ -358,6 +359,7 @@ set_keymap_tbl {
     ["<C-s>"] = { "<esc> <cmd> w <CR>", "Save file" },
     ["<c-q><c-q>"] = { "<esc> <cmd> qa! <CR>", "Force [q]uit" },
     ["<c-q><c-w>"] = { "<esc> <cmd> wqa! <CR>", "Force [q]uit and [w]rite" },
+    ["<S-Tab>"] = { "<C-d>", "Unindent" },
   },
 
   v = {
@@ -365,6 +367,7 @@ set_keymap_tbl {
     ["<A-up>"] = { ":m '<-2<CR>gv=gv", "Move lines up" },
     ["<"] = { "<gv", "Indent line" },
     [">"] = { ">gv", "Indent line" },
+    ["<S-Tab>"] = { "<gv", "Unindent" },
 
     ["<leader>xn"] = {
       function()

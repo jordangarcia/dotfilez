@@ -21,6 +21,7 @@ local function run_python()
   vim.api.nvim_buf_set_option(buf, "modifiable", false)
   vim.api.nvim_buf_set_option(buf, "filetype", "python-output")
   vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+  vim.api.nvim_buf_set_option(buf, "filetype", "python")
   vim.api.nvim_buf_set_option(buf, "bufhidden", "hide")
 
   -- Find or create a window for the buffer
