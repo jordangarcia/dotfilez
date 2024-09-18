@@ -66,8 +66,13 @@ return {
           end,
         },
         {
-          ft = "python-output",
+          ft = "python",
           size = { height = 25 },
+          filter = function(buf)
+            -- check if bufname is "Python Output"
+            -- return vim.bo[buf].bufname == "Python Output"
+            return false
+          end,
         },
         { title = "Spectre", ft = "spectre_panel", size = { height = 0.4 } },
         { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },

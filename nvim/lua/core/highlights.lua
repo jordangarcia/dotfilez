@@ -420,6 +420,22 @@ M.add = {
     link = "@property",
   },
 
+  -- terraform
+  ["@lsp.type.string.terraform"] = {
+    link = "@string",
+  },
+  ["@lsp.type.variable.terraform"] = {
+    fg = base_30.white,
+  },
+  ["@lsp.type.keyword.terraform"] = {
+    link = "@keyword",
+  },
+  ["@lsp.type.enumMember.terraform"] = {
+    -- link = "@type",
+    fg = palette.fujiWhite,
+    -- fg = palette.surimiOrange,
+  },
+
   -- react
   ["@constructor.tsx"] = {
     fg = syn.type,

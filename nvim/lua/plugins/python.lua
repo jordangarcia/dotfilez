@@ -1,6 +1,5 @@
-local function run_python()
-  local filename = vim.fn.expand "%:p"
-  local cmd = string.format("PYTHONPATH=src pdm run python %s", vim.fn.shellescape(filename))
+local function run_python(filename)
+  local cmd = string.format("PYTHONPATH=src PYTHONUNBUFFERED=1 pdm run python %s", vim.fn.shellescape(filename))
 
   -- Check if the buffer already exists
   local buf_name = "Python Output"
@@ -31,6 +30,8 @@ local function run_python()
     vim.cmd "botright split"
     win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_buf(win, buf)
+    -- make the window only 20 lines tall
+    vim.api.nvim_win_set_height(win, 15)
   end
 
   -- Set window options
@@ -62,11 +63,20 @@ local function run_python()
   })
 end
 
+local function run_current_file()
+  run_python(vim.fn.expand "%:p")
+end
+
+local function run_test_file()
+  run_python "/Users/jordan/code/gamma/packages/import/src/pyimport/test.py"
+end
+
 return {
   "run-python",
   dev = true,
   lazy = true,
   keys = {
-    { "<leader>xr", run_python, desc = "Run python" },
+    { "<leader>xr", run_current_file, desc = "Run python" },
+    { "<leader>xx", run_test_file, desc = "Run test file" },
   },
 }
