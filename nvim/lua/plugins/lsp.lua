@@ -218,10 +218,15 @@ return {
           "[p]rev diagnostic",
         },
         ["<C-2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
+        --
 
         ["<F11>"] = {
-          "<cmd> Lspsaga finder tyd+def+ref <CR>",
-          "Lspsaga finder",
+          function()
+            require("telescope.builtin").lsp_references {
+              include_declaration = false,
+            }
+          end,
+          "LSP References ",
         },
 
         ["<F12>"] = {
@@ -241,23 +246,6 @@ return {
           -- "<CMD> Lspsaga peek_type_definition <CR>",
           "LSP hover",
         },
-
-        ["<leader>ll"] = {
-          function()
-            require("lspsaga.diagnostic"):goto_next {
-              severity = 1, -- error
-            }
-          end,
-          "Goto next error",
-        },
-        -- ["<C-n>"] = {
-        --   function()
-        --     require("lspsaga.diagnostic"):goto_next {
-        --       severity = 1, -- error
-        --     }
-        --   end,
-        --   "Goto next error",
-        -- },
       }, {
         mode = { "n", "v" },
       })
@@ -265,7 +253,6 @@ return {
         l = {
           name = "+lsp",
           -- f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
-          o = { "<cmd> Lspsaga outline <CR>", "Lspsaga [o]utline" },
           -- r = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
           -- f2 renames
           -- r = {
@@ -296,8 +283,28 @@ return {
             end,
             "Lsp [s]ignature",
           },
-          d = { "<cmd> Lspsaga peek_definition <CR>", "Lspsaga [d]efinition" },
-          D = { "<cmd> Lspsaga peek_type_definition <CR>", "Lspsaga type [D]efinition" },
+          d = {
+            name = "+definition",
+            p = {
+              function()
+                require("telescope.builtin").lsp_definitions { jump_type = "never" }
+              end,
+              "Lsp [d]efinition [p]eek",
+            },
+            t = {
+              function()
+                require("telescope.builtin").lsp_definitions { jump_type = "tab" }
+              end,
+              "Lsp [d]efinition [t]ab",
+            },
+            v = {
+              function()
+                require("telescope.builtin").lsp_definitions { jump_type = "vsplit" }
+              end,
+              "Lsp [d]efinition [v]split",
+            },
+          },
+
           t = {
             name = "+typescript",
             i = {
@@ -313,10 +320,6 @@ return {
               "TS remove unused imports",
             },
           },
-          a = { "<cmd> Lspsaga code_action <CR>", "Lspsaga code [a]ction" },
-          -- use ]d and [d
-          -- n = { "<cmd> Lspsaga diagnostic_jump_next <CR>", "Lspsaga [n]ext diagnostic" },
-          -- p = { "<cmd> Lspsaga diagnostic_jump_prev <CR>", "Lspsaga [p]rev diagnostic" },
         },
       }, {
         prefix = "<leader>",

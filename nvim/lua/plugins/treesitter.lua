@@ -26,6 +26,7 @@ return {
         "hcl",
         "toml",
         "yaml",
+        "terraform",
       },
       highlight = {
         enable = true,

@@ -306,6 +306,28 @@ return {
           },
         },
       },
+      pickers = {
+        lsp_references = {
+          initial_mode = "normal", -- Start in normal mode
+          -- theme = "dropdown",
+          -- layout_config = {
+          --   width = 0.8,
+          --   height = 0.6,
+          -- },
+          show_line = false,
+          -- fname_width = 50,
+        },
+        lsp_definitions = {
+          initial_mode = "normal", -- Start in normal mode
+          show_line = false,
+          -- theme = "mini",
+          -- layout_strategy = "center",
+          layout_config = {
+            height = 0.4,
+            -- width = 0.8,
+          },
+        },
+      },
       extensions = {
         fzf = {
           fuzzy = true,
