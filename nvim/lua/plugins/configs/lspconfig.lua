@@ -203,6 +203,12 @@ lspconfig["vtsls"].setup {
   end,
 
   settings = {
+    typescript = {
+      tsserver = {
+        -- log = "normal",
+        maxTsServerMemory = 8192,
+      },
+    },
     vtsls = {
       autoUseWorkspaceTsdk = true,
       format = {

@@ -308,23 +308,30 @@ return {
       },
       pickers = {
         lsp_references = {
-          initial_mode = "normal", -- Start in normal mode
-          -- theme = "dropdown",
-          -- layout_config = {
-          --   width = 0.8,
-          --   height = 0.6,
-          -- },
+          initial_mode = "normal",
           show_line = false,
-          -- fname_width = 50,
+          layout_config = {
+            width = function(_, max_columns, _)
+              return math.min(max_columns, 200) -- Set max width to 120 characters
+            end,
+          },
+        },
+        lsp_type_definitions = {
+          initial_mode = "normal",
+          show_line = false,
+          layout_config = {
+            width = function(_, max_columns, _)
+              return math.min(max_columns, 200) -- Set max width to 100 characters
+            end,
+          },
         },
         lsp_definitions = {
-          initial_mode = "normal", -- Start in normal mode
+          initial_mode = "normal",
           show_line = false,
-          -- theme = "mini",
-          -- layout_strategy = "center",
           layout_config = {
-            height = 0.4,
-            -- width = 0.8,
+            width = function(_, max_columns, _)
+              return math.min(max_columns, 200) -- Set max width to 100 characters
+            end,
           },
         },
       },

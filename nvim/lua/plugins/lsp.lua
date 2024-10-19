@@ -174,13 +174,36 @@ return {
     config = function()
       require("lspsaga").setup {
         diagnostic = {
+          enable = false,
           max_show_width = 0.9,
           max_width = 0.7,
         },
+        hover = {
+          enable = false,
+        },
+        outline = {
+          enable = false,
+        },
+        callhierarchy = {
+          enable = false,
+        },
+        code_action = {
+          enable = false,
+        },
+        implement = {
+          enable = false,
+        },
+
+        definition = {
+          enable = false,
+        },
+
         lightbulb = {
+
           enable = false,
         },
         finder = {
+          enable = false,
           left_width = 0.7,
           right_width = 0.7,
           keys = {
@@ -223,14 +246,19 @@ return {
         ["<F11>"] = {
           function()
             require("telescope.builtin").lsp_references {
-              include_declaration = false,
+              include_declaration = true,
+              jump_type = "never",
             }
           end,
           "LSP References ",
         },
 
         ["<F12>"] = {
-          "<cmd> Telescope lsp_definitions <CR>",
+          function()
+            require("telescope.builtin").lsp_definitions {
+              jump_type = "tab drop",
+            }
+          end,
           "LSP definition",
         },
         -- open tag in new window
@@ -284,26 +312,58 @@ return {
             "Lsp [s]ignature",
           },
           d = {
-            name = "+definition",
+            name = "+type definition",
             p = {
               function()
-                require("telescope.builtin").lsp_definitions { jump_type = "never" }
+                require("telescope.builtin").lsp_type_definitions {
+                  jump_type = "never",
+                  layout_config = {
+                    height = 0.4,
+                  },
+                }
               end,
               "Lsp [d]efinition [p]eek",
             },
             t = {
               function()
-                require("telescope.builtin").lsp_definitions { jump_type = "tab" }
+                require("telescope.builtin").lsp_type_definitions { jump_type = "tab" }
               end,
               "Lsp [d]efinition [t]ab",
             },
             v = {
               function()
-                require("telescope.builtin").lsp_definitions { jump_type = "vsplit" }
+                require("telescope.builtin").lsp_type_definitions { jump_type = "vsplit" }
               end,
               "Lsp [d]efinition [v]split",
             },
           },
+
+          -- D = {
+          --   name = "+type definition",
+          --   p = {
+          --     function()
+          --       require("telescope.builtin").lsp_type_definitions {
+          --         jump_type = "never",
+          --         layout_config = {
+          --           height = 0.4,
+          --         },
+          --       }
+          --     end,
+          --     "Lsp [d]efinition [p]eek",
+          --   },
+          --   t = {
+          --     function()
+          --       require("telescope.builtin").lsp_type_definitions { jump_type = "tab" }
+          --     end,
+          --     "Lsp [d]efinition [t]ab",
+          --   },
+          --   v = {
+          --     function()
+          --       require("telescope.builtin").lsp_type_definitions { jump_type = "vsplit" }
+          --     end,
+          --     "Lsp [d]efinition [v]split",
+          --   },
+          -- },
 
           t = {
             name = "+typescript",
