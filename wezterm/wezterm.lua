@@ -131,8 +131,9 @@ wezterm.on("balance-all-panes", function(window, pane)
 	balance.balance_panes("y")(window, pane)
 end)
 
-local FILE_EXTENSION = "%.(?:[a-zA-Z0-9]{2,7}|[ahcmo])(?:%b|[^.])"
-local path_regex = "(?:%S*?/[%r%S]+)|(?:%S[%r%S]*" .. FILE_EXTENSION .. ")%b"
+-- Common extensions for web, backend, config files
+local EXTENSIONS = "tsx?|jsx?|ya?ml|toml|json|lua|py|rs|go|md|html?|css|scss|svg|gitignore|env|zsh|sh"
+local path_regex = "(?:\\.\\./|\\./|/)*(?:(?:\\w+)/)*(?:\\w+)\\.(?:" .. EXTENSIONS .. ")"
 
 -- This table will hold the configuration.
 
@@ -149,7 +150,22 @@ local config = {
 	use_fancy_tab_bar = false,
 	hide_tab_bar_if_only_one_tab = true,
 	-- font = wezterm.font_with_fallback({ { family = "Hack Nerd Font", weight = "Bold" } }),
-	font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
+	-- font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
+	font = wezterm.font_with_fallback({ { family = "Victor Mono SemiBold" } }),
+	font_rules = {
+		{
+			italic = true,
+			font = wezterm.font_with_fallback({
+				{
+					-- Specify the font you want for italics
+					family = "Victor Mono",
+					-- or another font like:
+					-- family = "JetBrainsMono Nerd Font",
+					style = "Oblique",
+				},
+			}),
+		},
+	},
 	font_size = 14,
 	harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
 	color_scheme = "jordan",
