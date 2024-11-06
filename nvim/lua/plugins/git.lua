@@ -116,4 +116,5 @@ return {
       { "<leader>g3", "<cmd> Gvdiffsplit! <cr>", desc = "Git diff [3]way", mode = "n" },
     },
   },
+  { "akinsho/git-conflict.nvim", version = "*", config = true },
 }
