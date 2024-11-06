@@ -53,6 +53,15 @@ alias gl='git pull --prune'
 alias glo='gl && git pull origin'
 alias glr='git pull --rebase'
 alias glg="git log --graph --pretty=format:'%Cred%h%Creset %Cblue%an%Creset: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
+alias glg2='if [ $(tput cols) -gt 120 ]; then \
+    git log --graph --pretty=format:"%Cred%h%Creset %Cblue%an%Creset: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset" --abbrev-commit --date=relative | \
+    fzf --ansi --no-sort --preview "echo {} | cut -d\" \" -f2 | xargs git show --color=always"; \
+  else \
+    git log --graph --pretty=format:"%Cred%h%Creset %Cblue%an%Creset: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset" --abbrev-commit --date=relative | \
+    fzf --ansi --no-sort; \
+  fi | cut -d" " -f2'
+
+alias grbi='glg2 | xargs -I {} git rebase -i {}'
 alias gp='git push -u origin HEAD'
 alias glrp='glr && gp'
 alias gd='git diff'

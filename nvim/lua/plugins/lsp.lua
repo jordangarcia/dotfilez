@@ -255,9 +255,11 @@ return {
 
         ["<F12>"] = {
           function()
-            require("telescope.builtin").lsp_definitions {
-              jump_type = "tab drop",
-            }
+            vim.lsp.buf.definition()
+            -- require("telescope.builtin").lsp_definitions {
+            --   include_declaration = true,
+            --   jump_type = "never",
+            -- }
           end,
           "LSP definition",
         },

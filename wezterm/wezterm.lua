@@ -133,7 +133,7 @@ end)
 
 -- Common extensions for web, backend, config files
 local EXTENSIONS = "tsx?|jsx?|ya?ml|toml|json|lua|py|rs|go|md|html?|css|scss|svg|gitignore|env|zsh|sh"
-local path_regex = "(?:\\.\\./|\\./|/)*(?:(?:\\w+)/)*(?:\\w+)\\.(?:" .. EXTENSIONS .. ")"
+local path_regex = "(?:\\.\\./|\\./|/)*(?:(?:[\\w_-])+/)*(?:[\\w+\\._-]+)\\.(?:" .. EXTENSIONS .. ")"
 
 -- This table will hold the configuration.
 

@@ -357,6 +357,8 @@ set_keymap_tbl {
   i = {
     -- save
     ["<C-s>"] = { "<esc> <cmd> w <CR>", "Save file" },
+    ["<C-p>"] = { "<Nop>", "No-op" },
+    ["<C-n>"] = { "<Nop>", "No-op" },
     ["<c-q><c-q>"] = { "<esc> <cmd> qa! <CR>", "Force [q]uit" },
     ["<c-q><c-w>"] = { "<esc> <cmd> wqa! <CR>", "Force [q]uit and [w]rite" },
     ["<S-Tab>"] = { "<C-d>", "Unindent" },
