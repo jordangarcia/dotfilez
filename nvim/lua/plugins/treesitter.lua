@@ -5,6 +5,7 @@ return {
     init = function()
       require("core.utils").lazy_load "nvim-treesitter"
     end,
+    lazy = false,
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ":TSUpdate",
     opts = {
@@ -33,7 +34,7 @@ return {
         use_languagetree = true,
       },
       indent = {
-        enable = true,
+        enable = false,
       },
     },
     keys = {
@@ -61,7 +62,8 @@ return {
       },
     },
     config = function(_, opts)
-      dofile(vim.g.base46_cache .. "syntax")
+      -- this is handled in syntax.lua now
+      -- dofile(vim.g.base46_cache .. "syntax")
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
