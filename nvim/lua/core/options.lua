@@ -1,13 +1,9 @@
 local opt = vim.opt
 local g = vim.g
 local o = vim.o
-local config = require "core.chadrc"
 
 -------------------------------------- globals -----------------------------------------
-g.nvchad_theme = config.ui.theme
-g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
-g.toggle_theme_icon = "   "
-g.transparency = config.ui.transparency
+g.transparency = false
 
 -------------------------------------- options ------------------------------------------
 g.mapleader = " "

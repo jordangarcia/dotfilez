@@ -1,11 +1,4 @@
 local M = {}
-local merge_tb = vim.tbl_deep_extend
-
-M.load_config = function()
-  return require "core.chadrc"
-end
-
-M.load_mappings = function(section, mapping_opt) end
 
 M.lazy_load = function(plugin)
   vim.api.nvim_create_autocmd({ "BufRead", "BufWinEnter", "BufNewFile" }, {
