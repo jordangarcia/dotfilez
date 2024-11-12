@@ -5,3 +5,4 @@ require "core.filetypes"
 
 -- require("core.highlights").load_custom_highlights()
 require "kanagawa"
+require("custom.winbar").setup()

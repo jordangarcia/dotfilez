@@ -6,58 +6,22 @@ return {
   },
 
   {
-    "NvChad/base46",
-    enabled = false,
+    "norcalli/nvim-colorizer.lua",
     lazy = false,
-    branch = "v2.0",
-    build = function()
-      require("base46").load_all_highlights()
+    ft = { "css", "lua" },
+    event = "VeryLazy",
+    config = function(_, opts)
+      require("colorizer").setup { user_default_options = { names = false, css = true } }
     end,
+  },
+
+  {
+    "echasnovski/mini.icons",
+    version = "*",
+    lazy = false,
     config = function()
-      -- require("base46").setup()
-      require("core.highlights").load_custom_highlights()
-    end,
-  },
-
-  {
-    "NvChad/ui",
-    enabled = false,
-    branch = "v2.0",
-    lazy = false,
-  },
-
-  {
-    "NvChad/nvim-colorizer.lua",
-    init = function()
-      require("core.utils").lazy_load "nvim-colorizer.lua"
-    end,
-    opts = {
-      filetypes = { "css", "lua" },
-      user_default_options = {
-        names = false,
-      },
-    },
-
-    config = function(_, opts)
-      require("colorizer").setup(opts)
-
-      -- execute colorizer as soon as possible
-      vim.defer_fn(function()
-        require("colorizer").attach_to_buffer(0)
-      end, 0)
-    end,
-  },
-  { "echasnovski/mini.icons", version = "*" },
-
-  {
-    "nvim-tree/nvim-web-devicons",
-    -- opts = function()
-    --   return { override = require "nvchad.icons.devicons" }
-    -- end,
-    config = function(_, opts)
-      -- dofile(vim.g.base46_cache .. "devicons")
-      require("nvim-web-devicons").setup(opts)
-      require("custom.winbar").setup()
+      require("mini.icons").setup()
+      MiniIcons.mock_nvim_web_devicons()
     end,
   },
 }

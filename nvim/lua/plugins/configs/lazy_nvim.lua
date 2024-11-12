@@ -1,3 +1,5 @@
+print "hello"
+
 return {
   defaults = { lazy = true },
 

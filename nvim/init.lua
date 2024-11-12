@@ -14,6 +14,10 @@ vim.opt.rtp:prepend(lazypath)
 -- load plugins
 require("lazy").setup {
   change_detection = { enabled = false },
+  defaults = {
+    lazy = true,
+  },
+  install = { colorscheme = { "kanagawa" } },
   spec = {
     { import = "core.plugins" },
     { import = "plugins" },
