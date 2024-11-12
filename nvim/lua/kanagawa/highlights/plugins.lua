@@ -36,20 +36,22 @@ function M.setup(colors, config)
     -- NvimTree
     NvimTreeNormal = { link = "Normal" },
     NvimTreeNormalNC = { link = "NvimTreeNormal" },
-    NvimTreeRootFolder = { fg = theme.syn.identifier, bold = true },
+    NvimTreeRootFolder = { fg = theme.syn.keyword, bold = true },
     NvimTreeGitDirty = { fg = theme.vcs.changed },
     NvimTreeGitNew = { fg = theme.vcs.added },
     NvimTreeGitDeleted = { fg = theme.vcs.removed },
     NvimTreeGitStaged = { fg = theme.vcs.added },
-    NvimTreeSpecialFile = { fg = theme.syn.special1 },
+    NvimTreeSpecialFile = { fg = colors.palette.carpYellow, bold = true },
     -- NvimTreeIndentMarker           = {},
     NvimTreeImageFile = { fg = theme.syn.special2 },
+    NvimTreeLineNr = { bg = theme.ui.bg },
     NvimTreeSymlink = { link = "Type" },
     NvimTreeFolderName = { link = "Directory" },
     NvimTreeExecFile = { fg = theme.syn.string, bold = true },
     NvimTreeOpenedFile = { fg = theme.syn.special1, italic = true },
+    -- NvimTreeWinSeparator = { bg = theme.ui.bg, fg = theme.ui.bg },
     NvimTreeWinSeparator = { link = "WinSeparator" },
-    NvimTreeWindowPicker = { bg = theme.ui.bg_m1, fg = theme.syn.special1, bold = true },
+    NvimTreeWindowPicker = { bg = theme.ui.bg_p1, fg = theme.syn.special1, bold = true },
     -- NeoTree
     NeoTreeTabInactive = { link = "TabLine" },
     NeoTreeTabActive = { link = "TabLineSel" },
@@ -308,8 +310,8 @@ function M.setup(colors, config)
     MiniIconsRed = { fg = theme.syn.special3 },
     MiniIconsYellow = { fg = theme.syn.identifier },
 
-    MiniIndentscopeSymbol = { fg = theme.syn.special1 },
-    MiniIndentscopePrefix = { nocombine = true }, -- Make it invisible
+    MiniIndentscopeSymbol = { fg = theme.ui.fg_dim },
+    -- MiniIndentscopePrefix = { nocombine = true }, -- Make it invisible
 
     MiniJump = { link = "SpellRare" },
 
@@ -414,7 +416,6 @@ function M.setup(colors, config)
     TelescopeNormal = { bg = theme.ui.bg_m1 },
     -- look at hlgroups and substitue for a theme color
     TelescopePreviewTitle = { bg = colors.palette.springGreen, fg = theme.ui.bg },
-    TelescopeREsultsTitle = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
     TelescopeResultsDiffAdd = { fg = theme.vcs.added },
     TelescopeResultsDiffChange = { fg = theme.vcs.changed },
     TelescopeResultsDiffDelete = { fg = theme.vcs.removed },
@@ -428,6 +429,7 @@ function M.setup(colors, config)
     -- black = "#1F1F28", --  nvim bg AKA theme.ui.bg
     -- black2 = "#25252e", -- theme.ui.bg_p1
     -- darker_black = "#191922", - theme.ui.bg_m1
+    --
   }
 end
 

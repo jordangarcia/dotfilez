@@ -23,7 +23,7 @@ function M.setup(colors, config)
     -- CursorColumn	Screen-column at the cursor, when 'cursorcolumn' is set.
     CursorColumn = { link = "CursorLine" },
     -- CursorLine	Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
-    CursorLine = { bg = theme.ui.bg_p2 },
+    CursorLine = { bg = theme.ui.bg_p1 },
     -- Directory	Directory names (and other special names in listings).
     Directory = { fg = theme.syn.fun },
     -- DiffAdd		Diff mode: Added line. |diff.txt|
@@ -45,16 +45,13 @@ function M.setup(colors, config)
     VertSplit = { link = "WinSeparator" },
     -- Folded		Line used for closed folds.
     Folded = { fg = theme.ui.special, bg = theme.ui.bg_p1 },
-    -- FoldColumn	'foldcolumn'
-    FoldColumn = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
-    -- SignColumn	Column where |signs| are displayed.
-    SignColumn = { fg = theme.ui.special, bg = theme.ui.bg_gutter },
     -- IncSearch	'incsearch' highlighting; also used for the text replaced with ":s///c".
     IncSearch = { fg = theme.ui.fg_reverse, bg = theme.diag.warning },
     -- Substitute	|:substitute| replacement text highlighting.
     Substitute = { fg = theme.ui.fg, bg = theme.vcs.removed },
     -- LineNr		Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
-    LineNr = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
+    -- LineNr = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
+    LineNr = { fg = theme.ui.nontext, bg = theme.ui.bg },
     -- LineNrAbove	Line number for when the 'relativenumber' option is set, above the cursor line.
     -- LineNrBelow	Line number for when the 'relativenumber' option is set, below the cursor line.
     -- CursorLineNr	Like LineNr when 'cursorline' is set and 'cursorlineopt' contains "number" or is "both", for the cursor line.
@@ -238,6 +235,16 @@ function M.setup(colors, config)
     -- diffFile = { fg = c.steelGray },
     -- diffLine = { fg = c.steelGray },
     -- diffIndexLine = { link = 'Identifier' },
+
+    -- StatusColumn
+    StatusColumn = { bg = theme.ui.bg_gutter, fg = colors.palette.sumiInk6 },
+    SignColumn = { link = "StatusColumn" },
+    StatusColumnNr = { bg = theme.ui.bg_gutter, fg = colors.palette.surimiOrange },
+    StatusColumnRight = { fg = theme.ui.bg_gutter, bg = colors.palette.sumiInk3 },
+    -- FoldColumn	'foldcolumn'
+    FoldColumn = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
+    -- SignColumn	Column where |signs| are displayed.
+    -- SignColumn = { fg = theme.ui.special, bg = theme.ui.bg_gutter },
   }
 end
 

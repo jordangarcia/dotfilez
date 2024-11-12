@@ -110,6 +110,7 @@ return {
         bg = palette.sumiInk3,
         bg_p1 = palette.sumiInk4,
         bg_p2 = palette.sumiInk5,
+        bg_p3 = palette.sumiInk6,
 
         -- NOTE
         special = palette.springBlue,
