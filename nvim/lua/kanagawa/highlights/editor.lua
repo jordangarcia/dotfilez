@@ -249,6 +249,9 @@ function M.setup(colors, config)
     FoldColumn = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
     -- SignColumn	Column where |signs| are displayed.
     -- SignColumn = { fg = theme.ui.special, bg = theme.ui.bg_gutter },
+
+    -- Scrollbar
+    ScrollbarHint = { bg = "none", fg = theme.ui.bg_m1 },
   }
 end
 

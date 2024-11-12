@@ -1,4 +1,3 @@
-local colors = require("core.highlights").palette
 ---@type LazyPluginSpec
 return {
   "petertriho/nvim-scrollbar",
@@ -8,8 +7,7 @@ return {
       marks = {
         Hint = {
           priority = -1,
-          color = colors.sumiInk3,
-          -- text = { "█" },
+          highlight = "ScrollbarHint",
         },
       },
       excluded_filetypes = {

@@ -1,8 +1,3 @@
-local palette = require("core.highlights").palette
-local function hello()
-  return [[hello world]]
-end
-
 local function visual_multi()
   local result = vim.api.nvim_call_function("VMInfos", {})
   if result.current then
@@ -100,10 +95,10 @@ theme.command = theme.normal
 theme.terminal = theme.insert
 
 ---@type LazyPluginSpec
---
 return {
   "nvim-lualine/lualine.nvim",
-  event = "VeryLazy",
+  lazy = true,
+  event = "UIEnter",
   config = function()
     require("lualine").setup {
       options = {
