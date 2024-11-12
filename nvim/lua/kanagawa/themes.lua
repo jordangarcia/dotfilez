@@ -94,6 +94,7 @@ return {
     return {
       ui = {
         fg = palette.fujiWhite,
+
         -- fg_dim     = palette.oldWhite,
         fg_dim = palette.sumiInk6,
         fg_reverse = palette.waveBlue1,
@@ -108,7 +109,9 @@ return {
         bg_p1 = palette.sumiInk4,
         bg_p2 = palette.sumiInk5,
 
-        special = palette.springViolet1,
+        -- NOTE
+        special = palette.springBlue,
+        -- special = palette.springViolet1,
         nontext = palette.sumiInk6,
         whitespace = palette.sumiInk6,
 

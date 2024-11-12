@@ -66,7 +66,7 @@ function M.setup(colors, config)
     -- ModeMsg		'showmode' message (e.g., "-- INSERT --").
     ModeMsg = { fg = theme.diag.warning, bold = true },
     -- MsgArea		Area for messages and cmdline.
-    MsgArea = vim.o.cmdheight == 0 and { link = "StatusLine" } or { fg = theme.ui.fg_dim },
+    MsgArea = vim.o.cmdheight == 0 and { link = "StatusLine" } or { fg = theme.ui.fg },
     -- MsgSeparator	Separator for scrolled messages |msgsep|.
     MsgSeparator = { bg = vim.o.cmdheight == 0 and theme.ui.bg or theme.ui.bg_m3 },
     -- MoreMsg		|more-prompt|
@@ -107,7 +107,10 @@ function M.setup(colors, config)
     QuickFixLine = { bg = theme.ui.bg_p1 },
     -- Search		Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
     Search = { fg = theme.ui.fg, bg = theme.ui.bg_search },
+    -- Search = { fg = "blue", bg = theme.ui.bg_search },
     -- SpecialKey	Unprintable characters: Text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
+    Special = { fg = theme.ui.special },
+
     SpecialKey = { fg = theme.ui.special },
     -- SpellBad	Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
     SpellBad = { undercurl = config.undercurl, underline = not config.undercurl, sp = theme.diag.error },
