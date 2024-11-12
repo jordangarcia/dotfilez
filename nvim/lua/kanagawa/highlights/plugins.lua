@@ -175,6 +175,8 @@ function M.setup(colors, config)
     CmpItemKindOperator = { link = "Operator" },
     CmpItemKindTypeParameter = { link = "Type" },
     CmpItemKindCopilot = { link = "String" },
+    CmpSel = { link = "PmenuSel" },
+    -- CmpSel = { bg = colors.palette.purple, fg = theme.ui.bg },
 
     -- IndentBlankline
     IndentBlanklineChar = { fg = theme.ui.whitespace },
@@ -412,7 +414,7 @@ function M.setup(colors, config)
     TelescopeResultsMethod = { link = "Function" },
     TelescopeResultsVariable = { link = "@variable" },
     TelescopePromptTitle = { fg = theme.ui.bg, bg = colors.palette.springBlue },
-    TelescopePromptPrefix = { fg = colors.palette.springBlue },
+    TelescopePromptPrefix = { fg = colors.palette.crystalBlue },
     TelescopeNormal = { bg = theme.ui.bg_m1 },
     -- look at hlgroups and substitue for a theme color
     TelescopePreviewTitle = { bg = colors.palette.springGreen, fg = theme.ui.bg },

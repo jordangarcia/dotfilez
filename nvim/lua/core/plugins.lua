@@ -47,6 +47,7 @@ return {
       end, 0)
     end,
   },
+  { "echasnovski/mini.icons", version = "*" },
 
   {
     "nvim-tree/nvim-web-devicons",

@@ -23,10 +23,10 @@ local formatting_style = {
   format = function(_, item)
     -- local icons = require "nvchad.icons.lspkind"
     -- TODO(jordan)
-    icons = {}
-    local icon = (cmp_ui.icons and icons[item.kind]) or ""
+    -- icons = {}
+    local icon = MiniIcons.get("lsp", item.kind) or ""
 
-    icon = cmp_ui.lspkind_text and (" " .. icon .. " ") or icon
+    icon = cmp_ui.lspkind_text and ("" .. icon .. "") or icon
     -- todo move this into custom
     local kind = cmp_ui.lspkind_text and item.kind or ""
     item.kind = icon
@@ -132,18 +132,18 @@ return {
         completeopt = "menu,menuone",
       },
 
-      window = {
-        completion = {
-          side_padding = 0,
-          winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:PmenuSel",
-          scrollbar = false,
-        },
-
-        documentation = {
-          border = border "CmpDocBorder",
-          winhighlight = "Normal:CmpDoc",
-        },
-      },
+      -- window = {
+      --   completion = {
+      --     side_padding = 0,
+      --     winhighlight = "Normal:CmpPmenu,CursorLine:CmpSel,Search:PmenuSel",
+      --     scrollbar = false,
+      --   },
+      --
+      --   documentation = {
+      --     border = border "CmpDocBorder",
+      --     winhighlight = "Normal:CmpDoc",
+      --   },
+      -- },
 
       snippet = {
         expand = function(args)
@@ -151,7 +151,7 @@ return {
         end,
       },
 
-      -- formatting = formatting_style,
+      formatting = formatting_style,
 
       mapping = {
 

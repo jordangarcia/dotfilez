@@ -98,7 +98,7 @@ return {
         fg = palette.fujiWhite,
 
         -- fg_dim     = palette.oldWhite,
-        fg_dim = palette.sumiInk6,
+        fg_dim = palette.sumiInk5,
         fg_reverse = palette.waveBlue1,
 
         bg_dim = palette.sumiInk1,
@@ -123,11 +123,11 @@ return {
 
         pmenu = {
           fg = palette.fujiWhite,
-          fg_sel = "none", -- This is important to make highlights pass-through
-          bg = palette.waveBlue1,
-          bg_sel = palette.waveBlue2,
+          fg_sel = palette.sumiInk3,
+          bg = palette.sumiInk1,
+          bg_sel = palette.purple,
           bg_sbar = palette.waveBlue1,
-          bg_thumb = palette.waveBlue2,
+          bg_thumb = palette.purple,
         },
         float = {
           fg = palette.oldWhite,
@@ -165,7 +165,7 @@ return {
         type = palette.waveAqua2,
         regex = palette.boatYellow2,
         deprecated = palette.katanaGray,
-        comment = palette.sumiInk6,
+        comment = palette.sumiInk5,
         -- comment = palette.dragonGray2,
         -- punct = palette.springViolet2,
         punct = palette.dragonGray2,

@@ -123,12 +123,15 @@ function M.setup(colors, config)
     StatusLineNC = { fg = theme.ui.nontext, bg = theme.ui.bg_m3 },
     -- TabLine		Tab pages line, not active tab page label.
     TabLine = {
-      bg = theme.ui.bg_m3,
+      -- bg = theme.ui.bg_m3,
+      bg = theme.ui.bg,
       -- fg = theme.ui.special,
     },
     -- TabLineFill	Tab pages line, where there are no labels.
     TabLineFill = {
-      bg = theme.ui.bg_m3,
+      -- TODO maybe make this black???
+      -- bg = theme.ui.bg_m3,
+      bg = theme.ui.bg,
     },
 
     TabLineSel = {

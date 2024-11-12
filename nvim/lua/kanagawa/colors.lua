@@ -8,9 +8,10 @@ local palette = {
   sumiInk3 = "#1F1F28",
   sumiInk4 = "#2A2A37",
   -- sumiInk4 = "#2A2A37",
-  sumiInk5 = "#363646",
-  -- sumiInk6 = "#54546D", --fg
-  sumiInk6 = "#4C4C55", --fg
+  -- sumiInk5 = "#363646",
+  sumiInk5 = "#4C4C55", --fg
+  sumiInk6 = "#54546D", --fg
+  -- sumiInk6 = "#4C4C55", --fg
 
   -- Popup and Floats
   waveBlue1 = "#223249",
@@ -127,6 +128,9 @@ local palette = {
   lotusTeal2 = "#6693bf",
   lotusTeal3 = "#5a7785",
   lotusCyan = "#d7e3d8",
+
+  -- my colors
+  purple = "#a48ec7",
 }
 
 local M = {}
