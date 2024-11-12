@@ -90,3 +90,5 @@ alias vienvrclocal="vi ~/code/gamma/.envrc.local && direnv allow"
 
 alias pbq="pbpaste | jq"
 alias pbhtml="pbpaste | prettier --parser html"
+
+alias nvim2="NVIM_APPNAME=nvim2 nvim"
