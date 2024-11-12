@@ -1,7 +1,7 @@
 ---@type LazyPluginSpec
 return {
   "lukas-reineke/indent-blankline.nvim",
-  enabled = true,
+  enabled = false,
   lazy = false,
   main = "ibl",
   opts = {

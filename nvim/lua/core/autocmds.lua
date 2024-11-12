@@ -91,3 +91,16 @@ autocmd("TabEnter", {
 
 -- Disable folding in Telescope's result window.
 vim.api.nvim_create_autocmd("FileType", { pattern = "TelescopeResults", command = [[setlocal nofoldenable]] })
+
+-- disable syntax highlighting for large files
+vim.api.nvim_create_autocmd("BufReadPre", {
+  callback = function(args)
+    local file_size = vim.fn.getfsize(args.file)
+    -- Disable syntax for files > 1MB
+    if file_size > 1024 * 1024 * 5 then
+      vim.opt_local.synmaxcol = 0
+      vim.cmd "syntax off"
+      vim.cmd "TSBufDisable highlight"
+    end
+  end,
+})

@@ -5,12 +5,28 @@ local o = vim.o
 -------------------------------------- globals -----------------------------------------
 g.transparency = false
 
+-------------------------------------- disabled plugins -----------------------------------------
+local disabled_built_ins = {
+  "loaded_matchparen", -- Disable bracket matching
+  "loaded_gzip", -- Disable gzip
+  "loaded_tar", -- Disable tar
+  "loaded_tarPlugin",
+  "loaded_zip", -- Disable zip
+  "loaded_zipPlugin",
+  "loaded_netrw", -- Disable netrw
+  "loaded_netrwPlugin",
+  "loaded_matchit", -- Disable matchit
+  "loaded_2html_plugin", -- Disable 2html
+  "loaded_tutor_mode_plugin", -- Disable tutor
+  "loaded_syntax", -- Disable remote plugins
+  "loaded_synmenu", -- Disable remote plugins
+}
+
+for _, plugin in pairs(disabled_built_ins) do
+  vim.g[plugin] = 1
+end
 -------------------------------------- options ------------------------------------------
 g.mapleader = " "
-
--- disable netrw
-g.loaded_netrwPlugin = 1
-g.loaded_netrw = 1
 
 opt.laststatus = 3 -- global statusline
 opt.showmode = false
@@ -26,6 +42,10 @@ opt.tabstop = 2
 opt.softtabstop = 2
 -- vim.g.clipboard = "unnamed"
 opt.swapfile = false
+
+-- syntax
+opt.syntax = "off"
+opt.synmaxcol = 300
 
 opt.list = true -- Show some invisible characters (tabs...
 

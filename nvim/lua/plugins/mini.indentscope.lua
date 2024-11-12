@@ -2,7 +2,7 @@
 return {
   "echasnovski/mini.indentscope",
   version = "*",
-  enabled = false,
+  enabled = true,
   lazy = true,
   event = "VeryLazy",
   config = function()
