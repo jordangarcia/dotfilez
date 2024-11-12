@@ -59,7 +59,8 @@ function M.setup(colors, config)
     -- CursorLineFold	Like FoldColumn when 'cursorline' is set for the cursor line.
     -- CursorLineSign	Like SignColumn when 'cursorline' is set for the cursor line.
     -- MatchParen	Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
-    MatchParen = { fg = theme.diag.warning, bold = true },
+    -- MatchParen = { fg = theme.diag.warning, bold = true },
+    MatchParen = { fg = colors.palette.carpYellow, bold = true },
     -- ModeMsg		'showmode' message (e.g., "-- INSERT --").
     ModeMsg = { fg = theme.diag.warning, bold = true },
     -- MsgArea		Area for messages and cmdline.

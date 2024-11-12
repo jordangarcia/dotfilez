@@ -182,11 +182,11 @@ function M.setup(colors, config)
     IndentBlanklineChar = { fg = theme.ui.whitespace },
     IndentBlanklineSpaceChar = { fg = theme.ui.whitespace },
     IndentBlanklineSpaceCharBlankline = { fg = theme.ui.whitespace },
-    IndentBlanklineContextChar = { fg = theme.ui.special },
-    IndentBlanklineContextStart = { sp = theme.ui.special, underline = true },
-    IblIndent = { fg = theme.ui.whitespace },
-    IblWhitespace = { fg = theme.ui.whitespace },
-    IblScope = { fg = theme.ui.special },
+    IndentBlanklineContextChar = { fg = theme.ui.bg_p1 },
+    IndentBlanklineContextStart = { sp = theme.ui.fg_dim, underline = false },
+    IblIndent = { fg = theme.ui.bg_p1 },
+    IblWhitespace = { fg = theme.ui.bg },
+    IblScope = { fg = theme.ui.fg_dim },
     -- Lazy
     LazyProgressTodo = { fg = theme.ui.nontext },
 

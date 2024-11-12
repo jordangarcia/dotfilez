@@ -152,6 +152,7 @@ local config = {
 	-- font = wezterm.font_with_fallback({ { family = "Hack Nerd Font", weight = "Bold" } }),
 	-- font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
 	font = wezterm.font_with_fallback({ { family = "Victor Mono SemiBold" } }),
+	-- font = wezterm.font_with_fallback({ { family = "Victor Mono" } }),
 	font_rules = {
 		{
 			italic = true,
