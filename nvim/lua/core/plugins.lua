@@ -7,6 +7,7 @@ return {
 
   {
     "NvChad/base46",
+    enabled = false,
     lazy = false,
     branch = "v2.0",
     build = function()
@@ -20,6 +21,7 @@ return {
 
   {
     "NvChad/ui",
+    enabled = false,
     branch = "v2.0",
     lazy = false,
   },
@@ -48,11 +50,11 @@ return {
 
   {
     "nvim-tree/nvim-web-devicons",
-    opts = function()
-      return { override = require "nvchad.icons.devicons" }
-    end,
+    -- opts = function()
+    --   return { override = require "nvchad.icons.devicons" }
+    -- end,
     config = function(_, opts)
-      dofile(vim.g.base46_cache .. "devicons")
+      -- dofile(vim.g.base46_cache .. "devicons")
       require("nvim-web-devicons").setup(opts)
       require("custom.winbar").setup()
     end,

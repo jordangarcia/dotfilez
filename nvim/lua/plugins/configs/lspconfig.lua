@@ -1,5 +1,5 @@
-dofile(vim.g.base46_cache .. "lsp")
-require "nvchad.lsp"
+-- dofile(vim.g.base46_cache .. "lsp")
+-- require "nvchad.lsp"
 local lspconfig = require "lspconfig"
 
 local M = {}
