@@ -148,7 +148,7 @@ local config = {
 	disable_default_key_bindings = true,
 	-- tabs
 	use_fancy_tab_bar = false,
-	hide_tab_bar_if_only_one_tab = true,
+	hide_tab_bar_if_only_one_tab = false,
 	-- font = wezterm.font_with_fallback({ { family = "Hack Nerd Font", weight = "Bold" } }),
 	-- font = wezterm.font_with_fallback({ { family = "JetBrainsMono Nerd Font", weight = "Bold" } }),
 	font = wezterm.font_with_fallback({ { family = "Victor Mono SemiBold" } }),
