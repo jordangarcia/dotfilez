@@ -397,7 +397,7 @@ return {
     end
 
     -- load autosession
-    require("auto-session").setup_session_lens()
+    -- require("auto-session").setup_session_lens()
     require("telescope-all-recent").setup {}
 
     -- disable lexima in telescope prompt

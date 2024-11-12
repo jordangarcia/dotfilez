@@ -164,7 +164,7 @@ lspconfig["pyright"].setup {
   capabilities = capabilities,
 }
 
-lspconfig["ruff_lsp"].setup {
+lspconfig["ruff"].setup {
   -- dont setup on_attach becuase it disables the formatting provider
   capabilities = capabilities,
 }

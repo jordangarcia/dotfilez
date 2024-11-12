@@ -36,25 +36,22 @@ return {
 
     local wk = require "which-key"
     wk.setup(opts)
-    wk.add {
+    wk.register {
       mode = { "n", "v" },
-      { "<leader><tab>", group = "tabs" },
-      { "<leader>b", group = "buffer" },
-      { "<leader>e", group = "tree" },
-      { "<leader>f", group = "find" },
-      { "<leader>g", group = "git" },
-      { "<leader>gh", group = "hunks" },
-      { "<leader>h", group = "harpoon" },
-      { "<leader>l", group = "lsp" },
-      { "<leader>r", group = "replace" },
-      { "<leader>s", group = "session" },
-      { "<leader>w", group = "windows" },
-      { "<leader>t", group = "tab+treesitter" },
-      { "<leader>u", group = "history" },
-      { "<leader>x", group = "windows" },
-      { "<leader>y", group = "yank" },
-      { "[", group = "prev" },
-      { "]", group = "next" },
+      ["]"] = { name = "+next" },
+      ["["] = { name = "+prev" },
+      ["<leader><tab>"] = { name = "+tabs" },
+      ["<leader>b"] = { name = "+buffer" },
+      ["<leader>e"] = { name = "+tree" },
+      ["<leader>f"] = { name = "+find" },
+      ["<leader>g"] = { name = "+git" },
+      ["<leader>gh"] = { name = "+hunks" },
+      ["<leader>h"] = { name = "+harpoon" },
+      ["<leader>l"] = { name = "+lsp" },
+      ["<leader>r"] = { name = "+replace" },
+      ["<leader>s"] = { name = "+session" },
+      ["<leader>w"] = { name = "+windows" },
+      ["<leader>y"] = { name = "+yank" },
     }
   end,
 }

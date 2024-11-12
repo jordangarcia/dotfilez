@@ -24,7 +24,8 @@ return {
         -- python stuff
         "pyright",
         "black",
-        "ruff-lsp",
+        -- "ruff-lsp",
+        "ruff",
         "basedpyright",
         -- c/cpp stuff
         "clangd",
@@ -223,198 +224,135 @@ return {
       -- vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
       --
 
-      require("which-key").register({
-        ["]d"] = {
-          function()
-            vim.diagnostic.goto_next {
-              float = false,
-            }
-          end,
-          "[n]ext diagnostic",
+      require("which-key").add {
+        {
+          mode = { "n", "v" },
+          {
+            "]d",
+            function()
+              vim.diagnostic.goto_next {
+                float = false,
+              }
+            end,
+            desc = "[n]ext diagnostic",
+          },
+          {
+            "[d",
+            function()
+              vim.diagnostic.goto_prev {
+                float = false,
+              }
+            end,
+            desc = "[p]rev diagnostic",
+          },
+          {
+            "<C-2>",
+            "<cmd> Lspsaga rename <CR>",
+            desc = "Lspsaga [r]ename",
+          },
+          {
+            "<F11>",
+            function()
+              require("telescope.builtin").lsp_references {
+                include_declaration = true,
+                jump_type = "never",
+              }
+            end,
+            desc = "LSP References",
+          },
+          {
+            "<F12>",
+            function()
+              vim.lsp.buf.definition()
+            end,
+            desc = "LSP definition",
+          },
+          {
+            "<F24>",
+            [[ :exec "vert norm <C-V><C-W>]"<CR> ]],
+            desc = "Jump to def (vsplit)",
+          },
+          {
+            "K",
+            function()
+              vim.lsp.buf.hover()
+            end,
+            desc = "LSP hover",
+          },
         },
-        ["[d"] = {
-          function()
-            vim.diagnostic.goto_prev {
-              float = false,
-            }
-          end,
-          "[p]rev diagnostic",
-        },
-        ["<C-2>"] = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
-        --
-
-        ["<F11>"] = {
-          function()
-            require("telescope.builtin").lsp_references {
-              include_declaration = true,
-              jump_type = "never",
-            }
-          end,
-          "LSP References ",
-        },
-
-        ["<F12>"] = {
-          function()
-            vim.lsp.buf.definition()
-            -- require("telescope.builtin").lsp_definitions {
-            --   include_declaration = true,
-            --   jump_type = "never",
-            -- }
-          end,
-          "LSP definition",
-        },
-        -- open tag in new window
-        ["<F24>"] = {
-          [[ :exec "vert norm <C-V><C-W>]"<CR> ]],
-          "Jump to def (vsplit)",
-        },
-
-        ["K"] = {
-          function()
-            vim.lsp.buf.hover()
-          end,
-          -- "<CMD> Lspsaga peek_type_definition <CR>",
-          "LSP hover",
-        },
-      }, {
-        mode = { "n", "v" },
-      })
-      require("which-key").register({
-        l = {
-          name = "+lsp",
-          -- f = { "<cmd> Lspsaga finder tyd+def+ref <CR>", "Lspsaga [f]inder" },
-          -- r = { "<cmd> Lspsaga rename <CR>", "Lspsaga [r]ename" },
-          -- f2 renames
-          -- r = {
-          --   function()
-          --     require("nvchad.renamer").open()
-          --   end,
-          --   "Lspsaga [r]ename",
-          -- },
-          R = {
+      }
+      require("which-key").add {
+        {
+          mode = { "n", "v" },
+          {
+            "<leader>lR",
             function()
               vim.lsp.buf.references()
             end,
-            "Lsp [R]eferences",
+desc =             "Lsp [R]eferences",
           },
-          i = {
-            "<CMD> EslintFixAll <CR>",
-            "Eslint f[i]x all",
+          { "<leader>ld", group = "type definition" },
+          {
+            "<leader>ldp",
+            function()
+              require("telescope.builtin").lsp_type_definitions {
+                jump_type = "never",
+                layout_config = {
+                  height = 0.4,
+                },
+              }
+            end,
+            desc = "Lsp [d]efinition [p]eek",
           },
-          f = {
+          {
+            "<leader>ldt",
+            function()
+              require("telescope.builtin").lsp_type_definitions { jump_type = "tab" }
+            end,
+            desc = "Lsp [d]efinition [t]ab",
+          },
+          {
+            "<leader>ldv",
+            function()
+              require("telescope.builtin").lsp_type_definitions { jump_type = "vsplit" }
+            end,
+            desc = "Lsp [d]efinition [v]split",
+          },
+          {
+            "<leader>lf",
             function()
               vim.lsp.buf.format { async = true }
             end,
-            "Lsp [f]ormat",
+            desc = "Lsp [f]ormat",
           },
-          s = {
+          {
+            "<leader>li",
+            "<CMD> EslintFixAll <CR>",
+            desc = "Eslint f[i]x all",
+          },
+          {
+            "<leader>ls",
             function()
               vim.lsp.buf.signature_help()
             end,
-            "Lsp [s]ignature",
+            desc = "Lsp [s]ignature",
           },
-          d = {
-            name = "+type definition",
-            p = {
-              function()
-                require("telescope.builtin").lsp_type_definitions {
-                  jump_type = "never",
-                  layout_config = {
-                    height = 0.4,
-                  },
-                }
-              end,
-              "Lsp [d]efinition [p]eek",
-            },
-            t = {
-              function()
-                require("telescope.builtin").lsp_type_definitions { jump_type = "tab" }
-              end,
-              "Lsp [d]efinition [t]ab",
-            },
-            v = {
-              function()
-                require("telescope.builtin").lsp_type_definitions { jump_type = "vsplit" }
-              end,
-              "Lsp [d]efinition [v]split",
-            },
-          },
-
-          -- D = {
-          --   name = "+type definition",
-          --   p = {
-          --     function()
-          --       require("telescope.builtin").lsp_type_definitions {
-          --         jump_type = "never",
-          --         layout_config = {
-          --           height = 0.4,
-          --         },
-          --       }
-          --     end,
-          --     "Lsp [d]efinition [p]eek",
-          --   },
-          --   t = {
-          --     function()
-          --       require("telescope.builtin").lsp_type_definitions { jump_type = "tab" }
-          --     end,
-          --     "Lsp [d]efinition [t]ab",
-          --   },
-          --   v = {
-          --     function()
-          --       require("telescope.builtin").lsp_type_definitions { jump_type = "vsplit" }
-          --     end,
-          --     "Lsp [d]efinition [v]split",
-          --   },
-          -- },
-
-          t = {
-            name = "+typescript",
-            i = {
-              function()
-                vim.lsp.buf.code_action {
-                  apply = true,
-                  context = {
-                    only = { "source.removeUnusedImports" },
-                    diagnostics = {},
-                  },
-                }
-              end,
-              "TS remove unused imports",
-            },
+          { "<leader>lt", group = "typescript" },
+          {
+            "<leader>lti",
+            function()
+              vim.lsp.buf.code_action {
+                apply = true,
+                context = {
+                  only = { "source.removeUnusedImports" },
+                  diagnostics = {},
+                },
+              }
+            end,
+            desc = "TS remove unused imports",
           },
         },
-      }, {
-        prefix = "<leader>",
-        mode = { "n", "v" },
-      })
-    end,
-  },
-  {
-    -- this is now covered by the vstls-rename
-    "antosha417/nvim-lsp-file-operations",
-    enabled = false,
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    config = function()
-      require("lsp-file-operations").setup()
-    end,
-  },
-  {
-    "mhanberg/output-panel.nvim",
-    event = "VeryLazy",
-    keys = {
-      {
-        "<leader>lO",
-        function()
-          vim.cmd [[ OutputPanel ]]
-        end,
-        desc = "Output panel",
-      },
-    },
-    config = function()
-      require("output_panel").setup()
+      }
     end,
   },
 }
