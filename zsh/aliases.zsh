@@ -13,6 +13,8 @@ else
 fi
 
 
+alias nvim9="NVIM_APPNAME=nvim-0.9 /opt/homebrew/Cellar/nvim@0.9.5/bin/nvim"
+
 alias vim='nvim'
 alias vi='nvim'
 
@@ -91,4 +93,3 @@ alias vienvrclocal="vi ~/code/gamma/.envrc.local && direnv allow"
 alias pbq="pbpaste | jq"
 alias pbhtml="pbpaste | prettier --parser html"
 
-alias nvim2="NVIM_APPNAME=nvim2 nvim"

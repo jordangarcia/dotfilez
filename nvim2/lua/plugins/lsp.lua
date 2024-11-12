@@ -224,7 +224,7 @@ return {
       -- vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
       --
 
-      require("which-key").register {
+      require("which-key").add {
         {
           mode = { "n", "v" },
           {
@@ -234,7 +234,7 @@ return {
                 float = false,
               }
             end,
-            "[n]ext diagnostic",
+            desc = "[n]ext diagnostic",
           },
           {
             "[d",
@@ -243,12 +243,12 @@ return {
                 float = false,
               }
             end,
-            "[p]rev diagnostic",
+            desc = "[p]rev diagnostic",
           },
           {
             "<C-2>",
             "<cmd> Lspsaga rename <CR>",
-            "Lspsaga [r]ename",
+            desc = "Lspsaga [r]ename",
           },
           {
             "<F11>",
@@ -258,30 +258,30 @@ return {
                 jump_type = "never",
               }
             end,
-            "LSP References",
+            desc = "LSP References",
           },
           {
             "<F12>",
             function()
               vim.lsp.buf.definition()
             end,
-            "LSP definition",
+            desc = "LSP definition",
           },
           {
             "<F24>",
             [[ :exec "vert norm <C-V><C-W>]"<CR> ]],
-            "Jump to def (vsplit)",
+            desc = "Jump to def (vsplit)",
           },
           {
             "K",
             function()
               vim.lsp.buf.hover()
             end,
-            "LSP hover",
+            desc = "LSP hover",
           },
         },
       }
-      require("which-key").register {
+      require("which-key").add {
         {
           mode = { "n", "v" },
           {
@@ -289,7 +289,7 @@ return {
             function()
               vim.lsp.buf.references()
             end,
-            "Lsp [R]eferences",
+desc =             "Lsp [R]eferences",
           },
           { "<leader>ld", group = "type definition" },
           {
@@ -302,40 +302,40 @@ return {
                 },
               }
             end,
-            "Lsp [d]efinition [p]eek",
+            desc = "Lsp [d]efinition [p]eek",
           },
           {
             "<leader>ldt",
             function()
               require("telescope.builtin").lsp_type_definitions { jump_type = "tab" }
             end,
-            "Lsp [d]efinition [t]ab",
+            desc = "Lsp [d]efinition [t]ab",
           },
           {
             "<leader>ldv",
             function()
               require("telescope.builtin").lsp_type_definitions { jump_type = "vsplit" }
             end,
-            "Lsp [d]efinition [v]split",
+            desc = "Lsp [d]efinition [v]split",
           },
           {
             "<leader>lf",
             function()
               vim.lsp.buf.format { async = true }
             end,
-            "Lsp [f]ormat",
+            desc = "Lsp [f]ormat",
           },
           {
             "<leader>li",
             "<CMD> EslintFixAll <CR>",
-            "Eslint f[i]x all",
+            desc = "Eslint f[i]x all",
           },
           {
             "<leader>ls",
             function()
               vim.lsp.buf.signature_help()
             end,
-            "Lsp [s]ignature",
+            desc = "Lsp [s]ignature",
           },
           { "<leader>lt", group = "typescript" },
           {
@@ -349,7 +349,7 @@ return {
                 },
               }
             end,
-            "TS remove unused imports",
+            desc = "TS remove unused imports",
           },
         },
       }
