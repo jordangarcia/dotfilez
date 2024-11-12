@@ -386,7 +386,7 @@ return {
     }
   end,
   config = function(_, opts)
-    dofile(vim.g.base46_cache .. "telescope")
+    -- dofile(vim.g.base46_cache .. "telescope")
     local telescope = require "telescope"
     telescope.setup(opts)
 

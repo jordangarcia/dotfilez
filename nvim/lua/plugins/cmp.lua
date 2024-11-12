@@ -1,4 +1,4 @@
-dofile(vim.g.base46_cache .. "cmp")
+-- dofile(vim.g.base46_cache .. "cmp")
 
 -- setup mason
 -- add binaries installed by mason.nvim to path
@@ -21,7 +21,9 @@ local formatting_style = {
   fields = { "kind", "abbr", "menu" },
 
   format = function(_, item)
-    local icons = require "nvchad.icons.lspkind"
+    -- local icons = require "nvchad.icons.lspkind"
+    -- TODO(jordan)
+    icons = {}
     local icon = (cmp_ui.icons and icons[item.kind]) or ""
 
     icon = cmp_ui.lspkind_text and (" " .. icon .. " ") or icon
@@ -149,7 +151,7 @@ return {
         end,
       },
 
-      formatting = formatting_style,
+      -- formatting = formatting_style,
 
       mapping = {
 
@@ -241,6 +243,7 @@ return {
       },
 
       sources = {
+        { name = "lazydev", group_index = 0 },
         { name = "nvim_lsp", max_item_count = 20, priority = 100 },
         -- { name = "luasnip" },
         -- { name = "buffer", enabled = true, keyword_length = 3, max_item_count = 2 },

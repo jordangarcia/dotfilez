@@ -1,33 +1,29 @@
 ---@type LazyPluginSpec
 return {
   "lukas-reineke/indent-blankline.nvim",
-  version = "2.20.7",
-  init = function()
-    require("core.utils").lazy_load "indent-blankline.nvim"
-  end,
+  enabled = false,
+  main = "ibl",
   opts = {
-    indentLine_enabled = 1,
-    filetype_exclude = {
-      "help",
-      "terminal",
-      "lazy",
-      "lspinfo",
-      "TelescopePrompt",
-      "TelescopeResults",
-      "mason",
-      "nvdash",
-      "nvcheatsheet",
-      "noice",
-      "",
+    indent = {
+      char = "▏",
     },
-    buftype_exclude = { "terminal", "noice" },
-    show_trailing_blankline_indent = false,
-    show_first_indent_level = false,
-    show_current_context = true,
-    show_current_context_start = false,
+    exclude = {
+      filetypes = {
+        "help",
+        "terminal",
+        "lazy",
+        "lspinfo",
+        "TelescopePrompt",
+        "TelescopeResults",
+        "mason",
+        "nvdash",
+        "nvcheatsheet",
+        "noice",
+      },
+      buftypes = {
+        "terminal",
+        "noice",
+      },
+    },
   },
-  config = function(_, opts)
-    dofile(vim.g.base46_cache .. "blankline")
-    require("indent_blankline").setup(opts)
-  end,
 }

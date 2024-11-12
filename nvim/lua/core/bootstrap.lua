@@ -13,15 +13,15 @@ end
 
 M.lazy = function(install_path)
   ------------- base46 ---------------
-  local lazy_path = fn.stdpath "data" .. "/lazy/base46"
+  -- local lazy_path = fn.stdpath "data" .. "/lazy/base46"
 
-  M.echo "  Compiling base46 theme to bytecode ..."
+  -- M.echo "  Compiling base46 theme to bytecode ..."
 
-  local base46_repo = "https://github.com/NvChad/base46"
-  shell_call { "git", "clone", "--depth", "1", "-b", "v2.0", base46_repo, lazy_path }
-  vim.opt.rtp:prepend(lazy_path)
+  -- local base46_repo = "https://github.com/NvChad/base46"
+  -- shell_call { "git", "clone", "--depth", "1", "-b", "v2.0", base46_repo, lazy_path }
+  -- vim.opt.rtp:prepend(lazy_path)
 
-  require("base46").compile()
+  -- require("base46").compile()
 
   --------- lazy.nvim ---------------
   M.echo "  Installing lazy.nvim & plugins ..."
