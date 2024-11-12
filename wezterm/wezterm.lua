@@ -173,12 +173,12 @@ local config = {
 	-- leader
 	-- leader is only used for quickselect
 	leader = { mods = hyper, key = "y" },
-	-- window_padding = {
-	--  left = 30,
-	--  right = 30,
-	--  top = 20,
-	--  bottom = 0,
-	-- },
+	window_padding = {
+		left = 10,
+		right = 10,
+		top = 10,
+		bottom = 10,
+	},
 	-- colors = require("colors.real-kanagawa").colors,
 	colors = {
 
