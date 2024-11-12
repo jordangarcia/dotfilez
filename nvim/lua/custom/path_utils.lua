@@ -13,15 +13,4 @@ M.normalize_to_home = function(dir)
   end
 end
 
-M.normalize = function(dir)
-  local p = Path:new(dir)
-  local cwd = vim.fn.getcwd()
-
-  if vim.startswith(dir, cwd) then
-    return p:make_relative(cwd)
-  else
-    return M.normalize_to_home(dir)
-  end
-end
-
 return M
