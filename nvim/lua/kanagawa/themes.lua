@@ -13,10 +13,12 @@ local c = require "kanagawa.lib.color"
 ---@field constructor ColorSpec
 ---@field parameter ColorSpec
 ---@field fun ColorSpec
+---@field include ColorSpec
 ---@field statement ColorSpec
 ---@field keyword ColorSpec
 ---@field operator ColorSpec
 ---@field preproc ColorSpec
+---@field builtin ColorSpec
 ---@field type ColorSpec
 ---@field regex ColorSpec
 ---@field deprecated ColorSpec
@@ -135,16 +137,20 @@ return {
       },
       syn = {
         string = palette.springGreen,
-        variable = "none",
+        variable = palette.fujiWhite,
         number = palette.sakuraPink,
-        constant = palette.carpYellow,
+        -- constant = palette.carpYellow,
+        constant = palette.fujiWhite,
         boolean = palette.surimiOrange,
+        builtin = palette.waveRed,
         -- constant = palette.surimiOrange,
+        include = palette.surimiOrange,
         identifier = palette.carpYellow,
         -- parameter  = "#C3B1B1",
         -- parameter  = "#B1ADC8",
         -- parameter  = "#b8b4d0",
-        parameter = "none",
+        -- parameter = "none",
+        parameter = palette.carpYellow,
         -- parameter = palette.oniViolet2,
         -- parameter = "#d5a4a6",
         -- parameter  = "#C8ADAD",

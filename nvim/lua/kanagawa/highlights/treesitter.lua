@@ -7,10 +7,13 @@ function M.setup(colors, config)
   local theme = colors.theme
   return {
     -- @variable                       various variable names
-    ["@variable"] = { fg = theme.ui.fg },
+    ["@variable"] = { fg = theme.syn.variable },
     -- @variable.builtin (Special)     built-in variable names (e.g. `this`, `self`)
-    ["@variable.builtin"] = { fg = theme.syn.special2, italic = true },
+    ["@variable.builtin"] = { fg = theme.syn.builtin, bold = true },
+    ["@function.builtin"] = { fg = theme.syn.builtin },
+    ["@constant.builtin"] = { fg = theme.syn.builtin, bold = true },
     -- @variable.parameter             parameters of a function
+    ["@parameter"] = { fg = theme.syn.parameter },
     ["@variable.parameter"] = { fg = theme.syn.parameter },
     -- @variable.parameter.builtin     special parameters (e.g. `_`, `it`)
     -- @variable.member                object and struct fields
@@ -46,6 +49,7 @@ function M.setup(colors, config)
     -- @type                   type or class definitions and annotations
     -- @type.builtin           built-in types
     -- @type.definition        identifiers in type definitions (e.g. `typedef <type> <identifier>` in C)
+    ["@type.builtin"] = { link = "Type" },
     --
     -- @attribute              attribute annotations (e.g. Python decorators, Rust lifetimes)
     ["@attribute"] = { link = "Constant" },
@@ -72,7 +76,8 @@ function M.setup(colors, config)
     -- @keyword.operator       operators that are English words (e.g. `and`, `or`)
     ["@keyword.operator"] = { fg = theme.syn.keyword, bold = true },
     -- @keyword.import         keywords for including modules (e.g. `import`, `from` in Python)
-    ["@keyword.import"] = { link = "PreProc" },
+    ["@keyword.import"] = { link = "Include" },
+    -- ["@keyword.import"] = { link = "PreProc" },
     -- @keyword.type           keywords defining composite types (e.g. `struct`, `enum`)
     -- @keyword.modifier       keywords defining type modifiers (e.g. `const`, `static`, `public`)
     -- @keyword.repeat         keywords related to loops (e.g. `for`, `while`)
@@ -80,7 +85,7 @@ function M.setup(colors, config)
     -- ["@keyword.return"] = vim.tbl_extend("force", { fg = theme.syn.special3 }, config.keywordStyle),
     -- @keyword.debug          keywords related to debugging
     -- @keyword.exception      keywords related to exceptions (e.g. `throw`, `catch`)
-    ["@keyword.exception"] = vim.tbl_extend("force", { fg = theme.syn.special3 }, config.statementStyle),
+    ["@keyword.exception"] = { fg = theme.syn.special2 },
 
     ["@keyword.luap"] = { link = "@string.regex" },
     --
@@ -95,7 +100,7 @@ function M.setup(colors, config)
     -- @punctuation.bracket    brackets (e.g. `()`, `{}`, `[]`)
     ["@punctuation.bracket"] = { fg = theme.syn.punct },
     -- @punctuation.special    special symbols (e.g. `{}` in string interpolation)
-    ["@punctuation.special"] = { fg = theme.syn.special1 },
+    ["@punctuation.special"] = { fg = theme.syn.punct },
     --
     -- @comment                line and block comments
     -- @comment.documentation  comments documenting code
@@ -158,6 +163,9 @@ function M.setup(colors, config)
     ["@tag.attribute"] = { fg = theme.syn.identifier },
     -- @tag.delimiter          XML-style tag delimiters
     ["@tag.delimiter"] = { fg = theme.syn.punct },
+    ["@tag.tsx"] = { fg = theme.syn.type },
+    ["@tag.builtin.tsx"] = { fg = theme.syn.builtin },
+    ["@string.special.url.tsx"] = { link = "none" },
   }
 end
 

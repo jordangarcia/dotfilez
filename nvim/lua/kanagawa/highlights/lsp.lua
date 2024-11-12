@@ -32,7 +32,8 @@ function M.setup(colors, config)
     ["@lsp.type.builtinConstant"] = { link = "@constant.builtin" },
     ["@lsp.type.magicFunction"] = { link = "@function.builtin" },
 
-    ["@lsp.mod.readonly"] = { link = "Constant" },
+    -- ["@lsp.mod.readonly"] = { link = "Constant" },
+    ["@lsp.mod.declaration"] = { link = "@variable.parameter" },
     ["@lsp.mod.documentation.lua"] = { link = "Comment" },
     ["@lsp.mod.typeHint"] = { link = "Type" },
     -- ["@lsp.mod.defaultLibrary"] = { link = "Special" },
@@ -41,13 +42,14 @@ function M.setup(colors, config)
     ["@lsp.typemod.operator.controlFlow"] = { link = "@keyword.exception" }, -- rust ? operator
     -- ["@lsp.typemod.keyword.documentation"] = { link = "Special" },
 
+    ["@lsp.typemod.variable"] = { link = "Variable" },
     ["@lsp.typemod.variable.global"] = { link = "Constant" },
     ["@lsp.typemod.variable.static"] = { link = "Constant" },
-    ["@lsp.typemod.variable.defaultLibrary"] = { link = "Special" },
+    ["@lsp.typemod.variable.defaultLibrary"] = { link = "@variable.builtin" },
 
     ["@lsp.typemod.function.builtin"] = { link = "@function.builtin" },
     ["@lsp.typemod.function.defaultLibrary"] = { link = "@function.builtin" },
-    ["@lsp.typemod.method.defaultLibrary"] = { link = "@function.builtin" },
+    -- ["@lsp.typemod.method.defaultLibrary"] = { link = "@function.builtin" },
 
     ["@lsp.typemod.variable.injected"] = { link = "@variable" },
 

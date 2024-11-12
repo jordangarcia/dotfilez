@@ -29,6 +29,7 @@ function M.setup(colors, config)
 
     -- *Identifier	any variable name
     Identifier = { fg = theme.syn.identifier },
+    Variable = { fg = theme.syn.variable },
     --  Function	function name (also: methods for classes)
     Function = vim.tbl_extend("force", { fg = theme.syn.fun }, config.functionStyle),
 
@@ -46,19 +47,21 @@ function M.setup(colors, config)
 
     -- *PreProc	generic Preprocessor
     PreProc = { fg = theme.syn.preproc },
+    Include = { fg = theme.syn.include },
     --  Include	preprocessor #include
     --  Define		preprocessor #define
     --  Macro		same as Define
     --  PreCondit	preprocessor #if, #else, #endif, etc.
 
     -- *Type		int, long, char, etc.
-    Type = vim.tbl_extend("force", { fg = theme.syn.type }, config.typeStyle),
+    Type = { fg = theme.syn.type },
     --  StorageClass	static, register, volatile, etc.
     --  Structure	struct, union, enum, etc.
     --  Typedef	A typedef
 
     -- *Special	any special symbol
     Special = { fg = theme.syn.special1 },
+    Builtin = { fg = theme.syn.special2 },
     --  SpecialChar	special character in a constant
     --  Tag		you can use CTRL-] on this
     --  Delimiter	character that needs attention
