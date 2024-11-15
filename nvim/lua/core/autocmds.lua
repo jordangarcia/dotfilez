@@ -12,6 +12,12 @@ autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "signature",
+  callback = function()
+    vim.opt_local.winbar = nil
+  end,
+})
 -- Auto resize panes when resizing nvim window
 autocmd("VimResized", {
   pattern = "*",
@@ -90,7 +96,7 @@ autocmd("TabEnter", {
 -- })
 
 -- Disable folding in Telescope's result window.
-vim.api.nvim_create_autocmd("FileType", { pattern = "TelescopeResults", command = [[setlocal nofoldenable]] })
+-- vim.api.nvim_create_autocmd("FileType", { pattern = "TelescopeResults", command = [[setlocal nofoldenable]] })
 
 -- disable syntax highlighting for large files
 vim.api.nvim_create_autocmd("BufReadPre", {

@@ -245,6 +245,11 @@ function M.setup(colors, config)
     SignColumn = { link = "StatusColumn" },
     StatusColumnNr = { bg = theme.ui.bg_gutter, fg = colors.palette.surimiOrange },
     StatusColumnRight = { fg = theme.ui.bg_gutter, bg = colors.palette.sumiInk3 },
+
+    -- this integrates with StatusColumn so keep here
+    GitSignsAdd = { fg = theme.vcs.added, bg = theme.ui.bg },
+    GitSignsChange = { fg = theme.vcs.changed, bg = theme.ui.bg },
+    GitSignsDelete = { fg = theme.vcs.removed, bg = theme.ui.bg },
     -- FoldColumn	'foldcolumn'
     FoldColumn = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
     -- SignColumn	Column where |signs| are displayed.

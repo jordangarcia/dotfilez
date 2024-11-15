@@ -53,10 +53,12 @@ local winbar_file = function()
   local Path = require "plenary.path"
   name = Path:new(name):normalize(vim.fn.getcwd())
 
+  local buftype = vim.bo.buftype
+  local filetype = vim.bo.filetype
+
   if name == "" then
     return ""
   end
-
   -- if name contains NvimTree
   if string.find(name, "NvimTree") then
     return ""

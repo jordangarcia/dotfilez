@@ -20,10 +20,6 @@ function M.setup(colors, config)
     -- vcsSignsDelete = { link = "diffDeleted" },
     -- vcsSignsDeleteLn = { bg = theme.diff.delete },
 
-    -- Gitsigns
-    GitSignsAdd = { fg = theme.vcs.added, bg = theme.ui.bg_gutter },
-    GitSignsChange = { fg = theme.vcs.changed, bg = theme.ui.bg_gutter },
-    GitSignsDelete = { fg = theme.vcs.removed, bg = theme.ui.bg_gutter },
     -- Neogit
     NeogitDiffContextHighlight = { bg = theme.diff.change }, --[[  guibg=#333333 guifg=#b2b2b2 ]]
     NeogitHunkHeader = { fg = theme.syn.fun }, --[[  guifg=#cccccc guibg=#404040 ]]
