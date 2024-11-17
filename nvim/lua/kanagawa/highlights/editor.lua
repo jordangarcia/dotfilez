@@ -40,9 +40,6 @@ function M.setup(colors, config)
     -- TermCursorNC	Cursor in an unfocused terminal.
     -- ErrorMsg	Error messages on the command line.
     ErrorMsg = { fg = theme.diag.error },
-    -- WinSeparator	Separators between window splits.
-    WinSeparator = { fg = theme.ui.bg_gutter, bg = theme.ui.bg },
-    VertSplit = { link = "WinSeparator" },
     -- Folded		Line used for closed folds.
     Folded = { fg = theme.ui.special, bg = theme.ui.bg_p1 },
     -- IncSearch	'incsearch' highlighting; also used for the text replaced with ":s///c".
@@ -244,7 +241,11 @@ function M.setup(colors, config)
     StatusColumn = { bg = theme.ui.bg_gutter, fg = colors.palette.sumiInk6 },
     SignColumn = { link = "StatusColumn" },
     StatusColumnNr = { bg = theme.ui.bg_gutter, fg = colors.palette.surimiOrange },
+    -- StatusColumnRight = { bg = "none", fg = theme.ui.bg },
     StatusColumnRight = { fg = theme.ui.bg_gutter, bg = colors.palette.sumiInk3 },
+    -- WinSeparator	Separators between window splits.
+    WinSeparator = { fg = theme.ui.bg_p1, bg = theme.ui.bg },
+    VertSplit = { link = "WinSeparator" },
 
     -- this integrates with StatusColumn so keep here
     GitSignsAdd = { fg = theme.vcs.added, bg = theme.ui.bg },
