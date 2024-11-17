@@ -120,10 +120,10 @@ function M.setup(colors, config)
     -- @markup.strikethrough   struck-through text
     ["@markup.strikethrough"] = { strikethrough = true },
     -- @markup.underline       underlined text (only for literal underline markup!)
-    ["@markup.underline"] = { underline = true },
+    ["@markup.underline"] = { underline = true, fg = "none" },
     --
     -- @markup.heading         headings, titles (including markers)
-    ["@markup.heading"] = { link = "Function" },
+    -- ["@markup.heading"] = { link = "Function" },
     -- @markup.heading.1       top-level heading
     -- @markup.heading.2       section heading
     -- @markup.heading.3       subsection heading
@@ -141,9 +141,13 @@ function M.setup(colors, config)
     -- @markup.link            text references, footnotes, citations, etc.
     -- @markup.link.label      link, reference descriptions
     -- @markup.link.url        URL-style links
-    ["@markup.link.url"] = { link = "@string.special.url" },
+    ["@markup.link"] = { link = "Identifier" },
+
+    -- ["@markup.link.url"] = { link = "@string.special.url" },
+    -- ["@markup.link.label"] = { fg = theme.ui.special2 },
     -- @markup.raw             literal or verbatim text (e.g. inline code)
-    ["@markup.raw"] = { link = "String" },
+    ["@markup.raw"] = { fg = theme.ui.special3 },
+    ["@markup.raw.block"] = { link = "@none" },
     -- @markup.raw.block       literal or verbatim text as a stand-alone block
     --
     -- @markup.list            list markers

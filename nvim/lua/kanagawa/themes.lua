@@ -60,12 +60,15 @@ local c = require "kanagawa.lib.color"
 ---@field bg_p2 ColorSpec Lighter background Cursor{Line,Column}, TabLineSel (Selected Items)
 ---@field bg_gutter ColorSpec {Sign,Fold}Column, LineNr
 ---@field special ColorSpec SpecialKey
+---@field special2 ColorSpec SpecialKey
+---@field special3 ColorSpec SpecialKey
 ---@field nontext ColorSpec LineNr, NonText
 ---@field whitespace ColorSpec Whitespace
 ---@field bg_search ColorSpec
 ---@field bg_visual ColorSpec
 ---@field pmenu MenuElements
 ---@field float FloatElements
+---@field title ColorSpec
 
 ---@class FloatElements
 ---@field fg ColorSpec
@@ -114,12 +117,16 @@ return {
 
         -- NOTE
         special = palette.springBlue,
+        special2 = palette.crystalBlue,
+        special3 = palette.surimiOrange,
         -- special = palette.springViolet1,
         nontext = palette.sumiInk6,
         whitespace = palette.sumiInk6,
 
         bg_search = palette.waveBlue2,
         bg_visual = palette.waveBlue1,
+
+        title = palette.crystalBlue,
 
         pmenu = {
           fg = palette.fujiWhite,
