@@ -83,6 +83,8 @@ opt.fillchars = {
   vert = "🮊",
   vertright = "🮊",
   vertleft = "🮊",
+  -- full char
+  horiz = "█",
 }
 opt.ignorecase = true
 opt.smartcase = true
