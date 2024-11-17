@@ -50,6 +50,22 @@ return {
 
   {
     "neovim/nvim-lspconfig",
+    keys = {
+      {
+        "<leader>tf",
+        function()
+          -- check if disable_format_on_save is set
+          if vim.b.disable_format_on_save then
+            vim.b.disable_format_on_save = nil
+            vim.notify "format_on_save: enabled"
+          else
+            vim.b.disable_format_on_save = true
+            vim.notify "format_on_save: disabled"
+          end
+        end,
+        desc = "Toggle format on save",
+      },
+    },
     dependencies = {
       -- format & linting
       { "yioneko/nvim-vtsls" },
@@ -111,6 +127,9 @@ return {
 
           vim.api.nvim_create_autocmd("BufWritePre", {
             callback = function(ev)
+              if vim.b.disable_format_on_save then
+                return
+              end
               -- TODO create a keybind that toggles format on save right
               vim.lsp.buf.format { bufnr = ev.buf, async = false }
             end,
