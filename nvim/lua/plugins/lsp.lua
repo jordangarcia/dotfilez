@@ -1,4 +1,4 @@
--- max_width = 0.4,
+---@type LazyPluginSpec[]
 return {
   {
     "williamboman/mason.nvim",
@@ -182,7 +182,7 @@ return {
           enable = false,
         },
         finder = {
-          enable = false,
+          enable = true,
           left_width = 0.7,
           right_width = 0.7,
           keys = {
@@ -196,8 +196,8 @@ return {
           enable = false,
         },
       }
-      vim.api.nvim_command "highlight clear SagaNormal"
-      vim.api.nvim_command "highlight link SagaNormal Normal"
+      -- vim.api.nvim_command "highlight clear SagaNormal"
+      -- vim.api.nvim_command "highlight link SagaNormal Normal"
 
       -- vim.cmd [[ nnoremap <leader>li mF:%!cd ../../ && eslint_d --stdin --fix-to-stdout<CR>`F ]]
       --
@@ -230,19 +230,21 @@ return {
           },
           {
             "<F11>",
-            function()
-              require("telescope.builtin").lsp_references {
-                include_declaration = true,
-                jump_type = "never",
-              }
-            end,
+            "<cmd> Lspsaga finder tyd+def+ref <CR>",
+            -- function()
+            --   require("telescope.builtin").lsp_references {
+            --     include_declaration = true,
+            --     jump_type = "never",
+            --   }
+            -- end,
             desc = "LSP References",
           },
           {
             "<F12>",
-            function()
-              vim.lsp.buf.definition()
-            end,
+            "<cmd> Lspsaga goto_definition <CR>",
+            -- function()
+            --   vim.lsp.buf.definition()
+            -- end,
             desc = "LSP definition",
           },
           {

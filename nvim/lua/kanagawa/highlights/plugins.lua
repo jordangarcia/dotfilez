@@ -409,7 +409,7 @@ function M.setup(colors, config)
     TelescopeResultsField = { link = "@field" },
     TelescopeResultsMethod = { link = "Function" },
     TelescopeResultsVariable = { link = "@variable" },
-    TelescopePromptTitle = { fg = theme.ui.bg, bg = colors.palette.springBlue },
+    TelescopePromptTitle = { fg = theme.ui.bg, bg = colors.palette.crystalBlue },
     TelescopePromptPrefix = { fg = colors.palette.crystalBlue },
     TelescopeNormal = { bg = theme.ui.bg_m1 },
     -- look at hlgroups and substitue for a theme color

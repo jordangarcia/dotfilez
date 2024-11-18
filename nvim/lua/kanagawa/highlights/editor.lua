@@ -48,11 +48,11 @@ function M.setup(colors, config)
     Substitute = { fg = theme.ui.fg, bg = theme.vcs.removed },
     -- LineNr		Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
     -- LineNr = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
-    LineNr = { fg = theme.ui.nontext, bg = theme.ui.bg },
+    -- LineNr = { fg = theme.ui.nontext, bg = theme.ui.bg },
     -- LineNrAbove	Line number for when the 'relativenumber' option is set, above the cursor line.
     -- LineNrBelow	Line number for when the 'relativenumber' option is set, below the cursor line.
     -- CursorLineNr	Like LineNr when 'cursorline' is set and 'cursorlineopt' contains "number" or is "both", for the cursor line.
-    CursorLineNr = { fg = theme.diag.warning, bg = theme.ui.bg_gutter, bold = true },
+    CursorLineNr = { fg = theme.diag.warning, bold = true },
     -- CursorLineFold	Like FoldColumn when 'cursorline' is set for the cursor line.
     -- CursorLineSign	Like SignColumn when 'cursorline' is set for the cursor line.
     -- MatchParen	Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
@@ -200,10 +200,10 @@ function M.setup(colors, config)
     DiagnosticFloatingHint = { fg = theme.diag.hint },
     DiagnosticFloatingOk = { fg = theme.diag.ok },
 
-    DiagnosticSignError = { fg = theme.diag.error, bg = theme.ui.bg_gutter },
-    DiagnosticSignWarn = { fg = theme.diag.warning, bg = theme.ui.bg_gutter },
-    DiagnosticSignInfo = { fg = theme.diag.info, bg = theme.ui.bg_gutter },
-    DiagnosticSignHint = { fg = theme.diag.hint, bg = theme.ui.bg_gutter },
+    DiagnosticSignError = { fg = theme.diag.error },
+    DiagnosticSignWarn = { fg = theme.diag.warning },
+    DiagnosticSignInfo = { fg = theme.diag.info },
+    DiagnosticSignHint = { fg = theme.diag.hint },
 
     DiagnosticVirtualTextError = { link = "DiagnosticError" },
     DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" },
@@ -238,19 +238,19 @@ function M.setup(colors, config)
     -- diffIndexLine = { link = 'Identifier' },
 
     -- StatusColumn
-    StatusColumn = { bg = theme.ui.bg_gutter, fg = colors.palette.sumiInk6 },
-    SignColumn = { link = "StatusColumn" },
-    StatusColumnNr = { bg = theme.ui.bg_gutter, fg = colors.palette.surimiOrange },
+    -- StatusColumn = { bg = theme.ui.bg_gutter, fg = colors.palette.sumiInk6 },
+    -- SignColumn = { link = "StatusColumn" },
+    -- StatusColumnNr = { bg = theme.ui.bg_gutter, fg = colors.palette.surimiOrange },
     -- StatusColumnRight = { bg = "none", fg = theme.ui.bg },
     StatusColumnRight = { fg = theme.ui.bg_gutter, bg = colors.palette.sumiInk3 },
     -- WinSeparator	Separators between window splits.
     WinSeparator = { fg = theme.ui.bg_p1, bg = theme.ui.bg },
-    VertSplit = { link = "WinSeparator" },
+    -- VertSplit = { link = "WinSeparator" },
 
     -- this integrates with StatusColumn so keep here
-    GitSignsAdd = { fg = theme.vcs.added, bg = theme.ui.bg },
-    GitSignsChange = { fg = theme.vcs.changed, bg = theme.ui.bg },
-    GitSignsDelete = { fg = theme.vcs.removed, bg = theme.ui.bg },
+    GitSignsAdd = { fg = theme.vcs.added },
+    GitSignsChange = { fg = theme.vcs.changed },
+    GitSignsDelete = { fg = theme.vcs.removed },
     -- FoldColumn	'foldcolumn'
     FoldColumn = { fg = theme.ui.nontext, bg = theme.ui.bg_gutter },
     -- SignColumn	Column where |signs| are displayed.

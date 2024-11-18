@@ -97,8 +97,8 @@ theme.terminal = theme.insert
 ---@type LazyPluginSpec
 return {
   "nvim-lualine/lualine.nvim",
-  lazy = true,
-  event = "UIEnter",
+  lazy = false,
+  -- event = "UIEnter",
   config = function()
     require("lualine").setup {
       options = {
@@ -127,6 +127,7 @@ return {
         lualine_z = {},
       },
       tabline = {},
+      always_show_tabline = true,
       extensions = { "fzf" },
     }
   end,

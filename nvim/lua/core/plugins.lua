@@ -15,8 +15,14 @@ return {
     end,
   },
 
+  -- {
+  --   "nvim-tree/nvim-web-devicons",
+  --   lazy = false,
+  -- },
+
   {
     "echasnovski/mini.icons",
+    enabled = true,
     version = "*",
     lazy = false,
     config = function()

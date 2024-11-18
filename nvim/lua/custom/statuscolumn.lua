@@ -41,14 +41,13 @@ local line_no = function(diag_hl, text)
     if vim.v.relnum == 0 then -- the current line
       -- current line should be left aligned
       return table.concat({
-        hl(diag_hl and diag_hl or "StatusColumnNr"),
+        hl(diag_hl and diag_hl or "CursorLineNr"),
         "%=",
         num_text,
       }, "")
     else
       return table.concat({
-        hl(diag_hl and diag_hl or "StatusColumn"),
-        -- hl "StatusColumn",
+        hl(diag_hl and diag_hl or "LineNr"),
         "%=",
         num_text,
       }, "")
@@ -113,49 +112,27 @@ function M.statuscolumn()
         line_hl = "DapSignColumn"
         line_text = s.text
       else
+        print("sign: " .. s.name)
         line_hl = s.name
         -- dont change text for diagnostic
+        -- line_text = vim.v.lnum
       end
     end
-    -- if vim.v.virtnum ~= 0 then
-    --   left = nil
-    -- end
-    -- vim.api.nvim_win_call(win, function()
-    --   if vim.fn.foldclosed(vim.v.lnum) >= 0 then
-    --     fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded" }
-    --   end
-    -- end)
-    -- Left: mark or non-git sign
-    -- components[3] = M.icon(M.get_mark(buf, vim.v.lnum) or left)
-    -- Right: fold icon or git sign (only if file)
-    local icons = {
-      DiagnosticSignError = "",
-      DiagnosticSignWarn = "",
-      DiagnosticSignHint = "",
-      DiagnosticSignInfo = "",
-    }
 
-    -- local diagnosticObj = diag and { text = icons[diag.name] .. " ", hl = diag.name, width = 2, left = true }
-    --   or {
-    --     text = "",
-    --     hl = "StatusColumn",
-    --     -- left = true,
-    --     width = 2,
-    --   }
-    components[1] = hl "StatusColumn" .. ""
+    -- components[1] = hl "StatusColumn" .. ""
+    components[1] = " "
     local line = "│"
     local thick = "▎"
-    local half = "▌"
 
-    local text = thick
+    local git_text = " "
     if git and git.text then
-      text = string.sub(git.text, 1, 1) == "|" and thick or ""
+      git_text = string.sub(git.text, 1, 1) == "|" and line or ""
     end
 
     components[3] = output {
-      text = text,
+      text = git_text,
       left = true,
-      hl = git and git.texthl or "StatusColumnRight",
+      hl = git and git.texthl or "LineNr",
       width = 1,
     }
   end
@@ -163,17 +140,6 @@ function M.statuscolumn()
   components[2] = line_no(line_hl, line_text)
 
   return table.concat(components, "")
-end
-
----@param sign? Sign
----@param len? number
-function M.icon(sign, len)
-  sign = sign or {}
-  len = len or 2
-  local hl = sign.texthl or "StatusColumn"
-  local text = vim.fn.strcharpart(sign.text or "", 0, len) ---@type string
-  text = text .. string.rep(" ", len - vim.fn.strchars(text))
-  return hl and ("%#" .. hl .. "#" .. text .. "%*") or text
 end
 
 -- Returns a list of regular and extmark signs sorted by priority (low to high)

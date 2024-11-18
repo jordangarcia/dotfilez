@@ -80,11 +80,11 @@ vim.cmd [[
 ]]
 opt.fillchars = {
   eob = " ",
-  vert = "🮊",
-  vertright = "🮊",
-  vertleft = "🮊",
+  -- vert = "🮊",
+  -- vertright = "🮊",
+  -- vertleft = "🮊",
   -- full char
-  horiz = "█",
+  -- horiz = "█",
 }
 opt.ignorecase = true
 opt.smartcase = true
@@ -103,6 +103,17 @@ opt.shortmess:append "sI"
 
 -- signcolumn
 opt.signcolumn = "yes"
+vim.diagnostic.config {
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "E",
+      [vim.diagnostic.severity.WARN] = "W",
+      [vim.diagnostic.severity.HINT] = "",
+      [vim.diagnostic.severity.INFO] = "",
+      -- Remove INFO and HINT by not defining them
+    },
+  },
+}
 if vim.fn.has "nvim-0.9.0" == 1 then
   vim.opt.statuscolumn = [[%!v:lua.require'custom.statuscolumn'.statuscolumn()]]
 end
