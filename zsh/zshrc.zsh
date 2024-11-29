@@ -74,4 +74,6 @@ export JQ_COLORS="1;33:0;37:0;37:0;37:0;32:1;37:1;37:1;33"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+# fix node shit
+export NODE_TLS_REJECT_UNAUTHORIZED=1
 

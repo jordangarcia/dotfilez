@@ -15,6 +15,7 @@ function M.setup(colors, config)
     ["@lsp.type.method"] = { link = "@function.method" }, -- Function
     ["@lsp.type.namespace"] = { link = "@module" }, -- Structure
     ["@lsp.type.parameter"] = { link = "@variable.parameter" }, -- Identifier
+
     -- ["@lsp.type.property"] = { link = "Identifier" },
     -- ["@lsp.type.struct"] = { link = "Structure" },
     -- ["@lsp.type.type"] = { link = "Type" },
@@ -41,6 +42,13 @@ function M.setup(colors, config)
 
     ["@lsp.typemod.operator.controlFlow"] = { link = "@keyword.exception" }, -- rust ? operator
     -- ["@lsp.typemod.keyword.documentation"] = { link = "Special" },
+    ["@lsp.typemod.macro"] = { link = "Macro" },
+    ["@lsp.typemod.method"] = { link = "@function.method" }, -- Function
+    ["@lsp.typemod.namespace"] = { link = "@module" }, -- Structure
+    ["@lsp.typemod.parameter"] = { link = "@variable.parameter" }, -- Identifier
+
+    ["@lsp.typemod.type"] = { link = "Type" },
+    ["@lsp.typemod.interface"] = { link = "Type" },
 
     ["@lsp.typemod.variable"] = { link = "Variable" },
     ["@lsp.typemod.variable.global"] = { link = "Constant" },

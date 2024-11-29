@@ -1,6 +1,5 @@
 local wezterm = require("wezterm")
 local mux = wezterm.mux
-
 local M = {}
 
 local function dir(name)
@@ -38,7 +37,7 @@ M.setup_gamma = function()
 	pane43:send_text("\nclear\n")
 
 	pane4:send_text("yarn dev:no-kafka\n")
-	pane42:send_text("yarn dev:turbo:light\n")
+	pane42:send_text("yarn dev:light:turbo\n")
 	pane43:send_text("yarn dev\n")
 
 	local tab5, pane5 = window:spawn_tab({ cwd = dir_dotfilez })

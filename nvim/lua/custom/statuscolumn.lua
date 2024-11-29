@@ -112,7 +112,6 @@ function M.statuscolumn()
         line_hl = "DapSignColumn"
         line_text = s.text
       else
-        print("sign: " .. s.name)
         line_hl = s.name
         -- dont change text for diagnostic
         -- line_text = vim.v.lnum

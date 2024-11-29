@@ -97,7 +97,12 @@ set_keymap_tbl {
 
     ["<S-i>"] = {
       function()
+        vim.cmd [[ NoiceDisable ]]
         vim.cmd [[ Inspect ]]
+
+        vim.defer_fn(function()
+          vim.cmd [[ NoiceEnable ]]
+        end, 1000)
       end,
       "Inspect",
     },

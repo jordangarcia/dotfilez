@@ -27,6 +27,15 @@ autocmd("VimResized", {
   end,
 })
 
+autocmd("BufReadPost", {
+  pattern = "fugitive://*",
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+  end,
+  group = vim.api.nvim_create_augroup("close_fugitive_with_q", { clear = true }),
+})
+
 autocmd("FileType", {
   group = augroup "close_with_q",
   pattern = {
@@ -110,3 +119,4 @@ vim.api.nvim_create_autocmd("BufReadPre", {
     end
   end,
 })
+-- user event that loads after UIEnter + only if file buf is there

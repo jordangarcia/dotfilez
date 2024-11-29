@@ -100,6 +100,7 @@ o.showtabline = 2
 
 -- disable nvim intro
 opt.shortmess:append "sI"
+opt.shortmess:append "filnxtToOFcC"
 
 -- signcolumn
 opt.signcolumn = "yes"

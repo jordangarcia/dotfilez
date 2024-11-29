@@ -2,7 +2,7 @@ return {
   "folke/noice.nvim",
 
   event = "VeryLazy",
-  enabled = false,
+  enabled = true,
 
   opts = {
     -- you can enable a preset for easier configuration
@@ -10,7 +10,7 @@ return {
       -- bottom_search = true, -- use a classic bottom cmdline for search
       command_palette = true, -- position the cmdline and popupmenu together
       long_message_to_split = true, -- long messages will be sent to a split
-      lsp_doc_border = false, -- add a border to hover docs and signature help
+      -- lsp_doc_border = true, -- add a border to hover docs and signature help
       inc_rename = true,
     },
     -- messages = {
@@ -99,19 +99,19 @@ return {
     lsp = {
       -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
       override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
-        ["cmp.entry.get_documentation"] = true,
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+        ["vim.lsp.util.stylize_markdown"] = false,
+        ["cmp.entry.get_documentation"] = false,
       },
-      -- hover = {
-      --   enabled = false,
-      -- },
-      -- documentation = {
-      --   enabled = false,
-      -- },
-      -- signature = {
-      --   enabled = false,
-      -- },
+      hover = {
+        enabled = false,
+      },
+      documentation = {
+        enabled = false,
+      },
+      signature = {
+        enabled = false,
+      },
       -- progress = {
       --   enabled = false,
       -- },
@@ -147,7 +147,7 @@ return {
           col = "50%",
         },
         size = {
-          width = 60,
+          width = 100,
           height = "auto",
         },
       },

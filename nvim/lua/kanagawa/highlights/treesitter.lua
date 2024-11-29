@@ -97,6 +97,7 @@ function M.setup(colors, config)
     --
     -- @punctuation.delimiter  delimiters (e.g. `;`, `.`, `,`)
     ["@punctuation.delimiter"] = { fg = theme.syn.punct },
+    -- ["@punctuation.delimiter"] = { link = "Operator" },
     -- @punctuation.bracket    brackets (e.g. `()`, `{}`, `[]`)
     ["@punctuation.bracket"] = { fg = theme.syn.punct },
     -- @punctuation.special    special symbols (e.g. `{}` in string interpolation)

@@ -172,7 +172,7 @@ return {
         type = palette.waveAqua2,
         regex = palette.boatYellow2,
         deprecated = palette.katanaGray,
-        comment = palette.sumiInk5,
+        comment = palette.sumiInk6,
         -- comment = palette.dragonGray2,
         -- punct = palette.springViolet2,
         punct = palette.dragonGray2,

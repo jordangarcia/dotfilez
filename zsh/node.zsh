@@ -23,3 +23,4 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 
 export PATH="/Users/jordan/.nvm/versions/node/$SHELL_NODE_VERSION/bin:$PATH"
+
