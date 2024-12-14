@@ -32,4 +32,7 @@ export PYENV_VERSION="3.12.4"
 #
 # Setups up pyenv
 # adds shims to path which point to python
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+

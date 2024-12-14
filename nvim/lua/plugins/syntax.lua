@@ -1,5 +1,6 @@
 return {
   "syntax-highlighting",
+  enabled = false,
   dev = true,
   lazy = false,
   config = function()

@@ -34,6 +34,7 @@ end
 
 return {
   "profiler",
+  enabled = false,
   dev = true,
   lazy = true,
   keys = {

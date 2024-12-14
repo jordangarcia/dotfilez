@@ -35,11 +35,14 @@ git_dirty () {
     then
       # echo "on [󰘬 $(git_prompt_info)]"
 
-      echo "on %{$fg_bold[green]%}󰘬 $(git_prompt_info)%{$reset_color%}"
+      echo "on $fg_bold[green]󰘬 $(git_prompt_info)$reset_color"
+      # echo "on \[$(git_prompt_info)\]\(bold green\)"
       # echo "on \[󰘬 $(git_prompt_info)\]\(bold green\)"
     else
       # echo "on [󰘬 $(git_prompt_info)]"
-      echo "on %{$fg_bold[red]%}󰘬 $(git_prompt_info)%{$reset_color%}"
+      # echo "on \[$(git_prompt_info)\]\(bold red\)"
+      echo "on $fg_bold[red]󰘬 $(git_prompt_info)$reset_color"
+      # echo "on %{$fg_bold[red]%}󰘬 $(git_prompt_info)%{$reset_color%}"
       # echo "on \[󰘬 $(git_prompt_info)\]\(bold red\)"
     fi
   fi
