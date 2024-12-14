@@ -3,10 +3,10 @@ alias reload!='. ~/.config/zsh/.zshrc'
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
 #   `brew install coreutils`
-if which exa &>/dev/null
+if which eza &>/dev/null
 then
-  alias ls="exa"
-  alias l="exa -l -a --group-directories-first --icons"
+  alias ls="eza"
+  alias l="eza -l -a --group-directories-first --icons"
 else
   alias ls="ls"
   alias l="ls -lah"
