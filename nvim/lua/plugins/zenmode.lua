@@ -7,6 +7,11 @@ return {
       "<CMD> ZenMode <CR>",
       desc = "[z]en mode",
     },
+    {
+      "<c-3>",
+      "<CMD> ZenMode <CR>",
+      desc = "[z]en mode",
+    },
   },
   opts = {
     window = {

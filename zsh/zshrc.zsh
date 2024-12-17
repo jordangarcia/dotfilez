@@ -60,10 +60,10 @@ unset config_files
 
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/jordan/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jordan/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/jordan/code/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/jordan/code/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/jordan/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jordan/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/jordan/code/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/jordan/code/google-cloud-sdk/completion.zsh.inc'; fi
 
 # fix JQ colors
 export JQ_COLORS="1;33:0;37:0;37:0;37:0;32:1;37:1;37:1;33"
