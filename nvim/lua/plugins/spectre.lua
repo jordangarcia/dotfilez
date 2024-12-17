@@ -1,5 +1,6 @@
 return {
   "nvim-pack/nvim-spectre",
+  enabled = false,
   -- they broke it
   commit = "d20dcf7",
   event = "VeryLazy",

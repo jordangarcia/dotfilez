@@ -283,12 +283,19 @@ return {
 
               ["<C-u>"] = actions.results_scrolling_up,
               ["<C-d>"] = actions.results_scrolling_down,
+
+              ["<C-b>"] = function()
+                vim.cmd [[Telescope buffers show_all_buffers=false sort_mru=true cwd_only=true]]
+              end,
             },
             i = {
               -- remap close
               -- default binding in normal also  has `<esc>`
               ["q"] = false,
               ["<C-q>"] = require("telescope.actions").close,
+              ["<C-b>"] = function()
+                vim.cmd [[Telescope buffers show_all_buffers=false sort_mru=true cwd_only=true]]
+              end,
               -- disable default close
               ["<C-c>"] = false,
               ["<c-x>"] = require("telescope.actions").delete_buffer,

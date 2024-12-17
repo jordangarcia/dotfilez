@@ -427,7 +427,9 @@ function M.setup(colors, config)
     -- black = "#1F1F28", --  nvim bg AKA theme.ui.bg
     -- black2 = "#25252e", -- theme.ui.bg_p1
     -- darker_black = "#191922", - theme.ui.bg_m1
-    --
+
+    -- LspSaga
+    SagaNormal = { link = "Normal" },
   }
 end
 

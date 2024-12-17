@@ -38,6 +38,7 @@ return {
       },
       finder = {
         enable = true,
+        layout = "normal",
         left_width = 0.5,
         right_width = 1,
         keys = {

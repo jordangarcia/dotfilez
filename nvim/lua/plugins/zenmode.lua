@@ -3,6 +3,11 @@ return {
   "folke/zen-mode.nvim",
   keys = {
     {
+      "<c-3>",
+      "<CMD> ZenMode <CR>",
+      desc = "[z]en mode",
+    },
+    {
       "<leader>ez",
       "<CMD> ZenMode <CR>",
       desc = "[z]en mode",
