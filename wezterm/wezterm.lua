@@ -73,7 +73,7 @@ wezterm.on("side-pane", function(window, pane)
 	local tab = window:active_tab()
 	local panes = tab:panes()
 	if #panes == 1 then
-		local new_pane = panes[1]:split({ size = 0.3 })
+		local new_pane = panes[1]:split({ size = 0.44 })
 		new_pane:send_text("\nclear\n")
 		return
 	end
