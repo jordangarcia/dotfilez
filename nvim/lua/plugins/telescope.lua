@@ -165,12 +165,6 @@ return {
         mode = "n",
       },
       {
-        "<leader>fw",
-        "<cmd> Telescope live_grep_args <CR>",
-        desc = "Live grep",
-        mode = "n",
-      },
-      {
         "<leader>fb",
         "<cmd> Telescope buffers <CR>",
         desc = "Find buffers",
@@ -236,7 +230,6 @@ return {
           initial_mode = "insert",
           selection_strategy = "reset",
           sorting_strategy = "ascending",
-          layout_strategy = "horizontal",
           layout_config = {
             horizontal = {
               prompt_position = "top",
@@ -246,15 +239,18 @@ return {
             vertical = {
               mirror = false,
             },
-            width = 0.87,
+
+            width = function(_, max_columns, _)
+              return math.min(max_columns, 200) -- Set max width to 120 characters
+            end,
             height = 0.80,
             preview_cutoff = 120,
           },
           file_sorter = require("telescope.sorters").get_fuzzy_file,
           generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
           -- winblend = 0,
-          -- border = {},
-          -- borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+          border = {},
+          borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
           -- color_devicons = true,
           set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
           file_previewer = require("telescope.previewers").vim_buffer_cat.new,

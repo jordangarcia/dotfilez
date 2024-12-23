@@ -62,6 +62,11 @@ lspconfig["lua_ls"].setup {
 
   settings = {
     Lua = {
+      workspace = {
+        library = {
+          -- string.format("%s/.hammerspoon/Spoons/EmmyLua.spoon/annotations", os.getenv "HOME"),
+        },
+      },
       runtime = {
         -- Tell the language server which version of Lua you're using
         version = "LuaJIT",

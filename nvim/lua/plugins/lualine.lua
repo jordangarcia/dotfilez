@@ -107,14 +107,16 @@ return {
       sections = {
         lualine_a = { first(recording, visual_multi, cwd) },
         lualine_b = {
-          "branch",
+          -- "branch",
           {
             "diagnostics",
             sections = { "error", "warn" },
           },
         },
         lualine_c = { "filename" },
-        lualine_x = { "filetype" },
+        lualine_x = {
+          -- "filetype"
+        },
         lualine_y = { lsp_status },
         lualine_z = { "location", "searchcount" },
       },

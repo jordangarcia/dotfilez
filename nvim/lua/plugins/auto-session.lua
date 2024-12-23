@@ -78,6 +78,7 @@ return {
       },
       auto_session_allowed_dirs = {
         "~/code/*",
+        "~/.config/*",
         "~/code/dotfilez/nvim",
         "~/code/gamma/packages/*",
         "~/code/requestnow/*",
