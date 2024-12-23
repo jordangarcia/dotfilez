@@ -2,6 +2,7 @@ export PATH="$PATH:$ZSH/bin"
 export PATH="$PATH:/usr/local/bin"
 export PATH="$PATH:/Users/jordan/.local/bin"
 # psql 
+export PATH="$PATH:$HOME/code/dotfilez/bin"
 export PATH="$PATH:/opt/homebrew/opt/libpq/bin"
 export PATH="$PATH:/Applications/kitty.app/Contents/MacOS"
 export PATH="$PATH:/Users/jordan/code/google-cloud-sdk/bin"
