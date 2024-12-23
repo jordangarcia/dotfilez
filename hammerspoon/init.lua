@@ -21,10 +21,6 @@ hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "W", function()
 	hs.alert.show("Hello World!")
 end)
 
-hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "C", function()
-	spoon.AClock:toggleShow()
-end)
-
 hs.hotkey.bind({ "cmd", "alt", "ctrl" }, "R", function()
 	hs.reload()
 end)
