@@ -59,11 +59,18 @@ brew "zlib"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 brew "keith/formulae/zap"
+brew "pyenv"
 
-# Customise mouse buttons, wheels and cursor speed
 cask "steermouse"
-# GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
+cask "divvy"
+cast "raycast"
+cast "spotify"
+cast "craft"
+cast "zoom"
+cast "linear"
+cast "cursor"
+cast "slack"
 
 vscode "qufiwefefwoyn.kanagawa"
 vscode "sumneko.lua"
