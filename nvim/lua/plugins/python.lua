@@ -73,6 +73,8 @@ end
 
 return {
   "run-python",
+  -- new version of lazy needs an actual directory to load...
+  enabled = false,
   dev = true,
   lazy = true,
   keys = {
