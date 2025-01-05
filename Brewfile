@@ -2,6 +2,7 @@ tap "homebrew/bundle"
 tap "keith/formulae"
 tap "nikitabobko/tap"
 
+brew "bat"
 # General-purpose data compression with high compression ratio
 brew "xz"
 # Cryptography and SSL/TLS Toolkit
