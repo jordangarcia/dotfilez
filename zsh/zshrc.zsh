@@ -8,19 +8,15 @@ unsetopt nomatch
 # export TERM=wezterm
 export PATH=/opt/homebrew/bin:$PATH
 
-# shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
-
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/code
 export GAMMA=$PROJECTS/gamma
 
-export EDITOR=vim
-export OPTIMIZELY=$PROJECTS/optimizely
+export EDITOR=nvim
 
 # all of our zsh files
 typeset -U config_files
-config_files=($ZSH/zsh/**/*.zsh)
+config_files=($XDG_CONFIG_HOME/zsh/**/*.zsh)
 
 # load the path files
 for file in ${(M)config_files:#*/path.zsh}
