@@ -26,7 +26,6 @@ local ts_priority_f = {
 return {
   {
     "jordangarcia/ts-actions.nvim",
-    dir = "~/code/ts-actions.nvim",
     event = "VeryLazy",
     keys = {
       {

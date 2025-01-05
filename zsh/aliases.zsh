@@ -77,8 +77,6 @@ alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias gstash='git stash -u'
 
-alias gamma="kitty --session ~/.config/kitty/sessions/gamma.conf &"
-alias lvim="NVIM_APPNAME=lazyvim nvim"
 alias myprs="gh pr list --author=@me | fzf | awk '{print $1}' | xargs -I {} gh pr view {} --web"
 alias prs="gh pr list | fzf | awk '{print $1}' | xargs -I {} gh pr view {} --web"
 

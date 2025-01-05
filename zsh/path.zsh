@@ -1,4 +1,4 @@
-export PATH="$PATH:$ZSH/bin"
+export PATH="$PATH:$XDG_CONFIG_HOME/zsh/bin"
 export PATH="$PATH:/usr/local/bin"
 export PATH="$PATH:/Users/jordan/.local/bin"
 # psql 

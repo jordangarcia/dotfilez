@@ -12,9 +12,6 @@
 	email = jordan.garcia@gmail.com
 [alias]
   co = checkout
-  promote = !$ZSH/bin/git-promote
-  wtf     = !$ZSH/bin/git-wtf
-  rank-contributers = !$ZSH/bin/git-rank-contributers
   count   = !git shortlog -sn
 [color]
   diff = auto
