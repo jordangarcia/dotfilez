@@ -13,8 +13,6 @@ brew "readline"
 brew "sqlite"
 # Official Amazon AWS command-line interface
 brew "awscli"
-# Get/set bluetooth power and discoverable state
-brew "blueutil"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # Modern, maintained replacement for ls
@@ -42,7 +40,7 @@ brew "neovim"
 # Manage multiple Node.js versions
 brew "nvm"
 # Object-relational database system
-brew "postgresql@14"
+brew "postgresql@16"
 # Show ps output as a tree
 brew "pstree"
 # Persistent key-value database, with built-in net interface
@@ -62,16 +60,21 @@ brew "zoxide"
 brew "keith/formulae/zap"
 brew "pyenv"
 
+cask "docker"
 cask "steermouse"
 cask "wezterm"
 cask "divvy"
-cast "raycast"
-cast "spotify"
-cast "craft"
-cast "zoom"
-cast "linear"
-cast "cursor"
-cast "slack"
+cask "raycast"
+cask "spotify"
+cask "craft"
+cask "zoom"
+cask "linear"
+cask "cursor"
+cask "slack"
+cask "karabiner-elements"
+cask "1password"
+cask "istat-menus"
+cask "tailscale"
 
 vscode "qufiwefefwoyn.kanagawa"
 vscode "sumneko.lua"
