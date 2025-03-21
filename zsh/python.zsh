@@ -1,6 +1,6 @@
 export PYENV_ROOT="$HOME/.pyenv"
 
-export PYENV_VERSION="3.12.4"
+export PYENV_VERSION="3.12.8"
 
 # the follow command runs:
 #

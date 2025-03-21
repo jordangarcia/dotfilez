@@ -86,13 +86,10 @@ return {
         },
         {
           "<F11>",
-          "<cmd> Lspsaga finder tyd+def+ref <CR>",
-          -- function()
-          --   require("telescope.builtin").lsp_references {
-          --     include_declaration = true,
-          --     jump_type = "never",
-          --   }
-          -- end,
+          -- "<cmd> Lspsaga finder tyd+def+ref <CR>",
+          function()
+            require("telescope.builtin").lsp_references {}
+          end,
           desc = "LSP References",
         },
         {

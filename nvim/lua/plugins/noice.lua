@@ -67,6 +67,15 @@ return {
         },
         opts = { skip = true },
       },
+
+      {
+        filter = {
+          event = "notify",
+          kind = "warn",
+          find = "File is too large to send to server",
+        },
+        opts = { skip = true },
+      },
       {
         filter = {
           event = "notify",

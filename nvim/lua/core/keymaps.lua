@@ -139,11 +139,17 @@ set_keymap_tbl {
       "[Y]ank [p]ython run file",
     },
 
-    ["<leader>yy"] = {
+    ["<leader>ys"] = {
       function()
-        vim.cmd [[ call system('pbcopy', @+) ]]
+        local filename = vim.fn.expand "%:t"
+        local filepart = filename:match "(.+)%.prompt%.tsx$"
+        if filepart then
+          vim.fn.setreg("+", 'yarn squidward dev --prompt "' .. filepart .. '"')
+        else
+          vim.notify("Not a .prompt.tsx file", vim.log.levels.WARN)
+        end
       end,
-      "Yank -> Clipboard",
+      "[Y]ank -> [S]quidward",
     },
 
     -- scrolling

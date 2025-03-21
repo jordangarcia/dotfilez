@@ -36,8 +36,10 @@ M.setup_gamma = function()
 	pane42:send_text("\nclear\n")
 	pane43:send_text("\nclear\n")
 
+	pane4:send_text("open --background -a Docker\n")
+	pane4:send_text("cd ../../ && ./scripts/start_local_services.sh && cd packages/server\n")
 	pane4:send_text("yarn dev:no-kafka\n")
-	pane42:send_text("yarn dev:light:turbo\n")
+	pane42:send_text("yarn dev:light\n")
 	pane43:send_text("yarn dev\n")
 
 	local tab5, pane5 = window:spawn_tab({ cwd = dir_dotfilez })
