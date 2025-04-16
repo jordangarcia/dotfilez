@@ -25,7 +25,8 @@ local ts_priority_f = {
 ---@type LazyPluginSpec[]
 return {
   {
-    "jordangarcia/ts-actions.nvim",
+    -- "jordangarcia/ts-actions.nvim",
+    dir = "~/code/ts-actions.nvim",
     event = "VeryLazy",
     keys = {
       {

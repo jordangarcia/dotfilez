@@ -26,8 +26,18 @@ local function tab_title(tab_info)
 	if title and #title > 0 then
 		return title
 	end
-	-- Otherwise, use the title from the active pane
-	-- in that tab
+
+	-- Get the current working directory
+	local cwd = tab_info.active_pane.current_working_dir
+	if cwd then
+		-- Extract just the last directory name from the path
+		local dir_name = string.match(cwd.file_path, "[^/]+$")
+		if dir_name and #dir_name > 0 then
+			return dir_name
+		end
+	end
+
+	-- Fall back to the pane title if we couldn't get the directory
 	return tab_info.active_pane.title
 end
 

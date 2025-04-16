@@ -118,7 +118,7 @@ return {
   },
   {
     "akinsho/git-conflict.nvim",
-    enabled = false,
+    enabled = true,
     version = "*",
     event = "VeryLazy",
     config = true,
