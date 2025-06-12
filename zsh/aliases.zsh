@@ -94,4 +94,6 @@ alias pbhtml="pbpaste | prettier --parser html"
 alias gh="env -u GITHUB_TOKEN gh"
 alias ghpr="gh pr view --web"
 
+alias claude="unset ANTHROPIC_API_KEY && claude"
+
 
