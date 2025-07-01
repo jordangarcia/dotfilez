@@ -152,6 +152,13 @@ set_keymap_tbl {
       "[Y]ank -> [S]quidward",
     },
 
+    ["<leader>yc"] = {
+      function()
+        vim.cmd [[ %y+ ]]
+      end,
+      "[Y]ank entire file [c]ontents",
+    },
+
     -- scrolling
     -- ["<leader><tab><tab>"] = { "<cmd> tabNext <CR>", "[Tab] Next]" },
     -- ["<leader><tab>n"] = { "<cmd> tabNext <CR>", "[T]ab [N]ext" },
