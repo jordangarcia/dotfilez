@@ -13,3 +13,5 @@ secrets.zsh
 *.zwc
 *.zwc.old
 ~*
+
+**/.claude/settings.local.json
