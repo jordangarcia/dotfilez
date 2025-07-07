@@ -89,11 +89,12 @@ alias vienvrc="vi ~/code/gamma/.envrc && direnv allow"
 alias vienvrclocal="vi ~/code/gamma/.envrc.local && direnv allow"
 
 alias pbq="pbpaste | jq"
+alias pbv="pbpaste | nvim"
 alias pbhtml="pbpaste | prettier --parser html"
 
 alias gh="env -u GITHUB_TOKEN gh"
 alias ghpr="gh pr view --web"
 
-alias claude="unset ANTHROPIC_API_KEY && claude"
+# alias claude="unset ANTHROPIC_API_KEY && ~/.claude/local/claude"
 
 

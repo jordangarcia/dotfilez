@@ -3,6 +3,14 @@ local act = wezterm.action
 
 return {
   keys = {
+    { key = 'j', mods = 'CTRL', action = act.ConditionalActivePaneDirection {
+      fallback = act.SendKey { key = 'DownArrow' },
+      direction = 'Down',
+    }},
+    { key = 'k', mods = 'CTRL', action = act.ConditionalActivePaneDirection {
+      fallback = act.SendKey { key = 'UpArrow' },
+      direction = 'Up',
+    }},
     { key = 'Tab', mods = 'CTRL', action = act.ActivateTabRelative(1) },
     { key = 'Tab', mods = 'SHIFT|CTRL', action = act.ActivateTabRelative(-1) },
     { key = 'Enter', mods = 'ALT', action = act.ToggleFullScreen },

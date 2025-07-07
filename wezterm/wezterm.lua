@@ -66,15 +66,22 @@ local function isViProcess(pane)
 	-- return pane:get_title():find("n?vim") ~= nil
 end
 
-local function conditionalActivatePane(window, pane, pane_direction, vim_direction)
+local function conditionalActivatePane(window, pane, pane_direction, vim_direction, arrow_key)
+	local tab_up = window:active_tab():get_pane_direction("Up")
+	local tab_down = window:active_tab():get_pane_direction("Down")
+
 	if isViProcess(pane) then
 		window:perform_action(
 			-- This should match the keybinds you set in Neovim.
 			act.SendKey({ key = vim_direction, mods = "CTRL" }),
 			pane
 		)
-	else
+	elseif tab_up or tab_down or arrow_key == nil then
 		window:perform_action(act.ActivatePaneDirection(pane_direction), pane)
+	elseif arrow_key then
+		window:perform_action(act.SendKey({ key = arrow_key }), pane)
+	else
+		window:perform_action({ key = vim_direction, mods = "CTRL" })
 	end
 end
 
@@ -130,10 +137,10 @@ wezterm.on("ActivatePaneDirection-left", function(window, pane)
 	conditionalActivatePane(window, pane, "Left", "h")
 end)
 wezterm.on("ActivatePaneDirection-up", function(window, pane)
-	conditionalActivatePane(window, pane, "Up", "k")
+	conditionalActivatePane(window, pane, "Up", "k", "UpArrow")
 end)
 wezterm.on("ActivatePaneDirection-down", function(window, pane)
-	conditionalActivatePane(window, pane, "Down", "j")
+	conditionalActivatePane(window, pane, "Down", "j", "DownArrow")
 end)
 
 wezterm.on("balance-all-panes", function(window, pane)

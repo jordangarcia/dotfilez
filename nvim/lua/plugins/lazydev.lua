@@ -8,10 +8,6 @@ return {
       -- See the configuration section for more details
       -- Load luvit types when the `vim.uv` word is found
       { path = "luvit-meta/library", words = { "vim%.uv" } },
-      {
-        path = string.format("%s/.hammerspoon/Spoons/EmmyLua.spoon/annotations", os.getenv "HOME"),
-        words = { "hs" },
-      },
     },
   },
 }
