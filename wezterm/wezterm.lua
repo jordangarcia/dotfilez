@@ -359,6 +359,26 @@ local config = {
 			key = "=",
 			action = act.SendKey({ key = "F12" }),
 		},
+		
+		-- Tab management keymaps for nvim integration
+		{
+			mods = "CMD|SHIFT",
+			key = "e",
+			action = wezterm.action_callback(function(window, pane)
+				if isViProcess(pane) then
+					window:perform_action(act.SendKey({ mods = "ALT|SHIFT", key = "e" }), pane)
+				end
+			end),
+		},
+		{
+			mods = "CMD|SHIFT",
+			key = "o",
+			action = wezterm.action_callback(function(window, pane)
+				if isViProcess(pane) then
+					window:perform_action(act.SendKey({ mods = "ALT|SHIFT", key = "o" }), pane)
+				end
+			end),
+		},
 
 		-- copy mode / hints / quickselect
 		-- kitty+e open URL hint

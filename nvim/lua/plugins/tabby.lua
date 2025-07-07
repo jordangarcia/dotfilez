@@ -43,14 +43,31 @@ return {
       {
         "<leader>to",
         "<CMD> tabonly <CR>",
-        desc = "Tab [o]nly",
+        desc = "Tab close [o]thers",
       },
       {
         "<leader>tr",
         function()
           require("custom.buffer_utils").close_right_tabs()
         end,
-        desc = "Tab [o]nly",
+        desc = "Tab close [r]ight",
+      },
+      -- Terminal integration keymaps
+      {
+        "<A-S-e>",
+        function()
+          require("custom.buffer_utils").close_right_tabs()
+          require("custom.buffer_utils").close_hidden_buffers()
+        end,
+        desc = "Close right tabs and hidden buffers (alt+shift+e)",
+      },
+      {
+        "<A-S-o>",
+        function()
+          vim.cmd "tabonly"
+          require("custom.buffer_utils").close_hidden_buffers()
+        end,
+        desc = "Close other tabs and hidden buffers (alt+shift+o)",
       },
     },
     config = function(self, opts)
