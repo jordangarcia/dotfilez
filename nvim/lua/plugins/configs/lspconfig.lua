@@ -156,14 +156,15 @@ lspconfig["ruff"].setup {
   capabilities = capabilities,
 }
 
-local servers = { "html", "cssls", "prismals" }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    -- allow prettier
-    on_attach = M.on_attach,
-    capabilities = capabilities,
-  }
-end
+-- Native LSP servers (configured via lsp/*.lua files)
+vim.lsp.enable({ 'html', 'cssls', 'taplo' })
+
+-- Keep prismals in lspconfig for now
+lspconfig["prismals"].setup {
+  -- allow prettier
+  on_attach = M.on_attach,
+  capabilities = capabilities,
+}
 
 require("lspconfig.configs").vtsls = require("vtsls").lspconfig -- set default server config, optional but recommended
 
