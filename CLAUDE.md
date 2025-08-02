@@ -60,6 +60,54 @@ To maintain access to a specific Neovim version during upgrades:
 3. Test new version with your main `nvim` command and config
 4. Update configurations as needed for the new version
 
+## Neovim Binary Management
+
+### Directory Structure
+This setup uses `~/nvim/` to manage different Neovim versions:
+
+```
+~/nvim/
+├── 0.10.3/          # Complete neovim 0.10.3 installation
+│   ├── bin/nvim     # Binary
+│   ├── lib/         # Libraries
+│   └── share/       # Lua runtime files and documentation
+└── bin/             # Symlinks directory (added to PATH)
+    └── nvim-0.10.3 -> ~/nvim/0.10.3/bin/nvim
+```
+
+### Installing Version-Specific Binaries
+When Homebrew removes old versions during upgrades:
+
+1. **Download specific version from GitHub releases:**
+   ```bash
+   curl -LO https://github.com/neovim/neovim/releases/download/v0.10.3/nvim-macos-arm64.tar.gz
+   tar -xzf nvim-macos-arm64.tar.gz
+   ```
+
+2. **Install to versioned directory:**
+   ```bash
+   mkdir -p ~/nvim/0.10.3
+   cp -r nvim-macos-arm64/* ~/nvim/0.10.3/
+   ```
+
+3. **Create symlink in bin directory:**
+   ```bash
+   mkdir -p ~/nvim/bin
+   ln -s ~/nvim/0.10.3/bin/nvim ~/nvim/bin/nvim-0.10.3
+   ```
+
+4. **Add to PATH in `~/code/dotfilez/zsh/path.zsh`:**
+   ```bash
+   export PATH="$PATH:$HOME/nvim/bin"
+   ```
+
+5. **Update alias to use binary name:**
+   ```bash
+   alias nvim10="NVIM_APPNAME=nvim10 nvim-0.10.3"
+   ```
+
+This approach preserves complete Neovim installations with all runtime files, avoiding missing module errors.
+
 ## Environment Variable
 
 The `NVIM_APPNAME` environment variable directs Neovim to use configs from:

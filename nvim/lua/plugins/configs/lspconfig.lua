@@ -30,8 +30,7 @@ local capabilities = vim.tbl_deep_extend(
   "force",
   {},
   vim.lsp.protocol.make_client_capabilities(),
-  has_cmp and cmp_nvim_lsp.default_capabilities() or {},
-  {}
+  has_cmp and cmp_nvim_lsp.default_capabilities() or {}
 )
 
 M.capabilities = capabilities

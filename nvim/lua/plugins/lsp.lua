@@ -1,88 +1,6 @@
 ---@type LazyPluginSpec[]
 return {
   {
-    "jose-elias-alvarez/null-ls.nvim",
-    lazy = true,
-    event = "LspAttach",
-    keys = {
-      {
-        "<leader>tf",
-        function()
-          -- check if disable_format_on_save is set
-          if vim.b.disable_format_on_save then
-            vim.b.disable_format_on_save = nil
-            vim.notify "format_on_save: enabled"
-          else
-            vim.b.disable_format_on_save = true
-            vim.notify "format_on_save: disabled"
-          end
-        end,
-        desc = "Toggle format on save",
-      },
-    },
-    opts = function()
-      local null_ls = require "null-ls"
-      return {
-        debug = false,
-        sources = {
-          null_ls.builtins.formatting.prettier.with {
-            filetypes = {
-              "typescriptreact",
-              "javascript",
-              "typescript",
-              "css",
-              "scss",
-              "html",
-              "json",
-              -- "jsonc",
-              "yaml",
-              "markdown",
-              "graphql",
-              "md",
-              "txt",
-            },
-          },
-          null_ls.builtins.formatting.ruff,
-          null_ls.builtins.formatting.stylua,
-        },
-        on_attach = function(client, bufnr)
-          -- this is buggy, instead just setup an auto cmd for EVERYTHING
-          -- that saves
-          -- if client.supports_method "textDocument/formatting" then
-          --   local augroup = vim.api.nvim_create_augroup("Format", {})
-          --
-          --   vim.api.nvim_clear_autocmds {
-          --     group = augroup,
-          --     buffer = bufnr,
-          --   }
-          --   vim.api.nvim_create_autocmd("BufWritePre", {
-          --     group = augroup,
-          --     buffer = bufnr,
-          --     callback = function()
-          --       print("null ls formatting" .. bufnr)
-          --       vim.lsp.buf.format { bufnr = bufnr, async = false }
-          --     end,
-          --   })
-          -- end
-        end,
-      }
-    end,
-    config = function(_, opts)
-      local null_ls = require "null-ls"
-      null_ls.setup(opts)
-
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        callback = function(ev)
-          if vim.b.disable_format_on_save then
-            return
-          end
-          -- TODO create a keybind that toggles format on save right
-          vim.lsp.buf.format { bufnr = ev.buf, async = false }
-        end,
-      })
-    end,
-  },
-  {
     "williamboman/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
     opts = {
@@ -97,6 +15,7 @@ return {
         -- "typescript-language-server",
         "vtsls",
         "prettier",
+
         "eslint-lsp",
         "prisma-language-server",
         "graphql-language-service-cli",
@@ -135,6 +54,7 @@ return {
     event = "UIEnter",
     lazy = true,
     dependencies = {
+      "williamboman/mason.nvim",
       -- format & linting
       { "yioneko/nvim-vtsls" },
     },

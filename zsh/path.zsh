@@ -5,6 +5,7 @@ export PATH="$PATH:/Users/jordan/.local/bin"
 export PATH="$PATH:$HOME/code/dotfilez/bin"
 # claude
 export PATH="$PATH:$HOME/.claude/local"
+export PATH="$PATH:$HOME/nvim/bin"
 export PATH="$PATH:/opt/homebrew/opt/libpq/bin"
 export PATH="$PATH:/Applications/kitty.app/Contents/MacOS"
 export PATH="$PATH:/Users/jordan/code/google-cloud-sdk/bin"
