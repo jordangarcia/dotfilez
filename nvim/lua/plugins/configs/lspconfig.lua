@@ -78,93 +78,13 @@ lspconfig["lua_ls"].setup {
   },
 }
 
-lspconfig["graphql"].setup {
-  on_attach = M.on_attach,
-  capabilities = capabilities,
-  root_dir = require("lspconfig.util").root_pattern "package.json",
-}
-lspconfig["eslint"].setup {
-  on_attach = M.on_attach,
-  capabilities = capabilities,
-  -- root_dir = require("lspconfig.util").root_pattern ".git",
-}
-lspconfig["jsonls"].setup {
-  on_attach = M.on_attach,
-  capabilities = capabilities,
-  settings = {
-    json = {
-      -- Schemas https://www.schemastore.org
-      schemas = {
-        {
-          fileMatch = { "package.json" },
-          url = "https://json.schemastore.org/package.json",
-        },
-        {
-          fileMatch = { "tsconfig*.json" },
-          url = "https://json.schemastore.org/tsconfig.json",
-        },
-        {
-          fileMatch = {
-            ".prettierrc",
-            ".prettierrc.json",
-            "prettier.config.json",
-          },
-          url = "https://json.schemastore.org/prettierrc.json",
-        },
-        {
-          fileMatch = { ".eslintrc", ".eslintrc.json" },
-          url = "https://json.schemastore.org/eslintrc.json",
-        },
-        {
-          fileMatch = { ".babelrc", ".babelrc.json", "babel.config.json" },
-          url = "https://json.schemastore.org/babelrc.json",
-        },
-        {
-          fileMatch = { "lerna.json" },
-          url = "https://json.schemastore.org/lerna.json",
-        },
-        {
-          fileMatch = { "now.json", "vercel.json" },
-          url = "https://json.schemastore.org/now.json",
-        },
-        {
-          fileMatch = {
-            ".stylelintrc",
-            ".stylelintrc.json",
-            "stylelint.config.json",
-          },
-          url = "http://json.schemastore.org/stylelintrc.json",
-        },
-      },
-    },
-  },
-}
+-- Migrated to native LSP (see lsp/*.lua files)
 
-lspconfig["terraformls"].setup {
-  -- omit on_attach to allow document formatting provider
-  capabilities = capabilities,
-}
+-- Migrated to native LSP (see lsp/terraformls.lua)
 
--- setup python
-lspconfig["pyright"].setup {
-  on_attach = M.on_attach_no_formatting,
-  capabilities = capabilities,
-}
+-- Python servers migrated to native LSP (see lsp/pyright.lua and lsp/ruff.lua)
 
-lspconfig["ruff"].setup {
-  -- dont setup on_attach becuase it disables the formatting provider
-  capabilities = capabilities,
-}
-
--- Native LSP servers (configured via lsp/*.lua files)
-vim.lsp.enable({ 'html', 'cssls', 'taplo' })
-
--- Keep prismals in lspconfig for now
-lspconfig["prismals"].setup {
-  -- allow prettier
-  on_attach = M.on_attach,
-  capabilities = capabilities,
-}
+-- Native LSP servers are enabled in plugins/lsp.lua
 
 require("lspconfig.configs").vtsls = require("vtsls").lspconfig -- set default server config, optional but recommended
 
