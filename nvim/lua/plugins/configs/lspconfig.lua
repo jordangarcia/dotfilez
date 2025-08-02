@@ -65,46 +65,9 @@ M.capabilities = capabilities
 
 -- Native LSP servers are enabled in plugins/lsp.lua
 
-require("lspconfig.configs").vtsls = require("vtsls").lspconfig -- set default server config, optional but recommended
-
--- If the lsp setup is taken over by other plugin, it is the same to call the counterpart setup function
-lspconfig["vtsls"].setup {
-  -- allow prettier
-  on_attach = M.on_attach_no_formatting,
-  root_dir = function(startpath)
-    -- print("root_dir" .. startpath)
-    local makeRootPattern = require("lspconfig.util").root_pattern
-
-    -- were on the same typescript everywhere woo!
-    -- -- regex match against /gamma/packages/client/
-    local in_requestnow = string.match(startpath, "requestnow/ui")
-
-    --
-    -- -- for gamma the client version is in the root folder, and the server version is in local node_modules
-    if in_requestnow ~= nil then
-      return makeRootPattern "package.json"(startpath)
-    end
-    --   return makeRootPattern "package.json"(startpath)
-    -- end
-    return makeRootPattern ".git"(startpath)
-  end,
-
-  settings = {
-    typescript = {
-      tsserver = {
-        -- log = "normal",
-        maxTsServerMemory = 8192,
-      },
-    },
-    vtsls = {
-      autoUseWorkspaceTsdk = true,
-      format = {
-        indentSize = 2,
-        tabSize = 2,
-      },
-    },
-  },
-}
+-- vtsls migrated to native LSP (see lsp/vtsls.lua)
+-- Note: Still need to require vtsls plugin for the language server binary
+require("lspconfig.configs").vtsls = require("vtsls").lspconfig
 
 vim.diagnostic.config {
   virtual_text = false,
@@ -113,7 +76,5 @@ vim.diagnostic.config {
 -- dont show hints in sidebar
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "LineNr", numhl = "" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "LineNr", numhl = "" })
---
--- lspconfig.pyright.setup { blabla}
 
 return M

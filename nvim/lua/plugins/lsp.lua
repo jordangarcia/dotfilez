@@ -61,7 +61,7 @@ return {
 
     config = function()
       -- Enable native LSP servers (configured via lsp/*.lua files)
-      vim.lsp.enable({ 'html', 'cssls', 'taplo', 'jsonls', 'graphql', 'eslint', 'prismals', 'terraformls', 'pyright', 'ruff', 'lua_ls' })
+      vim.lsp.enable({ 'html', 'cssls', 'taplo', 'jsonls', 'graphql', 'eslint', 'prismals', 'terraformls', 'pyright', 'ruff', 'lua_ls', 'vtsls' })
       
       require "plugins.configs.lspconfig"
       vim.api.nvim_create_autocmd({ "BufRead", "BufWinEnter", "BufNewFile" }, {
