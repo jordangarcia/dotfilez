@@ -96,5 +96,7 @@ alias gh="env -u GITHUB_TOKEN gh"
 alias ghpr="gh pr view --web"
 
 # alias claude="unset ANTHROPIC_API_KEY && ~/.claude/local/claude"
+alias cl="claude"
+alias clc="claude --continue"
 
 
