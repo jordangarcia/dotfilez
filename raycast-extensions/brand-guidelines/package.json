@@ -1,0 +1,49 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "brand-guidelines",
+  "title": "Brand Guidelines",
+  "description": "Your brand's colors, logos, and other assets quickly available",
+  "icon": "icon.png",
+  "author": "jordan",
+  "categories": [
+    "Design Tools"
+  ],
+  "license": "MIT",
+  "crossExtensions": [
+    "thomas/color-picker"
+  ],
+  "commands": [
+    {
+      "name": "match-brand-color",
+      "title": "Match Brand Color",
+      "description": "Find closest brand color match from clipboard hex value.",
+      "mode": "view"
+    },
+    {
+      "name": "pick-brand-color2",
+      "title": "Pick Brand Color",
+      "description": "Launch color picker to select a color and find brand matches.",
+      "mode": "no-view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.99.4",
+    "raycast-cross-extension": "^0.2.3",
+    "title-case": "^3.0.3"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.6",
+    "@types/node": "18.18.4",
+    "@types/react": "^17.0.62",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "ray publish"
+  }
+}
