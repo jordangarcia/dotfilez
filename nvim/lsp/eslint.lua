@@ -1,20 +1,20 @@
 return {
-  cmd = { 'vscode-eslint-language-server', '--stdio' },
-  filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue', 'svelte' },
-  root_markers = { '.eslintrc', '.eslintrc.js', '.eslintrc.json', 'eslint.config.js', 'package.json' },
+  cmd = { "vscode-eslint-language-server", "--stdio" },
+  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "svelte" },
+  root_markers = { ".eslintrc", ".eslintrc.js", ".eslintrc.json", "eslint.config.js", "package.json" },
   settings = {
     codeAction = {
       disableRuleComment = {
         enable = true,
-        location = "separateLine"
+        location = "separateLine",
       },
       showDocumentation = {
-        enable = true
-      }
+        enable = true,
+      },
     },
     codeActionOnSave = {
-      enable = false,
-      mode = "all"
+      enable = true,
+      mode = "all",
     },
     format = true,
     nodePath = "",
@@ -26,7 +26,8 @@ return {
     useESLintClass = false,
     validate = "on",
     workingDirectory = {
-      mode = "location"
-    }
+      mode = "location",
+    },
   },
 }
+

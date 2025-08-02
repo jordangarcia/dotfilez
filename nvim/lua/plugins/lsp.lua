@@ -79,6 +79,33 @@ return {
       vim.schedule(function()
         vim.cmd "silent! LspStart"
       end)
+
+      -- ESLint code actions on save for import fixes
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.vue" },
+        callback = function(args)
+          -- Respect the same format_on_save setting as Conform
+          if vim.b[args.buf].disable_format_on_save then
+            return
+          end
+          
+          local params = vim.lsp.util.make_range_params()
+          params.context = { only = { "source.fixAll.eslint" } }
+          
+          local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
+          if result then
+            for _, res in pairs(result) do
+              if res.result then
+                for _, action in pairs(res.result) do
+                  if action.edit then
+                    vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+                  end
+                end
+              end
+            end
+          end
+        end,
+      })
     end,
   },
 }
