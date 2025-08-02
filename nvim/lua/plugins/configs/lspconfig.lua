@@ -55,28 +55,7 @@ M.capabilities = capabilities
 --   },
 -- }
 --
-lspconfig["lua_ls"].setup {
-  on_attach = M.on_attach,
-  capabilities = M.capabilities,
-
-  settings = {
-    Lua = {
-      workspace = {
-        library = {
-          -- string.format("%s/.hammerspoon/Spoons/EmmyLua.spoon/annotations", os.getenv "HOME"),
-        },
-      },
-      runtime = {
-        -- Tell the language server which version of Lua you're using
-        version = "LuaJIT",
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { "vim" },
-      },
-    },
-  },
-}
+-- Lua language server migrated to native LSP (see lsp/lua_ls.lua)
 
 -- Migrated to native LSP (see lsp/*.lua files)
 
