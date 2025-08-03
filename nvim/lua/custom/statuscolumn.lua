@@ -29,21 +29,15 @@ local line_no = function(diag_hl, text)
   local is_num = vim.wo[win].number
   local is_relnum = vim.wo[win].relativenumber
   if (is_num or is_relnum) and vim.v.virtnum == 0 then
-    local num_text = text
-    if not num_text then
-      if vim.v.relnum == 0 then -- the current line
-        num_text = is_num and "%l" or "%r"
-      else
-        num_text = is_relnum and "%r" or "%l"
-      end
-    end
+    local num_text = text or "%l"
 
     if vim.v.relnum == 0 then -- the current line
       -- current line should be left aligned
       return table.concat({
         hl(diag_hl and diag_hl or "CursorLineNr"),
-        "%=",
+        "",
         num_text,
+        "%=",
       }, "")
     else
       return table.concat({
@@ -94,12 +88,14 @@ function M.statuscolumn()
     return line_no_only()
   end
 
-  local show_signs = vim.wo[win].signcolumn ~= "no"
+  -- local show_signs = vim.wo[win].signcolumn ~= "no"
+  local show_signs = true
 
   local components = { "", "", "" } -- left, middle, right
 
   local diag
   local line_hl
+  -- check if relnum
   local line_text = nil
 
   if show_signs then
@@ -187,10 +183,8 @@ function M.get_signs(buf, lnum)
 
   -- uncomment to debug what signs are showing
   -- local cursor_lnum = vim.api.nvim_win_get_cursor(0)[1]
-  -- if #res > 0 then
-  --   if cursor_lnum == lnum then
-  --     vim.notify(vim.inspect(res))
-  --   end
+  -- if cursor_lnum == lnum then
+  --   vim.notify("Line " .. lnum .. " signs: " .. vim.inspect(res))
   -- end
   return res
 end
