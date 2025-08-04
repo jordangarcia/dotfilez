@@ -61,8 +61,21 @@ return {
 
     config = function()
       -- Enable native LSP servers (configured via lsp/*.lua files)
-      vim.lsp.enable({ 'html', 'cssls', 'taplo', 'jsonls', 'graphql', 'eslint', 'prismals', 'terraformls', 'pyright', 'ruff', 'lua_ls', 'vtsls' })
-      
+      vim.lsp.enable {
+        "html",
+        "cssls",
+        "taplo",
+        "jsonls",
+        "graphql",
+        "eslint",
+        "prismals",
+        "terraformls",
+        "pyright",
+        "ruff",
+        "lua_ls",
+        "vtsls",
+      }
+
       require "plugins.configs.lspconfig"
       vim.api.nvim_create_autocmd({ "BufRead", "BufWinEnter", "BufNewFile" }, {
         callback = function()
@@ -88,10 +101,10 @@ return {
           if vim.b[args.buf].disable_format_on_save then
             return
           end
-          
+
           local params = vim.lsp.util.make_range_params()
           params.context = { only = { "source.fixAll.eslint" } }
-          
+
           local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
           if result then
             for _, res in pairs(result) do

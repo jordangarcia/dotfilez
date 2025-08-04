@@ -14,7 +14,7 @@ fi
 
 
 alias nvim9="NVIM_APPNAME=nvim-0.9 /opt/homebrew/Cellar/nvim@0.9.5/bin/nvim"
-alias nvim10="NVIM_APPNAME=nvim10 nvim-0.10.3"
+alias nvim10="NVIM_APPNAME=nvim10 ~/.local/share/bob/v0.10.3/bin/nvim"
 
 alias vim='nvim'
 alias vi='nvim'
