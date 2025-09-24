@@ -20,8 +20,10 @@ return {
     nodePath = "",
     onIgnoredFiles = "off",
     packageManager = "npm",
-    quiet = false,
-    rulesCustomizations = {},
+    quiet = true,
+    -- rulesCustomizations = {
+    --   { rule = "prettier/*", severity = "off" }
+    -- },
     run = "onType",
     useESLintClass = false,
     validate = "on",

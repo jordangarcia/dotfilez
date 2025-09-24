@@ -74,7 +74,17 @@ alias gca='git commit -a'
 alias gcm='git commit --amend'
 alias gcp='git cherry-pick'
 alias gb='git branch'
-alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
+# alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
+gs () {
+  if [[ $# -gt 0 ]] && [[ ! -e $1 ]]
+  then
+    env GITHUB_TOKEN="$GIT_SPICE_GITHUB_TOKEN" command gs "$@"
+  else
+    git status
+  fi
+}
+
+
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias gstash='git stash -u'
 
@@ -92,12 +102,16 @@ alias vienvrclocal="vi ~/code/gamma/.envrc.local && direnv allow"
 alias pbq="pbpaste | jq"
 alias pbv="pbpaste | nvim"
 alias pbhtml="pbpaste | prettier --parser html"
+alias pbjl="pbpaste | jless"
+alias pbyl="pbpaste | jless --yaml"
+
 
 alias gh="env -u GITHUB_TOKEN gh"
 alias ghpr="gh pr view --web"
+alias spice="env -u GITHUB_TOKEN /opt/homebrew/bin/gs"
+alias git-spice="env -u GITHUB_TOKEN /opt/homebrew/bin/gs"
 
 # alias claude="unset ANTHROPIC_API_KEY && ~/.claude/local/claude"
 alias cl="claude"
 alias clc="claude --continue"
-
-
+yolo() { claude --dangerously-skip-permissions "$*"; }

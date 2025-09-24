@@ -18,6 +18,11 @@ return {
       end,
       desc = "Toggle format on save",
     },
+    {
+      "<leader>uc",
+      "<cmd>ConformInfo<cr>",
+      desc = "Open conform info",
+    },
   },
   opts = {
     formatters_by_ft = {

@@ -102,7 +102,7 @@ return {
             return
           end
 
-          local params = vim.lsp.util.make_range_params()
+          local params = vim.lsp.util.make_range_params(0, "utf-16")
           params.context = { only = { "source.fixAll.eslint" } }
 
           local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
