@@ -67,11 +67,7 @@ M.capabilities = capabilities
 
 -- vtsls migrated to native LSP (see lsp/vtsls.lua)
 -- Note: Still need to require vtsls plugin for the language server binary
-require("lspconfig.configs").vtsls = require("vtsls").lspconfig
-
-vim.diagnostic.config {
-  virtual_text = false,
-}
+-- require("lspconfig.configs").vtsls = require("vtsls").lspconfig
 
 -- dont show hints in sidebar
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "LineNr", numhl = "" })

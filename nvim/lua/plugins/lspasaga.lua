@@ -105,13 +105,13 @@ return {
           [[ :exec "vert norm <C-V><C-W>]"<CR> ]],
           desc = "Jump to def (vsplit)",
         },
-        {
-          "K",
-          function()
-            vim.lsp.buf.hover()
-          end,
-          desc = "LSP hover",
-        },
+        -- {
+        --   "K",
+        --   function()
+        --     vim.lsp.buf.hover()
+        --   end,
+        --   desc = "LSP hover",
+        -- },
         {
           "<leader>lR",
           function()

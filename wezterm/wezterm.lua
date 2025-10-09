@@ -27,13 +27,17 @@ local function tab_title(tab_info)
 		return title
 	end
 
-	-- Get the current working directory
-	local cwd = tab_info.active_pane.current_working_dir
-	if cwd then
-		-- Extract just the last directory name from the path
-		local dir_name = string.match(cwd.file_path, "[^/]+$")
-		if dir_name and #dir_name > 0 then
-			return dir_name
+	-- Get the current working directory from the URL object
+	local cwd_uri = tab_info.active_pane.current_working_dir
+	if cwd_uri then
+		-- Parse the URI to get the file path
+		local cwd_path = cwd_uri.file_path
+		if cwd_path then
+			-- Extract just the last directory name from the path
+			local dir_name = string.match(cwd_path, "([^/]+)/?$")
+			if dir_name and #dir_name > 0 then
+				return dir_name
+			end
 		end
 	end
 
@@ -313,7 +317,8 @@ local config = {
 		{ mods = hyper, key = "DownArrow", action = act.AdjustPaneSize({ "Down", 5 }) },
 		{ mods = hyper, key = "UpArrow", action = act.AdjustPaneSize({ "Up", 5 }) },
 		{ mods = hyper, key = "RightArrow", action = act.AdjustPaneSize({ "Right", 12 }) },
-
+		{ key = "UpArrow", mods = "SHIFT", action = act.ScrollToPrompt(-1) },
+		{ key = "DownArrow", mods = "SHIFT", action = act.ScrollToPrompt(1) },
 		-- navigator
 		{ mods = "CTRL", key = "h", action = act.EmitEvent("ActivatePaneDirection-left") },
 		{ mods = "CTRL", key = "j", action = act.EmitEvent("ActivatePaneDirection-down") },
@@ -359,7 +364,7 @@ local config = {
 			key = "=",
 			action = act.SendKey({ key = "F12" }),
 		},
-		
+
 		-- Tab management keymaps for nvim integration
 		{
 			mods = "CMD|SHIFT",
@@ -502,19 +507,17 @@ local config = {
 			{ key = "O", mods = "SHIFT", action = act.CopyMode("MoveToSelectionOtherEndHoriz") },
 			{ key = "T", mods = "NONE", action = act.CopyMode({ JumpBackward = { prev_char = true } }) },
 			{ key = "T", mods = "SHIFT", action = act.CopyMode({ JumpBackward = { prev_char = true } }) },
-			{ key = "V", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Line" }) },
-			{ key = "V", mods = "SHIFT", action = act.CopyMode({ SetSelectionMode = "Line" }) },
 			{ key = "^", mods = "NONE", action = act.CopyMode("MoveToStartOfLineContent") },
 			{ key = "^", mods = "SHIFT", action = act.CopyMode("MoveToStartOfLineContent") },
 			{ key = "b", mods = "NONE", action = act.CopyMode("MoveBackwardWord") },
 			{ key = "b", mods = "ALT", action = act.CopyMode("MoveBackwardWord") },
-			{ key = "b", mods = "CTRL", action = act.CopyMode("PageUp") },
+			-- { key = "b", mods = "CTRL", action = act.CopyMode("PageUp") },
 			{ key = "c", mods = "CTRL", action = act.CopyMode("Close") },
 			{ key = "d", mods = "CTRL", action = act.CopyMode({ MoveByPage = 0.5 }) },
 			{ key = "e", mods = "NONE", action = act.CopyMode("MoveForwardWordEnd") },
 			{ key = "f", mods = "NONE", action = act.CopyMode({ JumpForward = { prev_char = false } }) },
 			{ key = "f", mods = "ALT", action = act.CopyMode("MoveForwardWord") },
-			{ key = "f", mods = "CTRL", action = act.CopyMode("PageDown") },
+			-- { key = "f", mods = "CTRL", action = act.CopyMode("PageDown") },
 			{ key = "g", mods = "NONE", action = act.CopyMode("MoveToScrollbackTop") },
 			{ key = "g", mods = "CTRL", action = act.CopyMode("Close") },
 			{ key = "h", mods = "NONE", action = act.CopyMode("MoveLeft") },
@@ -528,6 +531,9 @@ local config = {
 			{ key = "u", mods = "CTRL", action = act.CopyMode({ MoveByPage = -0.5 }) },
 			{ key = "v", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Cell" }) },
 			{ key = "v", mods = "CTRL", action = act.CopyMode({ SetSelectionMode = "Block" }) },
+			{ key = "f", mods = "CTRL", action = act.CopyMode({ SetSelectionMode = "SemanticZone" }) },
+			{ key = "V", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Line" }) },
+			{ key = "V", mods = "SHIFT", action = act.CopyMode({ SetSelectionMode = "Line" }) },
 			{ key = "w", mods = "NONE", action = act.CopyMode("MoveForwardWord") },
 			{
 				key = "y",
@@ -557,6 +563,13 @@ local config = {
 			{ key = "PageDown", mods = "NONE", action = act.CopyMode("NextMatchPage") },
 			{ key = "UpArrow", mods = "NONE", action = act.CopyMode("PriorMatch") },
 			{ key = "DownArrow", mods = "NONE", action = act.CopyMode("NextMatch") },
+		},
+	},
+	mouse_bindings = {
+		{
+			event = { Down = { streak = 3, button = "Left" } },
+			action = wezterm.action.SelectTextAtMouseCursor("SemanticZone"),
+			mods = "NONE",
 		},
 	},
 }
