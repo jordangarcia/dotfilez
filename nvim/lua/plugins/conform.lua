@@ -26,14 +26,16 @@ return {
   },
   opts = {
     formatters_by_ft = {
-      javascript = { "prettier" },
-      typescript = { "prettier" },
-      typescriptreact = { "prettier" },
-      javascriptreact = { "prettier" },
-      css = { "prettier" },
+      -- Biome will be used if biome.json exists, otherwise fallback to prettier
+      javascript = { "biome", "prettier", stop_after_first = true },
+      typescript = { "biome", "prettier", stop_after_first = true },
+      typescriptreact = { "biome", "prettier", stop_after_first = true },
+      javascriptreact = { "biome", "prettier", stop_after_first = true },
+      css = { "biome", "prettier", stop_after_first = true },
+      json = { "biome", "prettier", stop_after_first = true },
+      jsonc = { "biome", "prettier", stop_after_first = true },
       scss = { "prettier" },
       html = { "prettier" },
-      json = { "prettier" },
       yaml = { "prettier" },
       markdown = { "prettier" },
       graphql = { "prettier" },

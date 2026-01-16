@@ -99,9 +99,10 @@ alias lzd="lazydocker"
 alias vienvrc="vi ~/code/gamma/.envrc && direnv allow"
 alias vienvrclocal="vi ~/code/gamma/.envrc.local && direnv allow"
 
+alias format-html="prettier --parser html"
 alias pbq="pbpaste | jq"
 alias pbv="pbpaste | nvim"
-alias pbhtml="pbpaste | prettier --parser html"
+alias pbhtml="pbpaste | format-html"
 alias pbjl="pbpaste | jless"
 alias pbyl="pbpaste | jless --yaml"
 
@@ -112,6 +113,6 @@ alias spice="env -u GITHUB_TOKEN /opt/homebrew/bin/gs"
 alias git-spice="env -u GITHUB_TOKEN /opt/homebrew/bin/gs"
 
 # alias claude="unset ANTHROPIC_API_KEY && ~/.claude/local/claude"
-alias cl="claude"
-alias clc="claude --continue"
-yolo() { claude --dangerously-skip-permissions "$*"; }
+alias cl="claude --chrome"
+alias clc="claude --chrome --continue"
+yolo() { cl --dangerously-skip-permissions "$*"; }

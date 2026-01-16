@@ -5,6 +5,8 @@ export PATH="$PATH:/Users/jordan/.local/bin"
 export PATH="$PATH:$HOME/code/dotfilez/bin"
 # claude
 export PATH="$PATH:$HOME/.claude/local"
+# gamma dev-cli
+export PATH="$PATH:$HOME/code/2gamma/packages/dev-cli/bin"
 export PATH="$PATH:$HOME/nvim/bin"
 export PATH="$PATH:/opt/homebrew/opt/libpq/bin"
 export PATH="$PATH:/Applications/kitty.app/Contents/MacOS"

@@ -15,6 +15,7 @@ return {
         -- "typescript-language-server",
         "vtsls",
         "prettier",
+        "biome",
 
         "eslint-lsp",
         "prisma-language-server",
@@ -68,6 +69,7 @@ return {
         "jsonls",
         "graphql",
         "eslint",
+        "biome",
         "prismals",
         "terraformls",
         "pyright",

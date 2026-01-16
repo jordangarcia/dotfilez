@@ -284,7 +284,11 @@ local config = {
 		{ mods = hyper, key = "p", action = act.PasteFrom("Clipboard") },
 		{ mods = "CMD", key = "c", action = act.CopyTo("Clipboard") },
 
-		{ mods = hyper, key = "F9", action = act.ShowDebugOverlay },
+		{
+			key = "F9",
+			mods = "", -- No modifiers (just F9)
+			action = wezterm.action.DisableDefaultAssignment,
+		},
 		-- { mods = hyper, key = "l", action = act.ShowLauncher },
 		-- { mods = hyper, key = "Enter", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		-- { mods = hyper, key = "'", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
