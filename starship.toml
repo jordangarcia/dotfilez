@@ -33,6 +33,7 @@ $character"""
 
 [directory]
 style = "blue bold"
+truncate_to_repo = true
 
 [package]
 disabled = true
