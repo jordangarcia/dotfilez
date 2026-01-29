@@ -251,13 +251,14 @@
                         ]
                     },
                     {
-                        "description": "Map Ctrl+J/K to Down/Up in all applications except WezTerm",
+                        "description": "Map Ctrl+J/K to Down/Up in all applications except WezTerm/Kitty",
                         "manipulators": [
                             {
                                 "conditions": [
                                     {
                                         "bundle_identifiers": [
-                                            "^com\\.github\\.wez\\.wezterm$"
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^net\\.kovidgoyal\\.kitty$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -276,7 +277,8 @@
                                 "conditions": [
                                     {
                                         "bundle_identifiers": [
-                                            "^com\\.github\\.wez\\.wezterm$"
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^net\\.kovidgoyal\\.kitty$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }

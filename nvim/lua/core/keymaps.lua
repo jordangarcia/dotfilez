@@ -322,22 +322,22 @@ set_keymap_tbl {
       end,
       "Goto next buffer",
     },
-    -- navigator
+    -- vim-kitty-navigator
     ["<C-h>"] = {
-      "<CMD> NavigatorLeft <CR>",
-      "Navigator left",
+      "<CMD>KittyNavigateLeft<CR>",
+      "Navigate left",
     },
     ["<C-j>"] = {
-      "<CMD> NavigatorDown <CR>",
-      "Navigator down",
+      "<CMD>KittyNavigateDown<CR>",
+      "Navigate down",
     },
     ["<C-k>"] = {
-      "<CMD> NavigatorUp <CR>",
-      "Navigator up",
+      "<CMD>KittyNavigateUp<CR>",
+      "Navigate up",
     },
     ["<C-l>"] = {
-      "<CMD> NavigatorRight <CR>",
-      "Navigator right",
+      "<CMD>KittyNavigateRight<CR>",
+      "Navigate right",
     },
     ["<leader>lwa"] = {
       function()
