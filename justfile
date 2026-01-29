@@ -2,7 +2,7 @@ dotfiles := env_var('HOME') + "/code/dotfilez"
 config := env_var('HOME') + "/.config"
 
 # Define lists as space-separated strings
-dirs := "git karabiner nvim wezterm zsh raycast-scripts"
+dirs := "git karabiner kitty nvim wezterm zsh raycast-scripts"
 files := "starship.toml"
 
 default:
