@@ -179,6 +179,29 @@ return {
           end,
           desc = "TS remove unused imports",
         },
+        {
+          "<leader>ltd",
+          function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            local tsgo = vim.lsp.get_clients({ bufnr = bufnr, name = "tsgo" })[1]
+            if not tsgo then
+              vim.notify("tsgo not attached", vim.log.levels.WARN)
+              return
+            end
+
+            local params = vim.lsp.util.make_range_params(0, "utf-16")
+            params.context = { diagnostics = {} }
+
+            tsgo.request("textDocument/codeAction", params, function(err, result)
+              if err then
+                vim.notify("tsgo error: " .. vim.inspect(err), vim.log.levels.ERROR)
+                return
+              end
+              vim.notify("tsgo codeActions:\n" .. vim.inspect(result), vim.log.levels.INFO)
+            end, bufnr)
+          end,
+          desc = "Debug tsgo code actions",
+        },
       },
     }
   end,

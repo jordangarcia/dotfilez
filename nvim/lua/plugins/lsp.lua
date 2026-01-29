@@ -76,6 +76,7 @@ return {
         "ruff",
         "lua_ls",
         "vtsls",
+        "tsgo",
       }
 
       require "plugins.configs.lspconfig"
@@ -104,18 +105,20 @@ return {
             return
           end
 
+          -- Only send to eslint, not all LSPs (tsgo doesn't support codeAction yet)
+          local eslint = vim.lsp.get_clients({ bufnr = args.buf, name = "eslint" })[1]
+          if not eslint then
+            return
+          end
+
           local params = vim.lsp.util.make_range_params(0, "utf-16")
           params.context = { only = { "source.fixAll.eslint" } }
 
-          local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
-          if result then
-            for _, res in pairs(result) do
-              if res.result then
-                for _, action in pairs(res.result) do
-                  if action.edit then
-                    vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
-                  end
-                end
+          local result = eslint.request_sync("textDocument/codeAction", params, 1000, args.buf)
+          if result and result.result then
+            for _, action in pairs(result.result) do
+              if action.edit then
+                vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
               end
             end
           end

@@ -62,6 +62,14 @@ return {
           ["typescript"] = vim.diagnostic.severity.ERROR,
           ["lua"] = vim.diagnostic.severity.WARN,
         },
+        -- Only request from tsgo if attached, otherwise use all clients
+        client_filter = function(client, bufnr)
+          local tsgo = vim.lsp.get_clients({ bufnr = bufnr, name = "tsgo" })[1]
+          if tsgo then
+            return client.name == "tsgo"
+          end
+          return true
+        end,
         ---@param action LocalCodeAction
         filter_function = function(action)
           -- Check if title exists and contains "refactor."

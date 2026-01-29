@@ -404,7 +404,7 @@ local config = {
 			action = wezterm.action({
 				QuickSelectArgs = {
 					patterns = {
-						"https?://\\S+",
+						"https?://[^\\s\"'<>()\\[\\]]+",
 					},
 					action = wezterm.action_callback(function(window, pane)
 						local url = window:get_selection_text_for_pane(pane)
@@ -456,6 +456,23 @@ local config = {
 					},
 					action = wezterm.action_callback(function(window, pane)
 						local line = window:get_selection_text_for_pane(pane)
+						window:perform_action(wezterm.action.CopyTo("Clipboard"), pane)
+						window:perform_action(wezterm.action.ClearSelection, pane)
+					end),
+				},
+			}),
+		},
+		-- git branch names
+		{
+			key = "B",
+			mods = hyper,
+			action = wezterm.action({
+				QuickSelectArgs = {
+					patterns = {
+						"(?:jordan|feat|feature|fix|chore|hotfix|bugfix|release|refactor)/[a-zA-Z0-9_-]+",
+					},
+					action = wezterm.action_callback(function(window, pane)
+						local branch = window:get_selection_text_for_pane(pane)
 						window:perform_action(wezterm.action.CopyTo("Clipboard"), pane)
 						window:perform_action(wezterm.action.ClearSelection, pane)
 					end),
