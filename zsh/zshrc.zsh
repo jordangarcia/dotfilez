@@ -83,3 +83,11 @@ export NODE_TLS_REJECT_UNAUTHORIZED=1
 if [[ $TERM_PROGRAM == "WezTerm" ]]; then
   source ~/code/dotfilez/zsh/wezterm.sh 2>/dev/null || true
 fi
+
+# Kitty shell integration
+if [[ -n "$KITTY_INSTALLATION_DIR" ]]; then
+  export KITTY_SHELL_INTEGRATION="enabled"
+  autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+  kitty-integration
+  unfunction kitty-integration
+fi

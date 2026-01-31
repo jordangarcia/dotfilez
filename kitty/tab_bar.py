@@ -1,5 +1,34 @@
+from kitty.boss import get_boss
 from kitty.fast_data_types import Screen
 from kitty.tab_bar import DrawData, ExtraData, TabBarData, as_rgb
+
+
+def get_tab_title(tab: TabBarData) -> str:
+    """Get title: custom name > cwd > tab.title fallback"""
+    boss = get_boss()
+    if not boss:
+        return tab.title
+
+    tm = boss.active_tab_manager
+    if not tm:
+        return tab.title
+
+    real_tab = tm.tab_for_id(tab.tab_id)
+    if not real_tab:
+        return tab.title
+
+    # Custom title takes priority
+    if real_tab.name:
+        return real_tab.name
+
+    # Use cwd from shell integration
+    if real_tab.active_window:
+        cwd = real_tab.active_window.cwd_of_child
+        if cwd:
+            return cwd
+
+    return tab.title
+
 
 def draw_tab(
     draw_data: DrawData,
@@ -11,20 +40,11 @@ def draw_tab(
     is_last: bool,
     extra_data: ExtraData,
 ) -> int:
-    # Tab title logic: always show cwd, unless explicitly renamed
-    cwd = getattr(tab, 'active_wd', '') or ''
-    cwd_dir = cwd.rstrip("/").rsplit("/", 1)[-1] if cwd else ""
+    title = get_tab_title(tab)
 
-    # Check if user explicitly renamed the tab (title doesn't match cwd or common process names)
-    user_title = tab.title
-    is_explicit = user_title and user_title != cwd_dir and "/" not in user_title and user_title not in ("~", "zsh", "bash", "nvim", "vim", "vi", "python", "node", "fg")
-
-    if is_explicit:
-        title = user_title
-    elif cwd_dir:
-        title = cwd_dir
-    else:
-        title = "jordan"
+    # Extract just the last directory name
+    if "/" in title:
+        title = title.rstrip("/").rsplit("/", 1)[-1]
 
     # Show "jordan" for home directory
     if title in ("~", "jordan", ""):
@@ -46,17 +66,17 @@ def draw_tab(
 
     if tab.is_active:
         # Active: yellow bg, dark text
-        screen.cursor.bg = as_rgb(0xe6c384)
-        screen.cursor.fg = as_rgb(0x1f1f28)
+        screen.cursor.bg = as_rgb(0xE6C384)
+        screen.cursor.fg = as_rgb(0x1F1F28)
     else:
         # Inactive: dark bg, gray text
-        screen.cursor.bg = as_rgb(0x1f1f28)
+        screen.cursor.bg = as_rgb(0x1F1F28)
         screen.cursor.fg = as_rgb(0x727169)
 
     screen.draw(tab_text)
 
     # Separator between tabs
-    screen.cursor.bg = as_rgb(0x1f1f28)
+    screen.cursor.bg = as_rgb(0x1F1F28)
     screen.draw(" ")
 
     return screen.cursor.x
