@@ -130,10 +130,13 @@ opt.undofile = true
 -- interval for writing swap file to disk, also used by gitsigns
 opt.updatetime = 250
 
--- disable some default providers
-for _, provider in ipairs { "node", "perl", "python3", "ruby" } do
+-- disable some default providers (node enabled for nvim-pretty-ts-errors)
+for _, provider in ipairs { "perl", "python3", "ruby" } do
   vim.g["loaded_" .. provider .. "_provider"] = 0
 end
+
+-- Set node host path for fnm (must point to neovim-node-host, not node binary)
+vim.g.node_host_prog = "/Users/jordan/.local/share/fnm/node-versions/v22.18.0/installation/lib/node_modules/neovim/bin/cli.js"
 
 -- add binaries installed by mason.nvim to path
 local is_windows = vim.loop.os_uname().sysname == "Windows_NT"

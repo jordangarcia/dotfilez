@@ -48,6 +48,7 @@ return {
     },
     dependencies = {
       { "MunifTanjim/nui.nvim", lazy = true },
+      { "enochchau/nvim-pretty-ts-errors", build = "npm install" },
     },
 
     config = function()
@@ -62,6 +63,7 @@ return {
           ["typescript"] = vim.diagnostic.severity.ERROR,
           ["lua"] = vim.diagnostic.severity.WARN,
         },
+        pretty_ts_errors = false,
         -- Only request from tsgo if attached, otherwise use all clients
         client_filter = function(client, bufnr)
           local tsgo = vim.lsp.get_clients({ bufnr = bufnr, name = "tsgo" })[1]
