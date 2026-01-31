@@ -1,3 +1,9 @@
+-- Check for scrollback mode (launched from kitty)
+if vim.env.NVIM_SCROLLBACK == "1" then
+  require "init_scrollback"
+  return
+end
+
 require "core.options"
 require "core.keymaps"
 
