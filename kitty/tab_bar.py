@@ -11,25 +11,20 @@ def draw_tab(
     is_last: bool,
     extra_data: ExtraData,
 ) -> int:
-    # Tab title logic (matching wezterm):
-    # 1. Explicit title (if set and not matching cwd)
-    # 2. Last directory name from cwd
-    # 3. Fallback to pane title
-    title = tab.title
+    # Tab title logic: always show cwd, unless explicitly renamed
     cwd = getattr(tab, 'active_wd', '') or ''
+    cwd_dir = cwd.rstrip("/").rsplit("/", 1)[-1] if cwd else ""
 
-    # Check if title was explicitly set (doesn't match cwd-derived name)
-    cwd_dir = cwd.rstrip("/").rsplit("/", 1)[-1] if "/" in cwd else ""
-    title_is_explicit = title and title != cwd_dir and "/" not in title and title not in ("~", "jordan", "zsh", "bash")
+    # Check if user explicitly renamed the tab (title doesn't match cwd or common process names)
+    user_title = tab.title
+    is_explicit = user_title and user_title != cwd_dir and "/" not in user_title and user_title not in ("~", "zsh", "bash", "nvim", "vim", "vi", "python", "node", "fg")
 
-    if title_is_explicit:
-        pass  # Use explicit title as-is
-    elif cwd:
-        # Extract last directory name from cwd
-        title = cwd.rstrip("/").rsplit("/", 1)[-1] or "jordan"
-    elif "/" in title:
-        # Fallback: extract from title if it's a path
-        title = title.rstrip("/").rsplit("/", 1)[-1]
+    if is_explicit:
+        title = user_title
+    elif cwd_dir:
+        title = cwd_dir
+    else:
+        title = "jordan"
 
     # Show "jordan" for home directory
     if title in ("~", "jordan", ""):
