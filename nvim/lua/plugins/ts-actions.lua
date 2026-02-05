@@ -64,11 +64,11 @@ return {
           ["lua"] = vim.diagnostic.severity.WARN,
         },
         pretty_ts_errors = false,
-        -- Only request from tsgo if attached, otherwise use all clients
+        -- Only request from tsgo + eslint if tsgo attached, otherwise use all clients
         client_filter = function(client, bufnr)
           local tsgo = vim.lsp.get_clients({ bufnr = bufnr, name = "tsgo" })[1]
           if tsgo then
-            return client.name == "tsgo"
+            return client.name == "tsgo" or client.name == "eslint"
           end
           return true
         end,

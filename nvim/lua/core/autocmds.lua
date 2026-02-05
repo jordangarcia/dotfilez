@@ -4,6 +4,12 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
 
+-- truncate LSP log if > 1MB
+local lsp_log = vim.lsp.get_log_path()
+if vim.fn.getfsize(lsp_log) > 1024 * 1024 then
+  vim.fn.writefile({}, lsp_log)
+end
+
 -- dont list quickfix buffers
 autocmd("FileType", {
   pattern = "qf",
