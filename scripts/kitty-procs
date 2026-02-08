@@ -1,0 +1,86 @@
+#!/bin/bash
+# Show processes spawned from kitty, with detailed view of gamma dev stack
+
+KITTY_PID=$(ps -eo pid,command | grep "[k]itty.app/Contents/MacOS/kitty$" | awk '{print $1}')
+
+if [[ -z "$KITTY_PID" ]]; then
+  echo "kitty not running"
+  exit 1
+fi
+
+echo "=== Kitty Shells (PID $KITTY_PID) ==="
+echo ""
+
+# Kitty spawns login processes which spawn shells
+# Get shells (grandchildren of kitty via login wrappers)
+SHELLS=""
+for login_pid in $(pgrep -P "$KITTY_PID" -f "login"); do
+  for shell_pid in $(pgrep -P "$login_pid" 2>/dev/null); do
+    SHELLS="$SHELLS $shell_pid"
+  done
+done
+
+for shell_pid in $SHELLS; do
+  # Get first meaningful child process name
+  child_info=$(ps -p "$shell_pid" -o pid=,command= 2>/dev/null)
+  first_child=$(pgrep -P "$shell_pid" | head -1)
+
+  if [[ -n "$first_child" ]]; then
+    child_cmd=$(ps -p "$first_child" -o command= 2>/dev/null)
+    # Check if this is the gamma dev stack
+    if echo "$child_cmd" | grep -q "dev-cli\|process-compose\|gamma.*yarn"; then
+      echo "[$shell_pid] gamma dev stack"
+      GAMMA_SHELL=$shell_pid
+    elif echo "$child_cmd" | grep -q "nvim"; then
+      echo "[$shell_pid] nvim"
+    elif echo "$child_cmd" | grep -q "claude"; then
+      echo "[$shell_pid] claude"
+    elif echo "$child_cmd" | grep -q "starship"; then
+      echo "[$shell_pid] idle zsh"
+    else
+      echo "[$shell_pid] $child_cmd"
+    fi
+  else
+    echo "[$shell_pid] idle zsh"
+  fi
+done
+
+# If we found gamma dev stack, show detailed child processes
+if [[ -n "$GAMMA_SHELL" ]]; then
+  echo ""
+  echo "=== Gamma Dev Stack Processes ==="
+  echo ""
+  printf "%-8s %-50s %10s\n" "PID" "NAME" "MEM (MB)"
+  printf "%-8s %-50s %10s\n" "--------" "--------------------------------------------------" "----------"
+
+  # Recursively print process tree with indentation
+  print_tree() {
+    local pid=$1
+    local depth=$2
+    local indent=""
+
+    for ((i=0; i<depth; i++)); do
+      indent="  $indent"
+    done
+
+    # Get process info
+    info=$(ps -p "$pid" -o rss=,command= 2>/dev/null)
+    if [[ -n "$info" ]]; then
+      rss_kb=$(echo "$info" | awk '{print $1}')
+      cmd=$(echo "$info" | awk '{$1=""; print $0}' | sed 's/^ //')
+      name=$(echo "$cmd" | sed 's|.*/||' | cut -c1-$((50 - ${#indent})))
+      mem_mb=$(awk "BEGIN {printf \"%.1f\", $rss_kb / 1024}")
+      printf "%-8s %-50s %10s\n" "$pid" "${indent}${name}" "$mem_mb"
+    fi
+
+    # Recurse into children
+    for child in $(pgrep -P "$pid" 2>/dev/null); do
+      print_tree "$child" $((depth + 1))
+    done
+  }
+
+  # Start from gamma shell's first child
+  for child in $(pgrep -P "$GAMMA_SHELL" 2>/dev/null); do
+    print_tree "$child" 0
+  done
+fi
