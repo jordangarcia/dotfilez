@@ -113,6 +113,7 @@ alias spice="env -u GITHUB_TOKEN /opt/homebrew/bin/gs"
 alias git-spice="env -u GITHUB_TOKEN /opt/homebrew/bin/gs"
 
 # alias claude="unset ANTHROPIC_API_KEY && ~/.claude/local/claude"
+alias claude="claude --dangerously-skip-permissions"
 alias cl="claude --chrome"
 alias clc="claude --chrome --continue"
 yolo() { cl --dangerously-skip-permissions "$*"; }

@@ -5,15 +5,6 @@ return {
     lazy = false,
   },
 
-  {
-    "norcalli/nvim-colorizer.lua",
-    lazy = false,
-    ft = { "css", "lua" },
-    event = "VeryLazy",
-    config = function(_, opts)
-      require("colorizer").setup { user_default_options = { names = false, css = true } }
-    end,
-  },
 
   -- {
   --   "nvim-tree/nvim-web-devicons",

@@ -16,5 +16,18 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$PATH:$HOME/.cargo/bin"
 # jorgist
 export PATH="$PATH:$HOME/code/jorgist/bin"
+# FNM
+export PATH="/Users/jordan/.local/state/fnm_multishells/85325_1770662659656/bin":$PATH
+export FNM_MULTISHELL_PATH="/Users/jordan/.local/state/fnm_multishells/85325_1770662659656"
+export FNM_VERSION_FILE_STRATEGY="local"
+export FNM_DIR="/Users/jordan/.local/share/fnm"
+export FNM_LOGLEVEL="info"
+export FNM_NODE_DIST_MIRROR="https://nodejs.org/dist"
+export FNM_COREPACK_ENABLED="false"
+export FNM_RESOLVE_ENGINES="true"
+export FNM_ARCH="arm64"
 
 export MANPATH="/usr/local/man:/usr/local/mysql/man:/usr/local/git/man:$MANPATH"
+
+# Obsidian
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"

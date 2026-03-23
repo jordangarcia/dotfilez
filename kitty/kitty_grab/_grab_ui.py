@@ -676,9 +676,9 @@ class GrabHandler(Handler):
                 lambda c: not self._is_word_char(c), line[pos:]))
             pos += len(non_word)
             if pos < len(line):
-                # advance through word chars, land on last one
+                # advance through word chars to end of word
                 word = ''.join(takewhile(self._is_word_char, line[pos:]))
-                end_pos = pos + max(len(word) - 1, 0)
+                end_pos = pos + len(word)
                 return Position(wcswidth(line[:end_pos]),
                                 self.point.y, self.point.top_line)
         # wrap to next line
