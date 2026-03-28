@@ -27,7 +27,7 @@ def handle_result(args, result, target_window_id, boss):
     offset = kt69_lib.get_offset_from_window(window)
     worktree = session['worktree_path'] if session else ''
 
-    menu_script = os.path.expanduser('~/.config/kitty/kt69/kt69-menu.sh')
+    menu_script = os.path.expanduser('~/.config/kitty/kt/kt69-menu.sh')
 
     boss.call_remote_control(None, (
         'launch', '--type=overlay',

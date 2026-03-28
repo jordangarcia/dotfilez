@@ -90,7 +90,7 @@ case "$choice" in
     kitty @ launch --type=overlay \
       --env "KT69_BRANCH=$BRANCH" \
       --env "KT69_WORKTREE=$WORKTREE" \
-      ~/.config/kitty/kt69/kt69-trs-pick.sh
+      ~/.config/kitty/kt/kt69-trs-pick.sh
     ;;
   p)
     (cd "$WORKTREE" && gh pr view --web 2>/dev/null) || echo "no PR found"

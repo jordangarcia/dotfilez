@@ -25,7 +25,7 @@ def handle_result(args, result, target_window_id, boss):
         return
 
     worktree = session['worktree_path'] if session else ''
-    picker = os.path.expanduser('~/.config/kitty/kt69/kt69-trs-pick.sh')
+    picker = os.path.expanduser('~/.config/kitty/kt/kt69-trs-pick.sh')
 
     boss.call_remote_control(None, (
         'launch', '--type=overlay',
