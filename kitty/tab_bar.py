@@ -15,6 +15,7 @@ ACTIVE          = 0xE6C384
 ACTIVE_FG       = 0x1F1F28
 INACTIVE_TAB_BG = 0x2A2A37
 MUTED           = 0x727169
+PURPLE          = 0x957FB8
 
 PL      = "\ue0b0"
 PL_THIN = "\ue0b1"
@@ -26,6 +27,20 @@ def _pl(screen, prev_bg, next_bg):
     screen.cursor.fg = as_rgb(prev_bg)
     screen.cursor.bg = as_rgb(next_bg)
     screen.draw(PL)
+
+
+def _draw_session_indicator(draw_data: DrawData, screen: Screen, tab: TabBarData) -> int:
+    session_name = tab.session_name
+    if not session_name:
+        return 0
+    cell = f" {session_name} "
+    screen.cursor.fg = as_rgb(ACTIVE_FG)
+    screen.cursor.bg = as_rgb(PURPLE)
+    screen.cursor.bold = True
+    screen.draw(cell)
+    screen.cursor.bold = False
+    _pl(screen, PURPLE, INACTIVE_TAB_BG)
+    return len(cell) + 1
 
 
 def _tab_title(tab: TabBarData) -> tuple[str, str]:
@@ -92,9 +107,12 @@ def draw_tab(
 
     if index == 1:
         prev_tab_was_active = False
-        screen.cursor.bg = as_rgb(INACTIVE_TAB_BG)
-        screen.draw(" ")
-        before += 1
+        has_session = bool(tab.session_name)
+        before += _draw_session_indicator(draw_data, screen, tab)
+        if not has_session:
+            screen.cursor.bg = as_rgb(INACTIVE_TAB_BG)
+            screen.draw(" ")
+            before += 1
 
     prefix, name = _tab_title(tab)
     idx = f" {index} "

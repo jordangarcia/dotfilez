@@ -66,3 +66,9 @@ bindkey '^R' history-incremental-search-backward
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '\C-x\C-e' edit-command-line
+
+# TODO: Remove once fixed upstream
+# https://github.com/anthropics/claude-code/issues/38761#issuecomment-4126658335
+# Claude Code enables Kitty keyboard protocol but doesn't restore on unclean exit,
+# which swallows Ctrl-C. Reset it on every prompt.
+precmd() { printf '\e[=0u' }
