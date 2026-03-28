@@ -43,13 +43,20 @@ def _draw_session_indicator(draw_data: DrawData, screen: Screen, tab: TabBarData
     return len(cell) + 1
 
 
+MAX_TAB_TITLE = 20
+
+
+def _truncate(s: str, max_len: int = MAX_TAB_TITLE) -> str:
+    return f"{s[:max_len - 1]}\u2026" if len(s) > max_len else s
+
+
 def _tab_title(tab: TabBarData) -> tuple[str, str]:
     """Return (prefix, name). prefix includes trailing /."""
     boss = get_boss()
     if boss:
         t = boss.tab_for_id(tab.tab_id)
         if t and t.name:
-            return "", t.name
+            return "", _truncate(t.name)
         if t:
             cwd = t.get_cwd_of_active_window()
             if cwd:
@@ -58,9 +65,9 @@ def _tab_title(tab: TabBarData) -> tuple[str, str]:
                 if name in ("~", "jordan", ""):
                     return "", "jordan"
                 if parent and name:
-                    return f"{parent}/", name
-                return "", name or cwd
-    return "", tab.title
+                    return f"{parent}/", _truncate(name)
+                return "", _truncate(name or cwd)
+    return "", _truncate(tab.title)
 
 
 def _draw_right_status(draw_data: DrawData, screen: Screen, is_last: bool) -> int:

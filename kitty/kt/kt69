@@ -1,0 +1,401 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+source "$SCRIPT_DIR/lib/session.sh"
+
+GAMMA_ROOT="$HOME/code/gamma"
+
+# ─── Helpers ────────────────────────────────────────────────────────────────
+
+usage() {
+  cat <<EOF
+kt — kitty terminal session manager
+
+Session management:
+  kt new [branch]       Create or resume a session for a branch
+  kt ls                 List active sessions
+  kt stop [branch]      Tear down a session
+  kt rm [branch]        Stop session + remove worktree
+
+Context-aware (auto-detect from KT69_* env vars):
+  kt status             Show session status (PR, dev-cli, ports)
+  kt trs                Search transcripts (trs TUI, filtered to branch)
+  kt browser            Open client in browser
+
+Options:
+  -h, --help            Show this help
+EOF
+}
+
+die() { echo "kt: $*" >&2; exit 1; }
+truncate_title() {
+  local s="$1" max="${2:-20}"
+  if [[ ${#s} -gt $max ]]; then
+    echo "${s:0:$((max-1))}…"
+  else
+    echo "$s"
+  fi
+}
+info() { echo "kt: $*"; }
+
+# Resolve branch: check local, then remote, return "exists" or "new"
+resolve_branch() {
+  local branch="$1"
+  cd "$GAMMA_ROOT"
+
+  # Check local branches
+  if git branch --list "$branch" | grep -q .; then
+    echo "exists"
+    return
+  fi
+
+  # Check remote
+  if git ls-remote --heads origin "$branch" 2>/dev/null | grep -q .; then
+    echo "exists"
+    return
+  fi
+
+  echo "new"
+}
+
+# Find last CC session ID for a branch via trs
+find_last_cc_session() {
+  local branch="$1"
+  local session_json
+  session_json=$(trs list -b "$branch" --json -n 1 --no-index 2>/dev/null || true)
+  if [[ -n "$session_json" ]]; then
+    echo "$session_json" | jq -r '.session_id // empty' 2>/dev/null | head -1
+  fi
+}
+
+# ─── Commands ───────────────────────────────────────────────────────────────
+
+cmd_new() {
+  local branch="${1:-}"
+  [[ -z "$branch" ]] && die "usage: kt new <branch>"
+
+  # If session already exists, focus the tab
+  if session_exists "$branch"; then
+    local session tab_id
+    session=$(session_get "$branch")
+    tab_id=$(echo "$session" | jq -r '.kitty_tab_id')
+    if kitty_tab_alive "$tab_id"; then
+      kitty @ focus-tab -m "id:$tab_id"
+      info "focused existing session"
+      return
+    fi
+  fi
+
+  # Resolve branch (exists or new)
+  local branch_state
+  branch_state=$(resolve_branch "$branch")
+
+  # Create/switch worktree
+  info "setting up worktree ($branch_state branch)"
+  if [[ "$branch_state" == "new" ]]; then
+    wt switch -c "$branch" -C "$GAMMA_ROOT" 2>&1 | tail -3 || true
+  else
+    wt switch "$branch" -C "$GAMMA_ROOT" 2>&1 | tail -3 || true
+  fi
+
+  # Compute paths and offsets
+  local worktree_path
+  worktree_path=$(worktree_path_for_branch "$branch")
+  if [[ ! -d "$worktree_path" ]]; then
+    # Fallback: maybe wt put it somewhere else, check git worktree list
+    worktree_path=$(cd "$GAMMA_ROOT" && git worktree list --porcelain | grep -A1 "branch refs/heads/$branch" | head -1 | sed 's/^worktree //')
+    [[ -z "$worktree_path" || ! -d "$worktree_path" ]] && die "could not find worktree for $branch"
+  fi
+
+  local offset
+  offset=$(session_next_offset)
+
+  # Check for PR
+  local pr_info
+  pr_info=$(cd "$worktree_path" && gh pr view "$branch" --json state,title,url 2>/dev/null || true)
+  if [[ -n "$pr_info" ]]; then
+    local pr_title pr_state
+    pr_title=$(echo "$pr_info" | jq -r '.title')
+    pr_state=$(echo "$pr_info" | jq -r '.state')
+    info "PR: $pr_title ($pr_state)"
+  fi
+
+  # Build claude command args
+  local session_id
+  session_id=$(find_last_cc_session "$branch")
+
+  local -a claude_args=(claude)
+  if [[ -n "$session_id" ]]; then
+    claude_args+=(--resume "$session_id")
+    info "claude: claude --resume $session_id"
+  else
+    info "claude: claude"
+  fi
+
+  # Launch kitty tab: shell in left pane, then start claude inside it
+  info "launching tab (offset=$offset, client=:$((3000 + offset)))"
+  local cc_window_id
+  cc_window_id=$(kitty @ launch --type=tab \
+    --tab-title "$(truncate_title "$branch")" \
+    --cwd "$worktree_path" \
+    --var "kt69_branch=$branch" \
+    --var "kt69_offset=$offset" \
+    --var "kt69_worktree=$worktree_path" \
+    --env "KT69_BRANCH=$branch" \
+    --env "KT69_OFFSET=$offset" \
+    --env "KT69_WORKTREE=$worktree_path")
+
+  # Trim whitespace from window ID
+  cc_window_id=$(echo "$cc_window_id" | tr -d '[:space:]')
+
+  # Get the tab ID from the window we just created
+  local tab_id
+  tab_id=$(kitty @ ls | jq --arg wid "$cc_window_id" \
+    '.[].tabs[] | select(.windows[] | .id == ($wid | tonumber)) | .id')
+
+  # Launch shell in right split
+  # The new tab + CC window are now active, so vsplit lands in the right place
+  local shell_window_id
+  shell_window_id=$(kitty @ launch --location=vsplit \
+    --cwd "$worktree_path" \
+    --var "kt69_branch=$branch" \
+    --var "kt69_offset=$offset" \
+    --var "kt69_worktree=$worktree_path" \
+    --env "KT69_BRANCH=$branch" \
+    --env "KT69_OFFSET=$offset" \
+    --env "KT69_WORKTREE=$worktree_path" \
+    --keep-focus)
+  shell_window_id=$(echo "$shell_window_id" | tr -d '[:space:]')
+
+  info "session created"
+
+  # Start claude in the left pane (shell survives if claude exits)
+  kitty @ send-text -m "id:$cc_window_id" "${claude_args[*]}\r"
+}
+
+cmd_ls() {
+  local has_output=false
+  printf "%-40s %-8s %-12s\n" "BRANCH" "OFFSET" "CLIENT"
+  printf "%-40s %-8s %-12s\n" "------" "------" "------"
+
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    has_output=true
+    local branch offset
+    branch=$(echo "$line" | cut -f1)
+    offset=$(echo "$line" | cut -f2)
+    printf "%-40s %-8s %-12s\n" "$branch" "$offset" ":$((3000 + offset))"
+  done < <(_kitty_ls | jq -r '
+    [.[].tabs[].windows[]
+      | select(.user_vars.kt69_branch and (.user_vars.kt69_dev_tab // "") == "")
+      | { branch: .user_vars.kt69_branch, offset: .user_vars.kt69_offset }]
+    | unique_by(.branch)
+    | .[]
+    | [.branch, .offset] | @tsv
+  ' 2>/dev/null)
+
+  if [[ "$has_output" == "false" ]]; then
+    echo "no active sessions"
+  fi
+}
+
+cmd_stop() {
+  local branch="${1:-}"
+
+  # No arg: try to detect from current kitty window user vars
+  if [[ -z "$branch" ]]; then
+    # FZF picker from active sessions
+    local branches
+    branches=$(session_list_branches)
+    [[ -z "$branches" ]] && die "no active sessions"
+
+    branch=$(echo "$branches" | fzf --prompt="kt stop> " --height=10) || return 0
+    [[ -z "$branch" ]] && return 0
+  fi
+
+  local session
+  session=$(session_get "$branch")
+  [[ -z "$session" ]] && die "no session for '$branch'"
+
+  local offset tab_id worktree_path
+  offset=$(echo "$session" | jq -r '.port_offset')
+  tab_id=$(echo "$session" | jq -r '.kitty_tab_id')
+  worktree_path=$(echo "$session" | jq -r '.worktree_path')
+
+  # Kill dev-cli if running (force-terminate + sweep orphans)
+  if lsof -iTCP:$((8080 + offset)) -sTCP:LISTEN &>/dev/null; then
+    info "killing dev-cli (offset=$offset)"
+    (cd "$worktree_path" && yarn dev-cli kill --offset "$offset" 2>/dev/null) || true
+  fi
+
+  # Close dev tab if it exists (find by user var kt69_dev_tab + branch match)
+  local dev_tab_id
+  dev_tab_id=$(kitty @ ls | jq -r \
+    --arg branch "$branch" \
+    '.[].tabs[] | select(.windows[] | .user_vars.kt69_dev_tab == "true" and .user_vars.kt69_branch == $branch) | .id' \
+    2>/dev/null | head -1)
+  if [[ -n "$dev_tab_id" ]]; then
+    info "closing dev tab"
+    kitty @ close-tab -m "id:$dev_tab_id" 2>/dev/null || true
+  fi
+
+  # Close session tab
+  if kitty_tab_alive "$tab_id"; then
+    info "closing tab"
+    kitty @ close-tab -m "id:$tab_id" 2>/dev/null || true
+  fi
+
+  info "session stopped: $branch"
+}
+
+cmd_rm() {
+  local branch="${1:-}"
+
+  if [[ -z "$branch" ]]; then
+    local branches
+    branches=$(session_list_branches)
+    [[ -z "$branches" ]] && die "no active sessions"
+    branch=$(echo "$branches" | fzf --prompt="kt rm> " --height=10) || return 0
+    [[ -z "$branch" ]] && return 0
+  fi
+
+  # Stop session first (if it has a live tab)
+  local session
+  session=$(session_get "$branch")
+  if [[ -n "$session" ]]; then
+    cmd_stop "$branch"
+  fi
+
+  # Remove worktree (keeps branch)
+  info "removing worktree"
+  wt remove "$branch" -C "$GAMMA_ROOT" 2>&1 || true
+  info "removed: $branch"
+}
+
+cmd_status() {
+  # Detect branch from env or arg
+  local branch="${1:-${KT69_BRANCH:-}}"
+
+  if [[ -z "$branch" ]]; then
+    die "not in a kt session (no branch detected)"
+  fi
+
+  local session
+  session=$(session_get "$branch")
+  [[ -z "$session" ]] && die "no session for '$branch'"
+
+  local offset worktree_path
+  offset=$(echo "$session" | jq -r '.port_offset')
+  worktree_path=$(echo "$session" | jq -r '.worktree_path')
+
+  echo ""
+  echo "  kt status"
+  echo "  ─────────────────────────────────────"
+  echo ""
+  echo "  Branch:    $branch"
+  echo "  Worktree:  $worktree_path"
+  echo "  Offset:    $offset"
+  echo "  Client:    https://localhost:$((3000 + offset))"
+  echo "  Server:    https://localhost:$((7000 + offset))"
+  echo ""
+
+  # Dev-cli status
+  if lsof -iTCP:$((8080 + offset)) -sTCP:LISTEN &>/dev/null; then
+    echo "  Dev-cli:   running"
+  else
+    echo "  Dev-cli:   stopped"
+  fi
+  echo ""
+
+  # PR status
+  local pr_info
+  pr_info=$(cd "$worktree_path" && gh pr view "$branch" --json state,title,url,reviewDecision,statusCheckRollup 2>/dev/null || true)
+  if [[ -n "$pr_info" ]]; then
+    local pr_title pr_state pr_url pr_review
+    pr_title=$(echo "$pr_info" | jq -r '.title')
+    pr_state=$(echo "$pr_info" | jq -r '.state')
+    pr_url=$(echo "$pr_info" | jq -r '.url')
+    pr_review=$(echo "$pr_info" | jq -r '.reviewDecision // "none"')
+
+    # CI checks summary
+    local checks_total checks_pass checks_fail
+    checks_total=$(echo "$pr_info" | jq '[.statusCheckRollup[]?] | length')
+    checks_pass=$(echo "$pr_info" | jq '[.statusCheckRollup[]? | select(.conclusion == "SUCCESS")] | length')
+    checks_fail=$(echo "$pr_info" | jq '[.statusCheckRollup[]? | select(.conclusion == "FAILURE")] | length')
+
+    echo "  PR:        $pr_title"
+    echo "  State:     $pr_state"
+    echo "  Review:    $pr_review"
+    local checks_line="$checks_pass/$checks_total passed"
+    [[ "$checks_fail" -gt 0 ]] && checks_line="$checks_line, $checks_fail failed"
+    echo "  Checks:    $checks_line"
+    echo "  URL:       $pr_url"
+  else
+    echo "  PR:        none"
+  fi
+  echo ""
+
+  # Last CC session
+  local last_session
+  last_session=$(find_last_cc_session "$branch")
+  if [[ -n "$last_session" ]]; then
+    echo "  Last CC:   $last_session"
+  else
+    echo "  Last CC:   none"
+  fi
+
+  echo ""
+  echo "  ─────────────────────────────────────"
+  echo "  press any key to close"
+  read -rsn1
+}
+
+# Require KT69 env context
+require_context() {
+  [[ -n "${KT69_BRANCH:-}" ]] || die "not in a kt session (run from a kt tab)"
+}
+
+cmd_trs() {
+  require_context
+  trs -b "$KT69_BRANCH"
+}
+
+cmd_browser() {
+  require_context
+  local port=$((3000 + KT69_OFFSET))
+  open "https://localhost:$port"
+}
+
+cmd_pr() {
+  require_context
+  local action="${1:-open}"
+  local worktree="${KT69_WORKTREE:-}"
+  [[ -z "$worktree" ]] && die "no worktree path"
+
+  case "$action" in
+    open)
+      (cd "$worktree" && gh pr view --web 2>/dev/null) || die "no PR found"
+      ;;
+    create)
+      (cd "$worktree" && gh pr create --web)
+      ;;
+    *)
+      die "usage: kt pr [open|create]"
+      ;;
+  esac
+}
+
+# ─── Main ───────────────────────────────────────────────────────────────────
+
+case "${1:-}" in
+  new)      shift; cmd_new "$@" ;;
+  ls|list)  shift; cmd_ls "$@" ;;
+  stop)     shift; cmd_stop "$@" ;;
+  rm)       shift; cmd_rm "$@" ;;
+  status)   shift; cmd_status "$@" ;;
+  trs)      shift; cmd_trs "$@" ;;
+  browser)  shift; cmd_browser "$@" ;;
+  -h|--help|"") usage ;;
+  *)        die "unknown command: $1" ;;
+esac
