@@ -93,3 +93,42 @@ if [[ -n "$KITTY_INSTALLATION_DIR" ]]; then
 fi
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# gmx worktree manager
+gmx() {
+    case "${1:-}" in
+        @)
+            for _gmx_arg in "${@:2}"; do
+                [[ "$_gmx_arg" == "--help" || "$_gmx_arg" == "-h" ]] && {
+                    printf 'Usage: gmx @ [PATTERN]\n\nChange directory to a matching worktree.\nWith no PATTERN, opens interactive fuzzy selection.\n'
+                    return 0
+                }
+            done
+            local dir
+            if [[ $# -le 1 ]]; then
+                dir=$(command gmx filter) || return $?
+            else
+                dir=$(command gmx list --path "${@:2}" 2>/dev/null | head -1) || return $?
+            fi
+            [[ -n "$dir" ]] || { echo >&2 "gmx: @: no worktree found"; return 1; }
+            cd "$dir" || return $?
+            ;;
+        create | c)
+            for _gmx_arg in "${@:2}"; do
+                [[ "$_gmx_arg" == "--help" || "$_gmx_arg" == "-h" ]] && {
+                    command gmx "$@"
+                    return $?
+                }
+            done
+            local dir
+            dir=$(command gmx "$@") || return $?
+            cd "$dir" || return $?
+            ;;
+        *)
+            command gmx "$@"
+            ;;
+    esac
+}
+
+# gmx shell completions
+eval "$(COMPLETE=zsh command gmx)"

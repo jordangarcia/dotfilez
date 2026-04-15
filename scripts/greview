@@ -1,0 +1,80 @@
+#!/usr/bin/env bun
+
+const USAGE = `greview - PR code review in worktrees with Claude
+
+Usage:
+  greview <github-url|graphite-url|pr-number>
+
+Examples:
+  greview https://github.com/gamma-app/gamma/pull/4521
+  greview https://app.graphite.com/github/pr/gamma-app/gamma/4521
+  greview 4521
+
+Note: run from the target repo directory. Worktree is cleaned up on exit.`;
+
+function parsePR(input: string): number | null {
+  if (/^\d+$/.test(input)) return parseInt(input);
+
+  // github.com/owner/repo/pull/123
+  const gh = input.match(/github\.com\/[^/]+\/[^/]+\/pull\/(\d+)/);
+  if (gh) return parseInt(gh[1]);
+
+  // app.graphite.com/github/pr/owner/repo/123
+  const gr = input.match(/graphite\.(?:com|dev)\/github\/pr\/[^/]+\/[^/]+\/(\d+)/);
+  if (gr) return parseInt(gr[1]);
+
+  return null;
+}
+
+async function prBranch(pr: number): Promise<string> {
+  const proc = Bun.spawn(
+    ["gh", "pr", "view", String(pr), "--json", "headRefName", "-q", ".headRefName"],
+    { stdout: "pipe", stderr: "pipe" }
+  );
+  const out = await new Response(proc.stdout).text();
+  const code = await proc.exited;
+  if (code !== 0) {
+    console.error(`failed to resolve branch for PR #${pr}`);
+    process.exit(1);
+  }
+  return out.trim();
+}
+
+const input = process.argv[2];
+if (!input || input === "--help" || input === "-h") {
+  console.log(USAGE);
+  process.exit(input ? 0 : 1);
+}
+
+const pr = parsePR(input);
+if (!pr) {
+  console.error(`cannot parse PR number from: ${input}`);
+  process.exit(1);
+}
+
+const prompt = [
+  `Load context for PR #${pr}:`,
+  `1. \`gh pr view ${pr} --json title,body,url\` to get PR info`,
+  `2. \`gh pr diff ${pr}\` to see the diff`,
+  `3. \`gh api repos/{owner}/{repo}/pulls/${pr}/comments\` and \`gh api repos/{owner}/{repo}/pulls/${pr}/reviews\` to load review comments`,
+  `4. Read the changed files for full context`,
+  ``,
+  `You are in a worktree checked out to the PR's branch, so you can read any file directly.`,
+  `Do NOT edit or commit any code. This is a read-only review. When you have feedback, leave comments on the PR using \`gh\`.`,
+  `Once loaded, just say "Ready" and wait for my questions. Do not review or summarize unless asked.`,
+].join("\n");
+
+// resolve branch before launching so we can clean up after
+const branch = await prBranch(pr);
+
+const proc = Bun.spawn(
+  ["wt", "switch", `pr:${pr}`, "-x", "claude", "--", "--dangerously-skip-permissions", prompt],
+  { stdio: ["inherit", "inherit", "inherit"] }
+);
+await proc.exited;
+
+// cleanup worktree after claude exits
+const rm = Bun.spawn(["wt", "remove", "-D", branch], {
+  stdio: ["inherit", "inherit", "inherit"],
+});
+await rm.exited;

@@ -10,6 +10,16 @@ for f in certificates .envrc .envrc.local .env.yarn CLAUDE.local.md; do
     ln -sfn "$MAIN/$f" "$f"
   fi
 done
+
+# Symlink package-level .env.local and .vercel files
+for d in packages/client packages/server; do
+  if [ -e "$MAIN/$d/.env.local" ] && [ ! -e "$d/.env.local" ]; then
+    ln -sfn "$MAIN/$d/.env.local" "$d/.env.local"
+  fi
+  if [ -d "$MAIN/$d/.vercel" ] && [ ! -e "$d/.vercel" ]; then
+    ln -sfn "$MAIN/$d/.vercel" "$d/.vercel"
+  fi
+done
 mkdir -p .claude
 if [ -e "$MAIN/.claude/settings.local.json" ] && [ ! -e .claude/settings.local.json ]; then
   ln -sfn "$MAIN/.claude/settings.local.json" .claude/settings.local.json

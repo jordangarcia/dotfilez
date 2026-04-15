@@ -32,7 +32,8 @@ def handle_result(args, result, target_window_id, boss):
     if session:
         worktree = session['worktree_path']
     else:
-        worktree = os.path.expanduser('~/code/gamma')
+        # Use current window's cwd so it works from any worktree
+        worktree = window.cwd_of_child or os.path.expanduser('~/code/gamma')
         branch = branch or 'gamma'
 
     # Check if dev tab already exists (any window with kt69_dev_tab for this branch)
