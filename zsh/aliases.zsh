@@ -29,7 +29,18 @@ alias vinilla='nvim -u NONE'
 
 # most recent 10 git branches accessed
 alias ktl='kt new $(git branch --sort=-committerdate --format="%(refname:short)" | head -n 30 | fzf)'
-alias gbl='git checkout $(git branch --sort=-committerdate --format="%(refname:short)" | head -n 20 | fzf)'
+function gbl() {
+  local branch=$(git branch --sort=-committerdate --format="%(refname:short)" | head -n 20 | fzf)
+  [[ -z "$branch" ]] && return
+  local wt_path=$(git worktree list --porcelain | grep -A2 "worktree " | awk -v b="$branch" '/^worktree /{p=$2} /^branch refs\/heads\//{ if ($2 == "refs/heads/"b) print p }')
+  if [[ -n "$wt_path" ]]; then
+    echo "Branch '$branch' is checked out in worktree: $wt_path"
+    echo "Switching via wt..."
+    wt switch "$branch"
+  else
+    git checkout "$branch"
+  fi
+}
 alias gblast='for k in `git branch|perl -pe s/^..//`;do echo -e `git show --pretty=format:"%Cgreen%ci %Cblue%cr%Creset" $k|head -n 1`\\t$k;done|sort -r | head -n 10'
 alias gbl1='gblast|perl -pe s/(?:.+)\\t// | grep -v "^main$" | grep -v "`git rev-parse --abbrev-ref HEAD`" | head -n 1'
 alias gcol='git checkout `gbl1`'

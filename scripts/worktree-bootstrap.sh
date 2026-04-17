@@ -32,4 +32,11 @@ for d in . packages/server packages/client packages/ui packages/authorization pa
   fi
 done
 
+# Symlink Prisma generated client (gitignored, lives in source tree)
+for d in packages/server packages/aijsx packages/event-tracking; do
+  if [ -d "$MAIN/$d/src/db/generated" ] && [ ! -e "$d/src/db/generated" ]; then
+    ln -sfn "$MAIN/$d/src/db/generated" "$d/src/db/generated"
+  fi
+done
+
 direnv allow 2>/dev/null || true
