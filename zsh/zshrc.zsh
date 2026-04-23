@@ -79,6 +79,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # fix node shit
 export NODE_TLS_REJECT_UNAUTHORIZED=1
 
+# hk git hooks manager — use built-in pkl evaluator
+export HK_PKL_BACKEND=pklr
+
 # WezTerm shell integration
 if [[ $TERM_PROGRAM == "WezTerm" ]]; then
   source ~/code/dotfilez/zsh/wezterm.sh 2>/dev/null || true

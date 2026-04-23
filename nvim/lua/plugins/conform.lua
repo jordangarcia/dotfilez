@@ -26,21 +26,35 @@ return {
   },
   opts = {
     formatters_by_ft = {
-      -- Biome will be used if biome.json exists, otherwise fallback to prettier
-      javascript = { "biome", "prettier", stop_after_first = true },
-      typescript = { "biome", "prettier", stop_after_first = true },
-      typescriptreact = { "biome", "prettier", stop_after_first = true },
-      javascriptreact = { "biome", "prettier", stop_after_first = true },
-      css = { "biome", "prettier", stop_after_first = true },
-      json = { "biome", "prettier", stop_after_first = true },
-      jsonc = { "biome", "prettier", stop_after_first = true },
-      scss = { "prettier" },
-      html = { "prettier" },
-      yaml = { "prettier" },
-      markdown = { "prettier" },
-      graphql = { "prettier" },
+      javascript = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      typescript = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      typescriptreact = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      javascriptreact = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      css = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      json = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      jsonc = { "oxfmt", "biome", "prettier", stop_after_first = true },
+      scss = { "oxfmt", "prettier", stop_after_first = true },
+      html = { "oxfmt", "prettier", stop_after_first = true },
+      yaml = { "oxfmt", "prettier", stop_after_first = true },
+      markdown = { "oxfmt", "prettier", stop_after_first = true },
+      graphql = { "oxfmt", "prettier", stop_after_first = true },
       lua = { "stylua" },
       python = { "ruff_format" },
+    },
+    formatters = {
+      oxfmt = {
+        command = "oxfmt",
+        stdin = true,
+        args = { "--stdin-filepath", "$FILENAME" },
+        condition = function(self, ctx)
+          return vim.fs.find(".oxfmtrc.json", { path = ctx.filename, upward = true })[1] ~= nil
+        end,
+      },
+      biome = {
+        condition = function(self, ctx)
+          return vim.fs.find({ "biome.json", "biome.jsonc" }, { path = ctx.filename, upward = true })[1] ~= nil
+        end,
+      },
     },
     format_on_save = function(bufnr)
       if vim.b[bufnr].disable_format_on_save then

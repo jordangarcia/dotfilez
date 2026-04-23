@@ -46,6 +46,10 @@ if (!input || input === "--help" || input === "-h") {
   process.exit(input ? 0 : 1);
 }
 
+if (!process.cwd().startsWith("/Users/jordan/code/gamma")) {
+  process.chdir("/Users/jordan/code/gamma");
+}
+
 const pr = parsePR(input);
 if (!pr) {
   console.error(`cannot parse PR number from: ${input}`);
@@ -61,7 +65,7 @@ const prompt = [
   ``,
   `You are in a worktree checked out to the PR's branch, so you can read any file directly.`,
   `Do NOT edit or commit any code. This is a read-only review. When you have feedback, leave comments on the PR using \`gh\`.`,
-  `Once loaded, just say "Ready" and wait for my questions. Do not review or summarize unless asked.`,
+  `Do NOT review or give feedback unless asked. Give a concise 5 bullet summary of what changed in this PR. Stay high-level — describe what the PR does and the general approach, not specific class/method/variable names or implementation details.`,
 ].join("\n");
 
 // resolve branch before launching so we can clean up after
