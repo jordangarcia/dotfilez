@@ -3,12 +3,16 @@
 const USAGE = `greview - PR code review in worktrees with Claude
 
 Usage:
-  greview <github-url|graphite-url|pr-number>
+  greview [github-url|graphite-url|pr-number|branch-name]
+
+  Without args, lists PRs requesting your review (last 2 weeks) via fzf.
 
 Examples:
+  greview
   greview https://github.com/gamma-app/gamma/pull/4521
   greview https://app.graphite.com/github/pr/gamma-app/gamma/4521
   greview 4521
+  greview jordan/my-feature
 
 Note: run from the target repo directory. Worktree is cleaned up on exit.`;
 
@@ -40,20 +44,94 @@ async function prBranch(pr: number): Promise<string> {
   return out.trim();
 }
 
+async function pickPR(): Promise<number> {
+  const twoWeeksAgo = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
+  const fields = "number,title,author,additions,deletions,reviewDecision,createdAt";
+  const proc = Bun.spawn(
+    ["gh", "pr", "list", "--search", `review-requested:@me created:>=${twoWeeksAgo}`, "--json", fields, "--limit", "50"],
+    { stdout: "pipe", stderr: "pipe" }
+  );
+  const out = await new Response(proc.stdout).text();
+  if ((await proc.exited) !== 0) {
+    console.error("failed to fetch review-requested PRs");
+    process.exit(1);
+  }
+  type PR = { number: number; title: string; author: { login: string }; additions: number; deletions: number; reviewDecision: string; createdAt: string };
+  const prs = (JSON.parse(out) as PR[]).filter((p) => p.reviewDecision !== "APPROVED");
+  if (!prs.length) {
+    console.log("no PRs requesting your review in the last 2 weeks");
+    process.exit(0);
+  }
+
+  const green = "\x1b[32m";
+  const red = "\x1b[31m";
+  const gray = "\x1b[90m";
+  const reset = "\x1b[0m";
+  const dim = "\x1b[2m";
+  const pad = (s: string, n: number) => s.length > n ? s.slice(0, n) : s.padEnd(n);
+  const relTime = (iso: string) => {
+    const ms = Date.now() - new Date(iso).getTime();
+    const m = Math.floor(ms / 60000);
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h`;
+    return `${Math.floor(h / 24)}d`;
+  };
+  const sp = "   ";
+  const header = `${"PR#".padEnd(7)}${sp}${pad("Author", 12)}${sp}${"Title".padEnd(60)}${sp}${"Age".padEnd(5)}${sp}+/-`;
+  const lines = prs.map((p) => {
+    const num = String(p.number).padEnd(7);
+    const author = pad(p.author.login, 12);
+    const title = pad(p.title, 60);
+    const age = `${gray}${pad(relTime(p.createdAt), 5)}${reset}`;
+    const adds = `${green}+${p.additions}${reset}`;
+    const dels = `${red}-${p.deletions}${reset}`;
+    return `${p.number}\t${dim}${num}${reset}${sp}${author}${sp}${title}${sp}${age}${sp}${adds}${dim}/${reset}${dels}`;
+  }).join("\n");
+  const fzf = Bun.spawn(
+    ["fzf", "--header", header, "--with-nth", "2..", "--delimiter", "\t", "--ansi", "--reverse"],
+    { stdin: "pipe", stdout: "pipe", stderr: "inherit" }
+  );
+  fzf.stdin.write(lines);
+  fzf.stdin.end();
+  const selected = (await new Response(fzf.stdout).text()).trim();
+  if ((await fzf.exited) !== 0 || !selected) {
+    process.exit(1);
+  }
+  return parseInt(selected.split("\t")[0]);
+}
+
 const input = process.argv[2];
-if (!input || input === "--help" || input === "-h") {
+if (input === "--help" || input === "-h") {
   console.log(USAGE);
-  process.exit(input ? 0 : 1);
+  process.exit(0);
 }
 
 if (!process.cwd().startsWith("/Users/jordan/code/gamma")) {
   process.chdir("/Users/jordan/code/gamma");
 }
 
-const pr = parsePR(input);
-if (!pr) {
-  console.error(`cannot parse PR number from: ${input}`);
-  process.exit(1);
+let pr: number;
+if (!input) {
+  pr = await pickPR();
+} else {
+  const parsed = parsePR(input);
+  if (parsed) {
+    pr = parsed;
+  } else {
+    const lookup = Bun.spawn(
+      ["gh", "pr", "list", "--head", input, "--json", "number", "-q", ".[0].number"],
+      { stdout: "pipe", stderr: "pipe" }
+    );
+    const out = await new Response(lookup.stdout).text();
+    const code = await lookup.exited;
+    const num = parseInt(out.trim());
+    if (code !== 0 || isNaN(num)) {
+      console.error(`no PR found for branch: ${input}`);
+      process.exit(1);
+    }
+    pr = num;
+  }
 }
 
 const prompt = [
