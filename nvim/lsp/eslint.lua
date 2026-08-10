@@ -8,14 +8,14 @@ return {
     -- Find ESLint config root
     local eslint_root = util.root_pattern(".eslintrc", ".eslintrc.js", ".eslintrc.json", "eslint.config.js")(fname)
 
-    -- Find Biome config root
-    local biome_root = util.root_pattern("biome.json", "biome.jsonc")(fname)
+    -- Find a competing linter root (biome or oxlint) — a closer one wins over eslint
+    local other_root = util.root_pattern("biome.json", "biome.jsonc", ".oxlintrc.json")(fname)
 
     local debug_msg = string.format(
-      "ESLint Debug:\nFile: %s\nESLint: %s\nBiome: %s",
+      "ESLint Debug:\nFile: %s\nESLint: %s\nOther linter: %s",
       fname,
       eslint_root or "NOT FOUND",
-      biome_root or "NOT FOUND"
+      other_root or "NOT FOUND"
     )
 
     -- If no ESLint config found, don't attach
@@ -24,26 +24,26 @@ return {
       return nil
     end
 
-    -- If no Biome config found, use ESLint
-    if not biome_root then
-      vim.notify(debug_msg .. "\nDecision: Use ESLint (no Biome)", vim.log.levels.INFO)
+    -- If no competing linter config found, use ESLint
+    if not other_root then
+      vim.notify(debug_msg .. "\nDecision: Use ESLint (no other linter)", vim.log.levels.INFO)
       return eslint_root
     end
 
     -- Compare path depths - closer to file wins
     local eslint_depth = #vim.split(eslint_root, "/", { plain = true })
-    local biome_depth = #vim.split(biome_root, "/", { plain = true })
+    local other_depth = #vim.split(other_root, "/", { plain = true })
 
-    debug_msg = debug_msg .. string.format("\nESLint depth: %d\nBiome depth: %d", eslint_depth, biome_depth)
+    debug_msg = debug_msg .. string.format("\nESLint depth: %d\nOther depth: %d", eslint_depth, other_depth)
 
     -- If ESLint is deeper (closer to the file), use ESLint
-    if eslint_depth > biome_depth then
+    if eslint_depth > other_depth then
       vim.notify(debug_msg .. "\nDecision: Use ESLint (closer)", vim.log.levels.INFO)
       return eslint_root
     end
 
-    -- Otherwise Biome is same level or closer, prefer Biome
-    vim.notify(debug_msg .. "\nDecision: Use Biome (closer/same)", vim.log.levels.INFO)
+    -- Otherwise the other linter is same level or closer, prefer it
+    vim.notify(debug_msg .. "\nDecision: Use other linter (closer/same)", vim.log.levels.INFO)
     return nil
   end,
   settings = {

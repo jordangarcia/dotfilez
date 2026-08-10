@@ -1,0 +1,5 @@
+if [[ -z "$1" ]]; then
+  cd $GAMMA_AGENT;
+else
+  cd $GAMMA_AGENT/packages/$1;
+fi

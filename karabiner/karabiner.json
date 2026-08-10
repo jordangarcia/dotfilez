@@ -369,6 +369,16 @@
                         "vendor_id": 9610
                     },
                     "ignore": true
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 20565,
+                        "vendor_id": 12815
+                    },
+                    "ignore": false,
+                    "manipulate_caps_lock_led": false
                 }
             ],
             "name": "Default profile",

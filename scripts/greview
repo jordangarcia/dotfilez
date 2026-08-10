@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 
-const USAGE = `greview - PR code review in worktrees with Claude
+const USAGE = `greview - PR review in worktrees with Claude or Codex (/explain-diff-html)
 
 Usage:
-  greview [github-url|graphite-url|pr-number|branch-name]
+  greview [--codex] [github-url|graphite-url|pr-number|branch-name]
 
   Without args, lists PRs requesting your review (last 2 weeks) via fzf.
+  With --codex, the review runs in the codex CLI instead of claude.
 
 Examples:
   greview
@@ -13,8 +14,11 @@ Examples:
   greview https://app.graphite.com/github/pr/gamma-app/gamma/4521
   greview 4521
   greview jordan/my-feature
+  greview --codex 4521
 
 Note: run from the target repo directory. Worktree is cleaned up on exit.`;
+
+const SKILL_PATH = `${process.env.HOME}/.claude/skills/explain-diff-html/SKILL.md`;
 
 function parsePR(input: string): number | null {
   if (/^\d+$/.test(input)) return parseInt(input);
@@ -30,9 +34,9 @@ function parsePR(input: string): number | null {
   return null;
 }
 
-async function prBranch(pr: number): Promise<string> {
+async function prBranches(pr: number): Promise<{ branch: string; base: string }> {
   const proc = Bun.spawn(
-    ["gh", "pr", "view", String(pr), "--json", "headRefName", "-q", ".headRefName"],
+    ["gh", "pr", "view", String(pr), "--json", "headRefName,baseRefName"],
     { stdout: "pipe", stderr: "pipe" }
   );
   const out = await new Response(proc.stdout).text();
@@ -41,7 +45,13 @@ async function prBranch(pr: number): Promise<string> {
     console.error(`failed to resolve branch for PR #${pr}`);
     process.exit(1);
   }
-  return out.trim();
+
+  const parsed = JSON.parse(out) as { headRefName: string; baseRefName: string };
+
+  return {
+    branch: parsed.headRefName,
+    base: parsed.baseRefName,
+  };
 }
 
 async function pickPR(): Promise<number> {
@@ -101,10 +111,38 @@ async function pickPR(): Promise<number> {
   return parseInt(selected.split("\t")[0]);
 }
 
-const input = process.argv[2];
-if (input === "--help" || input === "-h") {
+// codex has no skill system, so the /explain-diff-html instructions are inlined
+// into its prompt. Read them at runtime so both agents stay on the same source.
+async function readSkillBody(): Promise<string> {
+  try {
+    const raw = await Bun.file(SKILL_PATH).text();
+    const withoutFrontmatter = raw.replace(/^---\n[\s\S]*?\n---\n/, "");
+
+    return withoutFrontmatter.trim();
+  } catch (error) {
+    console.error(`could not read skill at ${SKILL_PATH}`, error);
+    process.exit(1);
+  }
+}
+
+async function hasCommand(name: string): Promise<boolean> {
+  const proc = Bun.spawn(["which", name], { stdout: "ignore", stderr: "ignore" });
+
+  return (await proc.exited) === 0;
+}
+
+const args = process.argv.slice(2);
+if (args.includes("--help") || args.includes("-h")) {
   console.log(USAGE);
   process.exit(0);
+}
+
+const useCodex = args.includes("--codex");
+const input = args.find((arg) => !arg.startsWith("-"));
+
+if (useCodex && !(await hasCommand("codex"))) {
+  console.error("codex CLI not found on PATH — install it or drop --codex");
+  process.exit(1);
 }
 
 if (!process.cwd().startsWith("/Users/jordan/code/gamma")) {
@@ -134,28 +172,70 @@ if (!input) {
   }
 }
 
-const prompt = [
-  `Load context for PR #${pr}:`,
-  `1. \`gh pr view ${pr} --json title,body,url\` to get PR info`,
-  `2. \`gh pr diff ${pr}\` to see the diff`,
-  `3. \`gh api repos/{owner}/{repo}/pulls/${pr}/comments\` and \`gh api repos/{owner}/{repo}/pulls/${pr}/reviews\` to load review comments`,
-  `4. Read the changed files for full context`,
-  ``,
-  `You are in a worktree checked out to the PR's branch, so you can read any file directly.`,
-  `Do NOT edit or commit any code. This is a read-only review. When you have feedback, leave comments on the PR using \`gh\`.`,
-  `Do NOT review or give feedback unless asked. Give a concise 5 bullet summary of what changed in this PR. Stay high-level — describe what the PR does and the general approach, not specific class/method/variable names or implementation details.`,
-].join("\n");
+// resolve branches before building the prompt (base is referenced in it)
+// and before launching so we can clean up after
+const { branch, base } = await prBranches(pr);
 
-// resolve branch before launching so we can clean up after
-const branch = await prBranch(pr);
+const context = [
+  `The PR branch (${branch}) is already checked out locally — your cwd is a worktree at its HEAD.`,
+  `Get the diff locally with \`git diff origin/${base}...HEAD\`, and read/explore any file in the repo directly for surrounding context.`,
+  `\`gh pr view ${pr} --json title,body,url\` has the PR title and description.`,
+  `Do NOT edit or commit any code. This is read-only.`,
+  `When the HTML file is written, open it in the browser with \`open <path>\`.`,
+];
 
-const proc = Bun.spawn(
-  ["wt", "switch", `pr:${pr}`, "-x", "claude", "--", "--dangerously-skip-permissions", prompt],
-  { stdio: ["inherit", "inherit", "inherit"] }
+// claude: a leading slash command invokes the explain-diff-html skill, and
+// everything after it is the "specified code change" context.
+// codex: the same skill text is inlined, because codex cannot resolve the command.
+const prompt = useCodex
+  ? [await readSkillBody(), ``, `The code change is PR #${pr}.`, ...context].join("\n")
+  : [`/explain-diff-html PR #${pr}`, ``, ...context].join("\n");
+
+// switch to worktree (creates if needed), but don't exec into it
+const sw = Bun.spawn(["wt", "switch", `pr:${pr}`, "--no-cd"], {
+  stdio: ["inherit", "inherit", "inherit"],
+});
+await sw.exited;
+
+// resolve worktree path
+const pathProc = Bun.spawn(
+  ["git", "worktree", "list", "--porcelain"],
+  { stdout: "pipe", stderr: "pipe" }
 );
+const wtOutput = await new Response(pathProc.stdout).text();
+await pathProc.exited;
+
+let worktreePath: string | null = null;
+const blocks = wtOutput.split("\n\n");
+for (const block of blocks) {
+  if (block.includes(`branch refs/heads/${branch}`)) {
+    const match = block.match(/^worktree (.+)$/m);
+    if (match) worktreePath = match[1];
+  }
+}
+if (!worktreePath) {
+  console.error(`could not find worktree path for branch: ${branch}`);
+  process.exit(1);
+}
+
+// pull latest from remote so the worktree is up to date
+const pull = Bun.spawn(["git", "-C", worktreePath, "pull", "--ff-only"], {
+  stdio: ["inherit", "inherit", "inherit"],
+});
+await pull.exited;
+
+// launch the agent in the worktree, both in their no-prompt / no-sandbox mode
+const command = useCodex
+  ? ["codex", "--dangerously-bypass-approvals-and-sandbox", prompt]
+  : ["claude", "--dangerously-skip-permissions", prompt];
+
+const proc = Bun.spawn(command, {
+  stdio: ["inherit", "inherit", "inherit"],
+  cwd: worktreePath,
+});
 await proc.exited;
 
-// cleanup worktree after claude exits
+// cleanup worktree after the agent exits
 const rm = Bun.spawn(["wt", "remove", "-D", branch], {
   stdio: ["inherit", "inherit", "inherit"],
 });

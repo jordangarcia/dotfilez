@@ -58,7 +58,7 @@ opt.splitbelow = true
 opt.number = true
 opt.rnu = true
 
-opt.wrap = true
+opt.wrap = false
 opt.linebreak = true
 opt.scrolljump = 5
 -- go to previous/next line with h,l,left arrow and right arrow

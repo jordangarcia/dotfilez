@@ -11,6 +11,7 @@ export PATH=/opt/homebrew/bin:$PATH
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/code
 export GAMMA=$PROJECTS/gamma
+export GAMMA_AGENT=$GAMMA/agent
 
 export EDITOR=nvim
 

@@ -18,6 +18,7 @@ alias nvim10="NVIM_APPNAME=nvim10 ~/.local/share/bob/v0.10.3/bin/nvim"
 
 alias vim='nvim'
 alias vi='nvim'
+alias x='codex --dangerously-bypass-approvals-and-sandbox'
 
 # vim with no session
 alias newvi='DISABLE_AUTO_SESSION=1 nvim'
