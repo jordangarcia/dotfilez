@@ -2,6 +2,7 @@
 # pyright: reportMissingImports=false,reportGeneralTypeIssues=false,reportAttributeAccessIssue=false,reportCallIssue=false
 
 import datetime
+import json
 import os
 
 from kitty.boss import get_boss
@@ -16,6 +17,8 @@ ACTIVE_FG       = 0x1F1F28
 INACTIVE_TAB_BG = 0x2A2A37
 MUTED           = 0x727169
 PURPLE          = 0x957FB8
+STAR_ON_ACTIVE  = 0xC34043
+STAR            = 0xE6C384
 
 PL      = "\ue0b0"
 PL_THIN = "\ue0b1"
@@ -50,13 +53,44 @@ def _truncate(s: str, max_len: int = MAX_TAB_TITLE) -> str:
     return f"{s[:max_len - 1]}\u2026" if len(s) > max_len else s
 
 
+# Claude prefixes its titles with ✳ (idle) or a spinner frame, and also sets
+# tab titles with that prefix. A tab name without the prefix is one you chose.
+AGENT_GLYPHS = "✳◐◑◒◓⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+
+
+def _agent_title(t) -> str:
+    """Live title of the tab's agent window, or "" when it is not an agent."""
+    w = t.active_window
+    if w is None:
+        return ""
+    title = w.title or ""
+    # agent is set by bin/agent-kitty-vars hooks; the glyph covers Claude windows
+    # that have not fired a hook yet.
+    if not (w.user_vars.get("agent") or title[:1] in AGENT_GLYPHS):
+        return ""
+    return title.lstrip(AGENT_GLYPHS + " ")
+
+
 def _tab_title(tab: TabBarData) -> tuple[str, str]:
-    """Return (prefix, name). prefix includes trailing /."""
+    """Return (prefix, name). prefix includes trailing /.
+
+    Precedence, highest first: the chat's name (names.json, by the active
+    window's session), a kitty tab name without Claude's glyph, the agent's
+    generated title, then the cwd.
+    """
     boss = get_boss()
     if boss:
         t = boss.tab_for_id(tab.tab_id)
-        if t and t.name:
+        w = t.active_window if t else None
+        session = w.user_vars.get("agent_session") if w else None
+        chat_name = _load_state(NAMES_PATH).get(session) if session else None
+        if chat_name:
+            return "", _truncate(chat_name)
+        if t and t.name and t.name[:1] not in AGENT_GLYPHS:
             return "", _truncate(t.name)
+        agent_title = _agent_title(t) if t else ""
+        if agent_title:
+            return "", _truncate(agent_title)
         if t:
             cwd = t.get_cwd_of_active_window()
             if cwd:
@@ -68,6 +102,49 @@ def _tab_title(tab: TabBarData) -> tuple[str, str]:
                     return f"{parent}/", _truncate(name)
                 return "", _truncate(name or cwd)
     return "", _truncate(tab.title)
+
+
+# Agent chat state shared with kittens/agents.py, star_session.py and rename_chat.py,
+# keyed by session id (see AGENTS_SPEC.md).
+STATE_DIR = os.path.expanduser("~/.local/state/kitty-agents")
+STARS_PATH = os.path.join(STATE_DIR, "starred.json")
+NAMES_PATH = os.path.join(STATE_DIR, "names.json")
+_json_cache: dict[str, tuple[float, dict]] = {}
+
+
+def _load_state(path: str) -> dict:
+    """JSON object at path, re-read only when its mtime changes (draws run every second)."""
+    try:
+        mtime = os.stat(path).st_mtime
+    except OSError:
+        return {}
+    cached = _json_cache.get(path)
+    if cached and cached[0] == mtime:
+        return cached[1]
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        data = {}
+    data = data if isinstance(data, dict) else {}
+    _json_cache[path] = (mtime, data)
+    return data
+
+
+def _starred_sessions() -> dict:
+    return _load_state(STARS_PATH)
+
+
+def _tab_starred(tab: TabBarData) -> bool:
+    stars = _starred_sessions()
+    if not stars:
+        return False
+    boss = get_boss()
+    t = boss.tab_for_id(tab.tab_id) if boss else None
+    if t is None:
+        return False
+    # agent_session is set on the window by bin/agent-kitty-vars hooks.
+    return any(w.user_vars.get("agent_session") in stars for w in t)
 
 
 def _draw_right_status(draw_data: DrawData, screen: Screen, is_last: bool) -> int:
@@ -123,6 +200,7 @@ def draw_tab(
 
     prefix, name = _tab_title(tab)
     idx = f" {index} "
+    starred = _tab_starred(tab)
     after_bg = BG if is_last else INACTIVE_TAB_BG
 
     if tab.is_active:
@@ -132,6 +210,9 @@ def draw_tab(
         screen.cursor.bold = True
         screen.draw(idx)
         screen.cursor.bold = False
+        if starred:
+            screen.cursor.fg = as_rgb(STAR_ON_ACTIVE)
+            screen.draw("★ ")
         screen.cursor.fg = as_rgb(0x504A3A)
         screen.draw(prefix)
         screen.cursor.fg = as_rgb(ACTIVE_FG)
@@ -147,6 +228,9 @@ def draw_tab(
             screen.draw(PL_THIN)
         screen.cursor.fg = as_rgb(FG)
         screen.draw(idx)
+        if starred:
+            screen.cursor.fg = as_rgb(STAR)
+            screen.draw("★ ")
         screen.cursor.fg = as_rgb(MUTED)
         screen.draw(prefix)
         screen.cursor.fg = as_rgb(0xA8A48D)
