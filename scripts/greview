@@ -1,12 +1,20 @@
 #!/usr/bin/env bun
 
-const USAGE = `greview - PR review in worktrees with Claude or Codex (/explain-diff-html)
+import { agentConfigPath, claudeFlags, codexFlags, readAgentChoice, type Agent } from "./agent-lib/agent";
+
+const USAGE = `greview - PR review in worktrees with Codex or Claude (/explain-diff-html)
 
 Usage:
-  greview [--codex] [github-url|graphite-url|pr-number|branch-name]
+  greview [--codex|--claude] [--dry-run] [github-url|graphite-url|pr-number|branch-name]
 
-  Without args, lists PRs requesting your review (last 2 weeks) via fzf.
-  With --codex, the review runs in the codex CLI instead of claude.
+  Without args, lists PRs requesting your review across all repos (last 2 weeks) via fzf.
+  The review runs in the agent set in ~/code/dotfilez/agent.json (or $AGENT_CONFIG).
+  --codex or --claude picks the other agent for one run.
+
+  A GitHub or Graphite URL carries the repo, so it works from any directory.
+  A bare PR number or branch name uses the repo you are currently in.
+  Local clones are found under $GREVIEW_CODE_ROOT (default ~/code) by matching
+  the origin remote. Missing clones can be cloned on the spot.
 
 Examples:
   greview
@@ -14,39 +22,237 @@ Examples:
   greview https://app.graphite.com/github/pr/gamma-app/gamma/4521
   greview 4521
   greview jordan/my-feature
-  greview --codex 4521
+  greview --claude 4521
+  greview --dry-run 4521          resolve repo + worktree, print, and exit
 
-Note: run from the target repo directory. Worktree is cleaned up on exit.`;
+Note: worktree is cleaned up on exit.`;
 
-const SKILL_PATH = `${process.env.HOME}/.claude/skills/explain-diff-html/SKILL.md`;
+const HOME = process.env.HOME ?? "";
+const SKILL_PATH = `${HOME}/.claude/skills/explain-diff-html/SKILL.md`;
+const CODE_ROOT = process.env.GREVIEW_CODE_ROOT ?? `${HOME}/code`;
 
-function parsePR(input: string): number | null {
-  if (/^\d+$/.test(input)) return parseInt(input);
+type Slug = string; // "owner/repo"
 
-  // github.com/owner/repo/pull/123
-  const gh = input.match(/github\.com\/[^/]+\/[^/]+\/pull\/(\d+)/);
-  if (gh) return parseInt(gh[1]);
+type Target = {
+  slug: Slug;
+  pr: number;
+};
 
-  // app.graphite.com/github/pr/owner/repo/123
-  const gr = input.match(/graphite\.(?:com|dev)\/github\/pr\/[^/]+\/[^/]+\/(\d+)/);
-  if (gr) return parseInt(gr[1]);
+type ParsedInput =
+  // bare PR number, repo comes from cwd
+  | { kind: "pr"; pr: number }
+  // URL that names both the repo and the PR
+  | { kind: "url"; slug: Slug; pr: number }
+  // branch name, repo comes from cwd
+  | { kind: "branch"; branch: string };
 
-  return null;
+// ---------------------------------------------------------------------------
+// shell helpers
+
+type RunResult = {
+  code: number;
+  stdout: string;
+  stderr: string;
+};
+
+async function run(cmd: string[], cwd?: string): Promise<RunResult> {
+  try {
+    const proc = Bun.spawn(cmd, { cwd, stdout: "pipe", stderr: "pipe" });
+    const [stdout, stderr] = await Promise.all([
+      new Response(proc.stdout).text(),
+      new Response(proc.stderr).text(),
+    ]);
+    const code = await proc.exited;
+
+    return { code, stdout: stdout.trim(), stderr: stderr.trim() };
+  } catch (error) {
+    return { code: 127, stdout: "", stderr: String(error) };
+  }
 }
 
-async function prBranches(pr: number): Promise<{ branch: string; base: string }> {
-  const proc = Bun.spawn(
-    ["gh", "pr", "view", String(pr), "--json", "headRefName,baseRefName"],
-    { stdout: "pipe", stderr: "pipe" }
-  );
-  const out = await new Response(proc.stdout).text();
-  const code = await proc.exited;
-  if (code !== 0) {
-    console.error(`failed to resolve branch for PR #${pr}`);
-    process.exit(1);
+async function runInteractive(cmd: string[], cwd?: string): Promise<number> {
+  const proc = Bun.spawn(cmd, {
+    cwd,
+    stdio: ["inherit", "inherit", "inherit"],
+  });
+
+  return proc.exited;
+}
+
+function fail(message: string): never {
+  console.error(message);
+  process.exit(1);
+}
+
+async function hasCommand(name: string): Promise<boolean> {
+  const result = await run(["which", name]);
+
+  return result.code === 0;
+}
+
+// ---------------------------------------------------------------------------
+// input parsing
+
+function parseInput(input: string): ParsedInput {
+  const isNumber = /^\d+$/.test(input);
+  if (isNumber) {
+    return { kind: "pr", pr: parseInt(input) };
   }
 
-  const parsed = JSON.parse(out) as { headRefName: string; baseRefName: string };
+  // github.com/owner/repo/pull/123
+  const gh = input.match(/github\.com\/([^/]+\/[^/]+)\/pull\/(\d+)/);
+  if (gh) {
+    return { kind: "url", slug: gh[1], pr: parseInt(gh[2]) };
+  }
+
+  // app.graphite.com/github/pr/owner/repo/123
+  const gr = input.match(/graphite\.(?:com|dev)\/github\/pr\/([^/]+\/[^/]+)\/(\d+)/);
+  if (gr) {
+    return { kind: "url", slug: gr[1], pr: parseInt(gr[2]) };
+  }
+
+  return { kind: "branch", branch: input };
+}
+
+// ---------------------------------------------------------------------------
+// repo resolution
+
+// Remote URLs show up in several shapes:
+//   https://github.com/owner/repo.git
+//   https://github.com/owner/repo/
+//   git@github.com:owner/repo.git
+//   org-14957082@github.com:owner/repo.git   (GitHub SSO enterprise SSH)
+function slugFromRemote(remote: string): Slug | null {
+  const match = remote.match(/github\.com[/:]([^/]+)\/([^/]+?)(?:\.git)?\/?$/);
+  if (!match) {
+    return null;
+  }
+
+  return `${match[1]}/${match[2]}`;
+}
+
+function sameSlug(a: Slug, b: Slug): boolean {
+  return a.toLowerCase() === b.toLowerCase();
+}
+
+async function originSlug(dir: string): Promise<Slug | null> {
+  const result = await run(["git", "-C", dir, "remote", "get-url", "origin"]);
+  if (result.code !== 0) {
+    return null;
+  }
+
+  return slugFromRemote(result.stdout);
+}
+
+// The main worktree path, so wt/git commands behave the same whether greview
+// was launched from the main checkout or from inside one of its worktrees.
+async function mainWorktree(dir: string): Promise<string | null> {
+  const result = await run(["git", "-C", dir, "worktree", "list", "--porcelain"]);
+  if (result.code !== 0) {
+    return null;
+  }
+
+  const first = result.stdout.split("\n")[0] ?? "";
+  const match = first.match(/^worktree (.+)$/);
+
+  return match ? match[1] : null;
+}
+
+async function cwdRepo(): Promise<{ slug: Slug; path: string } | null> {
+  const slug = await originSlug(process.cwd());
+  if (!slug) {
+    return null;
+  }
+
+  const path = await mainWorktree(process.cwd());
+  if (!path) {
+    return null;
+  }
+
+  return { slug, path };
+}
+
+async function scanCodeRoot(slug: Slug): Promise<string[]> {
+  const glob = new Bun.Glob("*/.git");
+  const entries = await Array.fromAsync(glob.scan({ cwd: CODE_ROOT, onlyFiles: false, dot: true }));
+  const dirs = entries.map((entry) => `${CODE_ROOT}/${entry.replace(/\/\.git$/, "")}`);
+
+  const slugs = await Promise.all(dirs.map((dir) => originSlug(dir)));
+
+  return dirs.filter((_, i) => {
+    const found = slugs[i];
+
+    return found !== null && sameSlug(found, slug);
+  });
+}
+
+async function findLocalClone(slug: Slug): Promise<string | null> {
+  const current = await cwdRepo();
+  const cwdMatches = current && sameSlug(current.slug, slug);
+  if (cwdMatches) {
+    return current.path;
+  }
+
+  const matches = await scanCodeRoot(slug);
+  if (!matches.length) {
+    return null;
+  }
+
+  // several clones of the same remote (e.g. gamma-agent, gamma-agent2):
+  // prefer the one named after the repo, otherwise the first alphabetically
+  const repoName = slug.split("/")[1];
+  const named = matches.find((dir) => dir.endsWith(`/${repoName}`));
+
+  return named ?? matches.sort()[0];
+}
+
+async function ensureLocalClone(slug: Slug): Promise<string> {
+  const existing = await findLocalClone(slug);
+  if (existing) {
+    return existing;
+  }
+
+  const repoName = slug.split("/")[1];
+  const dest = `${CODE_ROOT}/${repoName}`;
+  const answer = prompt(`no local clone of ${slug} under ${CODE_ROOT}. clone into ${dest}? [y/N]`);
+  const confirmed = answer?.trim().toLowerCase() === "y";
+  if (!confirmed) {
+    fail(`aborted: ${slug} is not cloned locally`);
+  }
+
+  const code = await runInteractive(["gh", "repo", "clone", slug, dest]);
+  if (code !== 0) {
+    fail(`failed to clone ${slug}`);
+  }
+
+  return dest;
+}
+
+// ---------------------------------------------------------------------------
+// PR lookup
+
+async function prForBranch(slug: Slug, branch: string): Promise<number> {
+  const result = await run([
+    "gh", "pr", "list", "-R", slug, "--head", branch, "--json", "number", "-q", ".[0].number",
+  ]);
+  const num = parseInt(result.stdout);
+  const missing = result.code !== 0 || isNaN(num);
+  if (missing) {
+    fail(`no PR found for branch ${branch} in ${slug}`);
+  }
+
+  return num;
+}
+
+async function prBranches(target: Target): Promise<{ branch: string; base: string }> {
+  const result = await run([
+    "gh", "pr", "view", String(target.pr), "-R", target.slug, "--json", "headRefName,baseRefName",
+  ]);
+  if (result.code !== 0) {
+    fail(`failed to resolve branch for ${target.slug}#${target.pr}\n${result.stderr}`);
+  }
+
+  const parsed = JSON.parse(result.stdout) as { headRefName: string; baseRefName: string };
 
   return {
     branch: parsed.headRefName,
@@ -54,20 +260,61 @@ async function prBranches(pr: number): Promise<{ branch: string; base: string }>
   };
 }
 
-async function pickPR(): Promise<number> {
+type SearchPR = {
+  number: number;
+  title: string;
+  additions: number;
+  deletions: number;
+  reviewDecision: string | null;
+  createdAt: string;
+  author: { login: string } | null;
+  repository: { nameWithOwner: string };
+};
+
+// One GraphQL search covers every repo. `gh pr list` is scoped to a single repo
+// and `gh search prs` lacks additions/deletions/reviewDecision, so neither fits.
+async function fetchReviewRequested(): Promise<SearchPR[]> {
   const twoWeeksAgo = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
-  const fields = "number,title,author,additions,deletions,reviewDecision,createdAt";
-  const proc = Bun.spawn(
-    ["gh", "pr", "list", "--search", `review-requested:@me created:>=${twoWeeksAgo}`, "--json", fields, "--limit", "50"],
-    { stdout: "pipe", stderr: "pipe" }
-  );
-  const out = await new Response(proc.stdout).text();
-  if ((await proc.exited) !== 0) {
-    console.error("failed to fetch review-requested PRs");
-    process.exit(1);
+  const search = `is:pr is:open review-requested:@me created:>=${twoWeeksAgo}`;
+  const query = `query($q: String!) {
+    search(query: $q, type: ISSUE, first: 50) {
+      nodes {
+        ... on PullRequest {
+          number title additions deletions reviewDecision createdAt
+          author { login }
+          repository { nameWithOwner }
+        }
+      }
+    }
+  }`;
+
+  const result = await run(["gh", "api", "graphql", "-f", `query=${query}`, "-f", `q=${search}`]);
+  if (result.code !== 0) {
+    fail(`failed to fetch review-requested PRs\n${result.stderr}`);
   }
-  type PR = { number: number; title: string; author: { login: string }; additions: number; deletions: number; reviewDecision: string; createdAt: string };
-  const prs = (JSON.parse(out) as PR[]).filter((p) => p.reviewDecision !== "APPROVED");
+
+  const parsed = JSON.parse(result.stdout) as { data: { search: { nodes: SearchPR[] } } };
+
+  return parsed.data.search.nodes.filter((p) => p.reviewDecision !== "APPROVED");
+}
+
+function relTime(iso: string): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(ms / 60000);
+  if (m < 60) {
+    return `${m}m`;
+  }
+
+  const h = Math.floor(m / 60);
+  if (h < 24) {
+    return `${h}h`;
+  }
+
+  return `${Math.floor(h / 24)}d`;
+}
+
+async function pickPR(): Promise<Target> {
+  const prs = await fetchReviewRequested();
   if (!prs.length) {
     console.log("no PRs requesting your review in the last 2 weeks");
     process.exit(0);
@@ -78,38 +325,53 @@ async function pickPR(): Promise<number> {
   const gray = "\x1b[90m";
   const reset = "\x1b[0m";
   const dim = "\x1b[2m";
-  const pad = (s: string, n: number) => s.length > n ? s.slice(0, n) : s.padEnd(n);
-  const relTime = (iso: string) => {
-    const ms = Date.now() - new Date(iso).getTime();
-    const m = Math.floor(ms / 60000);
-    if (m < 60) return `${m}m`;
-    const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h`;
-    return `${Math.floor(h / 24)}d`;
-  };
   const sp = "   ";
-  const header = `${"PR#".padEnd(7)}${sp}${pad("Author", 12)}${sp}${"Title".padEnd(60)}${sp}${"Age".padEnd(5)}${sp}+/-`;
+  const pad = (s: string, n: number) => (s.length > n ? s.slice(0, n) : s.padEnd(n));
+
+  const repoWidth = Math.max(4, ...prs.map((p) => p.repository.nameWithOwner.split("/")[1].length));
+  const header = [
+    pad("Repo", repoWidth),
+    "PR#".padEnd(7),
+    pad("Author", 12),
+    "Title".padEnd(60),
+    "Age".padEnd(5),
+    "+/-",
+  ].join(sp);
+
+  // hidden fields first (slug, number), display columns after; fzf shows from column 3 on
   const lines = prs.map((p) => {
-    const num = String(p.number).padEnd(7);
-    const author = pad(p.author.login, 12);
+    const slug = p.repository.nameWithOwner;
+    const repo = `${gray}${pad(slug.split("/")[1], repoWidth)}${reset}`;
+    const num = `${dim}${String(p.number).padEnd(7)}${reset}`;
+    const author = pad(p.author?.login ?? "ghost", 12);
     const title = pad(p.title, 60);
     const age = `${gray}${pad(relTime(p.createdAt), 5)}${reset}`;
-    const adds = `${green}+${p.additions}${reset}`;
-    const dels = `${red}-${p.deletions}${reset}`;
-    return `${p.number}\t${dim}${num}${reset}${sp}${author}${sp}${title}${sp}${age}${sp}${adds}${dim}/${reset}${dels}`;
-  }).join("\n");
+    const diff = `${green}+${p.additions}${reset}${dim}/${reset}${red}-${p.deletions}${reset}`;
+    const display = [repo, num, author, title, age, diff].join(sp);
+
+    return `${slug}\t${p.number}\t${display}`;
+  });
+
   const fzf = Bun.spawn(
-    ["fzf", "--header", header, "--with-nth", "2..", "--delimiter", "\t", "--ansi", "--reverse"],
+    ["fzf", "--header", header, "--with-nth", "3..", "--delimiter", "\t", "--ansi", "--reverse"],
     { stdin: "pipe", stdout: "pipe", stderr: "inherit" }
   );
-  fzf.stdin.write(lines);
+  fzf.stdin.write(lines.join("\n"));
   fzf.stdin.end();
+
   const selected = (await new Response(fzf.stdout).text()).trim();
-  if ((await fzf.exited) !== 0 || !selected) {
+  const cancelled = (await fzf.exited) !== 0 || !selected;
+  if (cancelled) {
     process.exit(1);
   }
-  return parseInt(selected.split("\t")[0]);
+
+  const [slug, num] = selected.split("\t");
+
+  return { slug, pr: parseInt(num) };
 }
+
+// ---------------------------------------------------------------------------
+// prompt
 
 // codex has no skill system, so the /explain-diff-html instructions are inlined
 // into its prompt. Read them at runtime so both agents stay on the same source.
@@ -120,66 +382,77 @@ async function readSkillBody(): Promise<string> {
 
     return withoutFrontmatter.trim();
   } catch (error) {
-    console.error(`could not read skill at ${SKILL_PATH}`, error);
-    process.exit(1);
+    return fail(`could not read skill at ${SKILL_PATH}: ${error}`);
   }
 }
 
-async function hasCommand(name: string): Promise<boolean> {
-  const proc = Bun.spawn(["which", name], { stdout: "ignore", stderr: "ignore" });
-
-  return (await proc.exited) === 0;
-}
+// ---------------------------------------------------------------------------
+// main
 
 const args = process.argv.slice(2);
-if (args.includes("--help") || args.includes("-h")) {
+const wantsHelp = args.includes("--help") || args.includes("-h");
+if (wantsHelp) {
   console.log(USAGE);
   process.exit(0);
 }
 
-const useCodex = args.includes("--codex");
+const agentFlag = (["codex", "claude"] as Agent[]).find((agent) => args.includes(`--${agent}`));
+const choice = await readAgentChoice(agentFlag).catch((error) => fail(String(error instanceof Error ? error.message : error)));
+
+const useCodex = choice.agent === "codex";
+const dryRun = args.includes("--dry-run");
 const input = args.find((arg) => !arg.startsWith("-"));
 
-if (useCodex && !(await hasCommand("codex"))) {
-  console.error("codex CLI not found on PATH — install it or drop --codex");
-  process.exit(1);
+const agentMissing = !dryRun && !(await hasCommand(choice.agent));
+if (agentMissing) {
+  fail(`${choice.agent} CLI not found on PATH — install it, pass --${useCodex ? "claude" : "codex"}, or change ${agentConfigPath()}`);
 }
 
-if (!process.cwd().startsWith("/Users/jordan/code/gamma")) {
-  process.chdir("/Users/jordan/code/gamma");
-}
-
-let pr: number;
-if (!input) {
-  pr = await pickPR();
-} else {
-  const parsed = parsePR(input);
-  if (parsed) {
-    pr = parsed;
-  } else {
-    const lookup = Bun.spawn(
-      ["gh", "pr", "list", "--head", input, "--json", "number", "-q", ".[0].number"],
-      { stdout: "pipe", stderr: "pipe" }
-    );
-    const out = await new Response(lookup.stdout).text();
-    const code = await lookup.exited;
-    const num = parseInt(out.trim());
-    if (code !== 0 || isNaN(num)) {
-      console.error(`no PR found for branch: ${input}`);
-      process.exit(1);
-    }
-    pr = num;
+// resolve target: which repo, which PR
+async function resolveTarget(): Promise<Target> {
+  if (!input) {
+    return pickPR();
   }
+
+  const parsed = parseInput(input);
+  if (parsed.kind === "url") {
+    return { slug: parsed.slug, pr: parsed.pr };
+  }
+
+  const current = await cwdRepo();
+  if (!current) {
+    return fail(`"${input}" needs a repo: run from inside a git repo with a GitHub origin, or pass a PR URL`);
+  }
+
+  if (parsed.kind === "pr") {
+    return { slug: current.slug, pr: parsed.pr };
+  }
+
+  const pr = await prForBranch(current.slug, parsed.branch);
+
+  return { slug: current.slug, pr };
 }
+
+const target = await resolveTarget();
+const repoPath = await ensureLocalClone(target.slug);
 
 // resolve branches before building the prompt (base is referenced in it)
 // and before launching so we can clean up after
-const { branch, base } = await prBranches(pr);
+const { branch, base } = await prBranches(target);
+
+if (dryRun) {
+  console.log(`repo:      ${target.slug}`);
+  console.log(`pr:        #${target.pr}`);
+  console.log(`branch:    ${branch} (base ${base})`);
+  console.log(`local:     ${repoPath}`);
+  console.log(`agent:     ${choice.agent}${choice.model ? ` (${choice.model})` : ""}`);
+  process.exit(0);
+}
 
 const context = [
   `The PR branch (${branch}) is already checked out locally — your cwd is a worktree at its HEAD.`,
   `Get the diff locally with \`git diff origin/${base}...HEAD\`, and read/explore any file in the repo directly for surrounding context.`,
-  `\`gh pr view ${pr} --json title,body,url\` has the PR title and description.`,
+  `\`gh pr view ${target.pr} -R ${target.slug} --json title,body,url\` has the PR title and description.`,
   `Do NOT edit or commit any code. This is read-only.`,
   `When the HTML file is written, open it in the browser with \`open <path>\`.`,
 ];
@@ -187,56 +460,35 @@ const context = [
 // claude: a leading slash command invokes the explain-diff-html skill, and
 // everything after it is the "specified code change" context.
 // codex: the same skill text is inlined, because codex cannot resolve the command.
-const prompt = useCodex
-  ? [await readSkillBody(), ``, `The code change is PR #${pr}.`, ...context].join("\n")
-  : [`/explain-diff-html PR #${pr}`, ``, ...context].join("\n");
+const prompt_ = useCodex
+  ? [await readSkillBody(), ``, `The code change is PR #${target.pr} in ${target.slug}.`, ...context].join("\n")
+  : [`/explain-diff-html PR #${target.pr}`, ``, ...context].join("\n");
 
-// switch to worktree (creates if needed), but don't exec into it
-const sw = Bun.spawn(["wt", "switch", `pr:${pr}`, "--no-cd"], {
-  stdio: ["inherit", "inherit", "inherit"],
-});
-await sw.exited;
+// create/switch the worktree from the repo, without cd-ing this process
+await runInteractive(["wt", "-C", repoPath, "switch", `pr:${target.pr}`, "--no-cd"]);
 
-// resolve worktree path
-const pathProc = Bun.spawn(
-  ["git", "worktree", "list", "--porcelain"],
-  { stdout: "pipe", stderr: "pipe" }
-);
-const wtOutput = await new Response(pathProc.stdout).text();
-await pathProc.exited;
-
-let worktreePath: string | null = null;
-const blocks = wtOutput.split("\n\n");
-for (const block of blocks) {
-  if (block.includes(`branch refs/heads/${branch}`)) {
-    const match = block.match(/^worktree (.+)$/m);
-    if (match) worktreePath = match[1];
-  }
-}
+const worktrees = await run(["git", "-C", repoPath, "worktree", "list", "--porcelain"]);
+const worktreePath = worktrees.stdout
+  .split("\n\n")
+  .filter((block) => block.includes(`branch refs/heads/${branch}`))
+  .map((block) => block.match(/^worktree (.+)$/m)?.[1])
+  .find((path) => path !== undefined);
 if (!worktreePath) {
-  console.error(`could not find worktree path for branch: ${branch}`);
-  process.exit(1);
+  fail(`could not find worktree path for branch: ${branch}`);
 }
 
 // pull latest from remote so the worktree is up to date
-const pull = Bun.spawn(["git", "-C", worktreePath, "pull", "--ff-only"], {
-  stdio: ["inherit", "inherit", "inherit"],
-});
-await pull.exited;
+await runInteractive(["git", "-C", worktreePath, "pull", "--ff-only"]);
 
 // launch the agent in the worktree, both in their no-prompt / no-sandbox mode
 const command = useCodex
-  ? ["codex", "--dangerously-bypass-approvals-and-sandbox", prompt]
-  : ["claude", "--dangerously-skip-permissions", prompt];
+  ? ["codex", "--dangerously-bypass-approvals-and-sandbox", ...codexFlags(choice), prompt_]
+  : ["claude", "--dangerously-skip-permissions", ...claudeFlags(choice), prompt_];
 
-const proc = Bun.spawn(command, {
-  stdio: ["inherit", "inherit", "inherit"],
-  cwd: worktreePath,
-});
-await proc.exited;
+await runInteractive(command, worktreePath);
 
-// cleanup worktree after the agent exits
-const rm = Bun.spawn(["wt", "remove", "-D", branch], {
-  stdio: ["inherit", "inherit", "inherit"],
-});
-await rm.exited;
+// cleanup worktree after the agent exits. --force: the bootstrap hook symlinks
+// node_modules, and a "node_modules/" gitignore entry (trailing slash) does not
+// match a symlink, so wt sees it as an untracked file and refuses to remove.
+// The review is read-only, so nothing in the worktree is worth keeping.
+await runInteractive(["wt", "-C", repoPath, "remove", "--force", "-D", branch]);

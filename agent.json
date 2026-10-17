@@ -1,0 +1,10 @@
+{
+  "agent": "claude",
+  "claude": {
+    "model": "claude-opus-5-5",
+    "fast": true
+  },
+  "codex": {
+    "model": null
+  }
+}

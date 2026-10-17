@@ -61,6 +61,52 @@ return {
     },
 
     config = function()
+      -- Projects where ESLint is too slow to be useful in the editor. Lint runs in CI.
+      local eslint_disabled_roots = {
+        vim.fn.expand "~/code/gamma",
+      }
+
+      -- vim.lsp.config() outranks every lsp/*.lua on the runtimepath, including the one
+      -- nvim-lspconfig ships. The root_dir decision must live here to take effect.
+      vim.lsp.config("eslint", {
+        root_dir = function(bufnr, on_dir)
+          local util = require "lspconfig.util"
+          local fname = vim.api.nvim_buf_get_name(bufnr)
+
+          for _, root in ipairs(eslint_disabled_roots) do
+            if fname:sub(1, #root + 1) == root .. "/" then
+              return
+            end
+          end
+
+          local eslint_root = util.root_pattern(
+            ".eslintrc",
+            ".eslintrc.js",
+            ".eslintrc.cjs",
+            ".eslintrc.json",
+            "eslint.config.js",
+            "eslint.config.mjs",
+            "eslint.config.ts"
+          )(fname)
+          if not eslint_root then
+            return
+          end
+
+          -- A closer biome or oxlint config wins over eslint.
+          local other_root = util.root_pattern("biome.json", "biome.jsonc", ".oxlintrc.json")(fname)
+          if not other_root then
+            return on_dir(eslint_root)
+          end
+
+          local eslint_depth = #vim.split(eslint_root, "/", { plain = true })
+          local other_depth = #vim.split(other_root, "/", { plain = true })
+
+          if eslint_depth > other_depth then
+            return on_dir(eslint_root)
+          end
+        end,
+      })
+
       -- Enable native LSP servers (configured via lsp/*.lua files)
       vim.lsp.enable {
         "html",

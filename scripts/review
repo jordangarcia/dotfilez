@@ -1,0 +1,9 @@
+#!/usr/bin/env bun
+import { main } from "./review-lib/main";
+
+try {
+  await main();
+} catch (error) {
+  console.error(`rv: ${error instanceof Error ? error.message : error}`);
+  process.exitCode = 1;
+}

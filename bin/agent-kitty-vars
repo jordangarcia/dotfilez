@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+# Claude Code / Codex lifecycle hook -> Kitty window user vars.
+#
+# Usage (from a hook): agent-kitty-vars claude|codex   (hook JSON on stdin)
+#
+# Sets these vars on the window the agent runs in:
+#   agent           claude | codex
+#   agent_session   session id (Claude session_id, Codex session_id/thread_id)
+#   agent_status    working | attention | idle | error
+#   agent_status_at unix epoch seconds of the last status change
+#   agent_cwd       working directory reported by the hook
+#   agent_prompt    last prompt you sent, whitespace collapsed, first 300 chars
+#   agent_prompt_at unix epoch seconds when that prompt was sent
+#
+# Read them with `kitty @ ls` (user_vars) or target windows with
+# `--match var:agent_status=attention`. SessionEnd unsets them.
+#
+# Event -> status mapping follows loganlinn/dotfiles lib/kitty_activity/hooks.py.
+# Hooks must never block or print: every failure path exits 0 silently.
+
+set -u
+
+agent="${1:-}"
+listen="${KITTY_LISTEN_ON:-}"
+window="${KITTY_WINDOW_ID:-}"
+
+# Headless hooks only know their window through the inherited env.
+# Without it there is no safe target, so do nothing rather than guess.
+if [[ -z "$agent" || -z "$listen" || ! "$window" =~ ^[1-9][0-9]*$ ]]; then
+  cat >/dev/null
+  exit 0
+fi
+
+kitten_bin="$(command -v kitten || echo /Applications/kitty.app/Contents/MacOS/kitten)"
+
+# Bound the remote-control call so a wedged Kitty socket cannot stall the agent.
+# coreutils timeout comes from Homebrew; run unbounded if it is missing.
+limit=()
+if command -v timeout >/dev/null 2>&1; then
+  limit=(timeout 2)
+fi
+
+# One jq pass: event, session, subagent marker, tool, notification type, cwd, prompt.
+fields="$(jq -r '[
+    .hook_event_name // "",
+    (.session_id // .thread_id // ""),
+    (.agent_id // ""),
+    ((.tool_name // "") | split(".") | last // ""),
+    (.notification_type // ""),
+    (.cwd // ""),
+    ((.prompt // "") | tostring | gsub("[[:space:]]+"; " ") | ltrimstr(" ") | .[0:300])
+  ] | map(tostring) | join("\u001f")' 2>/dev/null)" || exit 0
+
+# Unit separator, not tab: read collapses runs of whitespace IFS, which would
+# shift fields whenever one is empty.
+IFS=$'\x1f' read -r event session subagent tool notification cwd prompt <<<"$fields"
+
+# Subagent lifecycle must never overwrite the foreground session's state.
+if [[ -n "$subagent" || -z "$event" ]]; then
+  exit 0
+fi
+
+status=""
+case "$event" in
+  SessionStart) status="idle" ;;
+  UserPromptSubmit) status="working" ;;
+  PermissionRequest | Elicitation) status="attention" ;;
+  PreToolUse)
+    case "$tool" in
+      AskUserQuestion | ExitPlanMode | request_user_input) status="attention" ;;
+      *) status="working" ;;
+    esac
+    ;;
+  PostToolUse | PostToolUseFailure | ElicitationResult) status="working" ;;
+  Notification)
+    case "$notification" in
+      permission_prompt | elicitation_dialog) status="attention" ;;
+      idle_prompt) status="idle" ;;
+      *) exit 0 ;;
+    esac
+    ;;
+  Stop | Interrupt) status="idle" ;;
+  StopFailure) status="error" ;;
+  SessionEnd) status="" ;;
+  *) exit 0 ;;
+esac
+
+# Per-window state. The hook itself only writes local files, then hands the
+# kitty update to a detached job, so a slow or wedged kitty socket never delays
+# the agent (Claude kills hooks after their timeout and shows an error).
+state_dir="${TMPDIR:-/tmp}/agent-kitty-vars"
+mkdir -p "$state_dir" 2>/dev/null
+cache="$state_dir/$window.key"
+pending="$state_dir/$window.pending"
+lock="$state_dir/$window.lock"
+key="$agent $session $status"
+
+# PostToolUse fires on every tool call; skip when nothing changed.
+# A new prompt always writes, even when the status is unchanged.
+if [[ -z "$prompt" && "$event" != "SessionEnd" && -f "$cache" && "$(<"$cache")" == "$key" ]]; then
+  exit 0
+fi
+
+# Desired vars for this window, one NAME=VALUE per line; "unset" clears them.
+# A later event's state fully replaces an earlier one.
+if [[ "$event" == "SessionEnd" ]]; then
+  state="unset"
+else
+  state="agent=$agent
+agent_status=$status
+agent_status_at=$(date +%s)"
+  if [[ -n "$session" ]]; then
+    state+=$'\n'"agent_session=$session"
+  fi
+  if [[ -n "$cwd" ]]; then
+    state+=$'\n'"agent_cwd=$cwd"
+  fi
+  if [[ -n "$prompt" ]]; then
+    state+=$'\n'"agent_prompt=$prompt"$'\n'"agent_prompt_at=$(date +%s)"
+  fi
+fi
+
+# Prompt vars persist across events: carry them forward from the last state.
+if [[ "$state" != "unset" && -z "$prompt" && -f "$pending" ]]; then
+  carried="$(grep -E '^agent_prompt(_at)?=' "$pending" 2>/dev/null)"
+  if [[ -n "$carried" ]]; then
+    state+=$'\n'"$carried"
+  fi
+fi
+
+tmp="$pending.$$"
+printf '%s\n' "$state" >"$tmp" && mv -f "$tmp" "$pending"
+printf '%s' "$key" >"$cache"
+
+apply() {
+  # Serialize per window. Whoever holds the lock pushes the newest state, so
+  # jobs finishing out of order can never leave an older status behind.
+  local waited=0
+  until mkdir "$lock" 2>/dev/null; do
+    # A lock older than 10s belongs to a job that died; take it over.
+    if [[ -n "$(find "$lock" -maxdepth 0 -mtime +10s 2>/dev/null)" ]]; then
+      rm -rf "$lock"
+      continue
+    fi
+    sleep 0.05
+    waited=$((waited + 1))
+    if ((waited > 200)); then
+      return
+    fi
+  done
+
+  local rc=(${limit[@]+"${limit[@]}"} "$kitten_bin" @ --to "$listen" set-user-vars --match "id:$window")
+  local lines=()
+  while IFS= read -r line; do
+    lines+=("$line")
+  done <"$pending"
+
+  if [[ "${lines[0]:-}" == "unset" ]]; then
+    "${rc[@]}" agent agent_session agent_status agent_status_at agent_cwd agent_prompt agent_prompt_at >/dev/null 2>&1
+    rm -f "$pending" "$cache"
+  else
+    "${rc[@]}" "${lines[@]}" >/dev/null 2>&1
+  fi
+
+  rmdir "$lock" 2>/dev/null
+}
+
+# Detach fully: no inherited stdio, so the agent does not wait on this job.
+apply </dev/null >/dev/null 2>&1 &
+disown 2>/dev/null
+
+exit 0

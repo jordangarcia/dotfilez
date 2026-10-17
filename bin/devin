@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#
+# devin — thin wrapper for the Devin HTTP API.
+# The PAT lives in the macOS Keychain (service: devin-api-key), never in env.
+#
+# Usage:
+#   devin auth                     # store/update the PAT in the Keychain (prompts, no echo)
+#   devin create "<prompt>"        # create a session
+#   devin list [limit]             # list sessions (default 20)
+#   devin get <session-id>         # get one session
+#   devin msg <session-id> "<text>"# send a message to a session
+#   devin api <method> <path> [json-body]  # escape hatch for any endpoint
+
+set -euo pipefail
+
+API="https://api.devin.ai/v1"
+KEYCHAIN_SERVICE="devin-api-key"
+
+token() {
+  security find-generic-password -s "$KEYCHAIN_SERVICE" -w 2>/dev/null || {
+    echo "No Devin PAT in Keychain. Run: devin auth" >&2
+    exit 1
+  }
+}
+
+req() {
+  local method="$1" path="$2" body="${3:-}"
+
+  local args=(-sS -X "$method" "$API$path"
+    -H "Authorization: Bearer $(token)"
+    -H "Content-Type: application/json")
+
+  if [ -n "$body" ]; then
+    args+=(-d "$body")
+  fi
+
+  curl "${args[@]}"
+}
+
+cmd="${1:-}"
+case "$cmd" in
+  auth)
+    read -rs -p "Devin PAT: " pat; echo
+    security add-generic-password -a "$USER" -s "$KEYCHAIN_SERVICE" -w "$pat" -U
+    echo "Stored in Keychain (service: $KEYCHAIN_SERVICE)."
+    ;;
+  create)
+    prompt="${2:?usage: devin create \"<prompt>\"}"
+    req POST /sessions "$(jq -n --arg p "$prompt" '{prompt: $p}')"
+    ;;
+  list)
+    limit="${2:-20}"
+    req GET "/sessions?limit=$limit"
+    ;;
+  get)
+    id="${2:?usage: devin get <session-id>}"
+    req GET "/session/$id"
+    ;;
+  msg)
+    id="${2:?usage: devin msg <session-id> \"<text>\"}"
+    text="${3:?usage: devin msg <session-id> \"<text>\"}"
+    req POST "/session/$id/message" "$(jq -n --arg m "$text" '{message: $m}')"
+    ;;
+  api)
+    method="${2:?usage: devin api <method> <path> [json-body]}"
+    path="${3:?usage: devin api <method> <path> [json-body]}"
+    req "$method" "$path" "${4:-}"
+    ;;
+  *)
+    sed -n '3,12p' "$0" | sed 's/^# \{0,1\}//'
+    exit 1
+    ;;
+esac

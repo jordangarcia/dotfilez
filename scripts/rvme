@@ -1,0 +1,25 @@
+#!/usr/bin/env bun
+import { takeDays } from "./review-lib/github";
+import { fetchMine, mineTable } from "./review-lib/mine";
+
+const HELP = `rvme — your PRs: merge status, reviews, and commenters
+
+  rvme                        Print your PRs updated in the last 7 days
+  rvme --days <n>             Widen the window to n days
+
+  Requires bun and gh.
+`;
+
+try {
+  const args = process.argv.slice(2);
+  if (args.includes("--help") || args.includes("-h")) {
+    console.log(HELP);
+  } else {
+    const days = takeDays(args);
+    const pulls = await fetchMine(days);
+    process.stdout.write(mineTable(pulls, undefined, days));
+  }
+} catch (error) {
+  console.error(`rvme: ${error instanceof Error ? error.message : error}`);
+  process.exitCode = 1;
+}

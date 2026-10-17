@@ -3,6 +3,14 @@
 
 local hyper = { "ctrl", "alt", "cmd" }
 
+local appLauncher = require("app-launcher")
+local notifications = require("notifications")
+
+-- Raycast still owns the alt+<letter> app aliases and alt+shift+delete.
+-- Flip this to true only after turning those aliases off in Raycast,
+-- otherwise both handlers fire on the same chord.
+local enableRaycastPort = false
+
 -- ── Setup: CLI + alerts ────────────────────────────────────────────
 
 -- Installs the `hs` command line tool into ~/.local/bin.
@@ -40,30 +48,6 @@ end)
 
 -- Instant snapping; animation makes rapid re-tiling feel laggy.
 hs.window.animationDuration = 0
-
--- Each entry maps a key to a unit rect: { x, y, w, h } as screen fractions.
-local layouts = {
-  left  = { key = "left",  rect = { 0.0, 0.0, 0.5, 1.0 } },
-  right = { key = "right", rect = { 0.5, 0.0, 0.5, 1.0 } },
-  up    = { key = "up",    rect = { 0.0, 0.0, 1.0, 1.0 } }, -- maximize
-  down  = { key = "down",  rect = { 0.25, 0.25, 0.5, 0.5 } }, -- center
-}
-
-local function moveFocusedWindow(rect)
-  local win = hs.window.focusedWindow()
-  if not win then
-    hs.alert.show("No focused window")
-    return
-  end
-
-  win:moveToUnit(hs.geometry.rect(rect))
-end
-
-for _, layout in pairs(layouts) do
-  hs.hotkey.bind(hyper, layout.key, function()
-    moveFocusedWindow(layout.rect)
-  end)
-end
 
 -- alt bindings place the focused window on the screen under the mouse.
 local function moveFocusedWindowToMouseScreen(rect)
@@ -116,6 +100,67 @@ for key, appName in pairs(appHotkeys) do
   hs.hotkey.bind(hyper, key, function()
     hs.application.launchOrFocus(appName)
   end)
+end
+
+-- ── Update-restart blocker ─────────────────────────────────────────
+
+-- macOS only auto-restarts for updates when the machine looks idle.
+-- caffeinate -dis holds display/system/disk assertions, so the machine
+-- never looks idle and the restart stays delayed while the toggle is on.
+local restartBlocker = {
+  task = nil,
+  menu = hs.menubar.new(),
+}
+
+local function updateBlockerMenu()
+  local isOn = restartBlocker.task ~= nil
+
+  restartBlocker.menu:setTitle(isOn and "☕" or "💤")
+  restartBlocker.menu:setTooltip(isOn and "Update restart delayed (caffeinate on)" or "Update restart allowed")
+end
+
+-- If something kills the caffeinate while the toggle is on, start a new
+-- one right away. Only the toggle turns it off for real.
+local function startBlockerTask()
+  restartBlocker.task = hs.task.new("/usr/bin/caffeinate", function()
+    local wantedAlive = restartBlocker.task ~= nil
+    if wantedAlive then
+      hs.alert.show("caffeinate died — restarting it")
+      startBlockerTask()
+    end
+  end, { "-dis" })
+
+  restartBlocker.task:start()
+end
+
+local function toggleRestartBlocker()
+  if restartBlocker.task then
+    local task = restartBlocker.task
+    restartBlocker.task = nil -- clear first so the exit callback does not respawn
+    task:terminate()
+    hs.alert.show("Update restart allowed")
+  else
+    startBlockerTask()
+    hs.alert.show("Update restart delayed")
+  end
+
+  updateBlockerMenu()
+end
+
+restartBlocker.menu:setClickCallback(toggleRestartBlocker)
+updateBlockerMenu()
+
+-- Global so `hs -c "toggleUpdateBlocker()"` works from the shell.
+toggleUpdateBlocker = toggleRestartBlocker
+
+-- The caffeinate child dies with Hammerspoon, so a config reload or quit
+-- releases the assertions. The menu state resets to off on reload.
+
+-- ── Raycast port: app aliases + dismiss notifications ───────────
+
+if enableRaycastPort then
+  appLauncher.start()
+  notifications.bindDismissAll({ "alt", "shift" }, "delete")
 end
 
 hs.alert.show("Hammerspoon config loaded")

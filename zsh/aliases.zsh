@@ -130,3 +130,5 @@ alias claude="claude --dangerously-skip-permissions"
 alias cl="claude --chrome"
 alias clc="claude --chrome --continue"
 yolo() { cl --dangerously-skip-permissions "$*"; }
+
+alias balatro='open "$HOME/Applications/Balatro Modded.app"'

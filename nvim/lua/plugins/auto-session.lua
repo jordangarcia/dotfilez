@@ -83,6 +83,9 @@ return {
         "~/code/gamma/packages/*",
         "~/code/requestnow/*",
         "~/code/*/packages/*",
+        -- nested bun workspace inside the gamma repo (and its 3gamma sibling)
+        "~/code/*/agent",
+        "~/code/*/agent/packages/*",
       },
       session_lens = {
         -- If load_on_setup is set to false, one needs to eventually call `require("auto-session").setup_session_lens()` if they want to use session-lens.
