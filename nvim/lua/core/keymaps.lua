@@ -322,21 +322,29 @@ set_keymap_tbl {
       end,
       "Goto next buffer",
     },
-    -- vim-kitty-navigator
+    -- kitty or Rex pane navigation (core/rex_navigator.lua)
     ["<C-h>"] = {
-      "<CMD>KittyNavigateLeft<CR>",
+      function()
+        require("core.rex_navigator").navigate "left"
+      end,
       "Navigate left",
     },
     ["<C-j>"] = {
-      "<CMD>KittyNavigateDown<CR>",
+      function()
+        require("core.rex_navigator").navigate "down"
+      end,
       "Navigate down",
     },
     ["<C-k>"] = {
-      "<CMD>KittyNavigateUp<CR>",
+      function()
+        require("core.rex_navigator").navigate "up"
+      end,
       "Navigate up",
     },
     ["<C-l>"] = {
-      "<CMD>KittyNavigateRight<CR>",
+      function()
+        require("core.rex_navigator").navigate "right"
+      end,
       "Navigate right",
     },
     ["<leader>lwa"] = {
