@@ -5,7 +5,7 @@ they made or review (rv), and recently closed chats to resume.
 Bound in ~/.config/rex/init.lua as the "agents" action, which opens this
 script in a floating pane:
 
-    python3 agents.py --pick --client <client id>
+    python3 agents.py --pick --client <client id> --origin <block id>
 
 Keys: enter focus (or resume a closed chat in a new tab)
       ctrl-h history: recently closed chats, newest first
@@ -438,6 +438,19 @@ def resume_in_new_tab(row):
     rex('api', 'call', '-s', os.environ.get('REX_SESSION', ''), 'session.new_window', payload)
 
 
+def restore_focus(origin):
+    """Back to the pane the picker was opened from; closing it lets Rex pick another."""
+    if not origin:
+        return
+
+    payload = json.dumps({'block_id': origin})
+    try:
+        rex('api', 'call', '-s', os.environ.get('REX_SESSION', ''), 'session.focus_block', payload)
+    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+        # The origin pane may have closed while the picker was open.
+        print(f'agents: could not return focus to {origin}: {error}', file=sys.stderr)
+
+
 def handle_pick(key, client_id):
     row = resolve_row(key)
     if row is None:
@@ -557,8 +570,11 @@ def main():
         print(__doc__)
         return
 
+    origin = flag_value('--origin')
+
     key = pick()
     if not key:
+        restore_focus(origin)
         return
 
     try:

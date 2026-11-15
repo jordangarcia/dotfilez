@@ -59,6 +59,9 @@ local AGENTS_PICKER = os.getenv("HOME") .. "/code/dotfilez/rex/agents.py"
 local AGENTS_LABEL = "agent-picker"
 
 -- Floating layers in the session that hold an agent picker, as { layer_id, window_id }.
+-- layer_id -> the pane each open picker was opened from.
+local picker_origins = {}
+
 local function open_agent_pickers()
   local view = rex.session.view{} or {}
   local found = {}
@@ -100,17 +103,27 @@ rex.action{
 
     -- One picker at a time: pressing the key again closes it, and pressing it
     -- in another tab moves it there.
-    local was_here = false
+    local closed_here = nil
     for _, picker in ipairs(open_agent_pickers()) do
-      was_here = was_here or picker.window_id == window_id
+      if picker.window_id == window_id then
+        closed_here = picker
+      end
       rex.session.close_layer{ layer_id = picker.layer_id }
     end
 
-    if was_here then
+    -- Closing a layer lets Rex choose the next focused pane, so put focus back
+    -- on the pane the picker was opened from.
+    if closed_here then
+      local origin = picker_origins[closed_here.layer_id]
+      picker_origins[closed_here.layer_id] = nil
+      if origin then
+        rex.session.focus_block{ block_id = origin }
+      end
       return
     end
 
-    local _, err = rex.session.new_layer{
+    local origin = ctx.block_id or ""
+    local layer, err = rex.session.new_layer{
       window_id = window_id,
       bounds = { 0.03, 0.03, 0.94, 0.94 },
       focus = true,
@@ -118,13 +131,15 @@ rex.action{
         flavor = "com.superlogical.terminal.shell",
         label = AGENTS_LABEL,
         options = {
-          command = { "python3", AGENTS_PICKER, "--pick", "--client", ctx.client_id or "" },
+          command = { "python3", AGENTS_PICKER, "--pick", "--client", ctx.client_id or "", "--origin", origin },
         },
       },
     }
     if err ~= nil then
       error(err, 0)
     end
+
+    picker_origins[layer.layer_id] = ctx.block_id
   end,
 }
 
@@ -199,17 +214,27 @@ rex.bind("shift+cmd+m", "session.next")
 --             and moves between Rex panes otherwise.
 --   ctrl+j/k  moves between Rex panes when there is one above or below, and
 --             otherwise sends the down / up arrow to the program.
+-- Overlays Rex knows by label (the agent picker, copy mode) get all four keys:
+-- fzf uses ctrl+h for history and ctrl+j/k to move, and Rex reports the
+-- picker's process as Python and copy mode's as login, not fzf or nvim.
 local NAV_PROGRAMS = { "nvim", "vim", "fzf" }
 
-local function runs_nav_program(block_id)
-  -- Copy mode starts nvim through a login wrapper, so Rex reports `login` as
-  -- the foreground process. Its panes are labelled "(copy-mode) …".
+local PASSTHROUGH_LABELS = { "agent-picker", "(copy-mode)" }
+
+local function is_passthrough(block_id)
   local described = rex.session.describe_block{ block_id = block_id }
   local label = described and described.block and described.block.label or ""
-  if label:sub(1, #"(copy-mode)") == "(copy-mode)" then
-    return true
+
+  for _, prefix in ipairs(PASSTHROUGH_LABELS) do
+    if label:sub(1, #prefix) == prefix then
+      return true
+    end
   end
 
+  return false
+end
+
+local function runs_nav_program(block_id)
   local process = rex.block.call("com.superlogical.terminal", "process", { block_id = block_id })
   local foreground = process and process.foreground or {}
   local name = (foreground.name or ""):lower()
@@ -243,6 +268,11 @@ rex.action{
   run = function(ctx, args)
     if not ctx.block_id then
       rex.client.queue("pane.focus", { direction = args.direction })
+      return
+    end
+
+    if is_passthrough(ctx.block_id) then
+      rex.client.queue("pane.send_key", { key = args.key })
       return
     end
 
