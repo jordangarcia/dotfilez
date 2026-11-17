@@ -214,12 +214,12 @@ rex.bind("shift+cmd+m", "session.next")
 --             and moves between Rex panes otherwise.
 --   ctrl+j/k  moves between Rex panes when there is one above or below, and
 --             otherwise sends the down / up arrow to the program.
--- Overlays Rex knows by label (the agent picker, copy mode) get all four keys:
+-- Overlays Rex knows by label (the agent picker, copy mode, hints) get all four keys:
 -- fzf uses ctrl+h for history and ctrl+j/k to move, and Rex reports the
 -- picker's process as Python and copy mode's as login, not fzf or nvim.
 local NAV_PROGRAMS = { "nvim", "vim", "fzf" }
 
-local PASSTHROUGH_LABELS = { "agent-picker", "(copy-mode)" }
+local PASSTHROUGH_LABELS = { "agent-picker", "(copy-mode)", "hints" }
 
 local function is_passthrough(block_id)
   local described = rex.session.describe_block{ block_id = block_id }
@@ -374,3 +374,180 @@ rex.action{
 }
 
 rex.bind("ctrl+1", "copy_mode_toggle")
+
+-- Hints, kitty's `kitten hints`: label every match of a kind on the pane's
+-- screen, type a label to open or copy it, Esc cancels. The overlay sits
+-- exactly over the pane. See ~/code/dotfilez/rex/hints.py.
+local HINTS_SCRIPT = os.getenv("HOME") .. "/code/dotfilez/rex/hints.py"
+local HINTS_LABEL = "hints"
+local overlay_geometry = dofile(os.getenv("HOME") .. "/code/dotfilez/rex/copy-mode-common.lua")
+
+rex.action{
+  name = "hints",
+  title = "Hints…",
+  description = "Label URLs, paths, hashes, lines, branches or resume commands on screen to open or copy.",
+  keywords = "kitten hints url path hash open copy select",
+  args = { kind = "string" },
+  run = function(ctx, args)
+    if not ctx.block_id then
+      error("hints needs a focused pane", 0)
+    end
+
+    local described = rex.session.describe_block{ block_id = ctx.block_id }
+    local block = described and described.block or {}
+
+    -- Pressed inside a hints overlay: close it instead of stacking another.
+    if block.label == HINTS_LABEL then
+      rex.block.call("com.superlogical.terminal", "write", {
+        session_id = ctx.session_id,
+        block_id = ctx.block_id,
+        args = { data = "\27" },
+      })
+      return
+    end
+
+    local view = rex.session.view{} or {}
+    local bounds = overlay_geometry.pane_bounds(view, block.window_id, ctx.block_id)
+
+    local _, err = rex.session.new_layer{
+      window_id = block.window_id,
+      bounds = bounds,
+      focus = true,
+      layout = rex.layout.block{
+        flavor = "com.superlogical.terminal.shell",
+        label = HINTS_LABEL,
+        options = {
+          command = {
+            "/usr/bin/python3", HINTS_SCRIPT,
+            "--session", ctx.session_id, "--block", ctx.block_id, "--kind", args.kind,
+          },
+        },
+      },
+    }
+    if err ~= nil then
+      error(err, 0)
+    end
+  end,
+}
+
+-- kitty_mod = ctrl+shift, as in kitty.conf
+rex.bind("ctrl+shift+e", "hints", { kind = "url" })
+rex.bind("ctrl+shift+y", "hints", { kind = "hyperlink" })
+rex.bind("ctrl+shift+f", "hints", { kind = "path" })
+rex.bind("ctrl+shift+h", "hints", { kind = "hash" })
+rex.bind("ctrl+shift+l", "hints", { kind = "line" })
+rex.bind("ctrl+shift+b", "hints", { kind = "branch" })
+rex.bind("ctrl+shift+c", "hints", { kind = "resume" })
+
+-- Fork the Claude chat in the focused pane into a split beside it, kitty's
+-- cmd+shift+f (kitty/kittens/fork_session.py): `claude --resume <id>
+-- --fork-session` with the original launch flags, so the fork keeps the
+-- conversation and permission mode but writes a new session. It runs in an
+-- interactive zsh for the usual PATH, and the split stays a shell afterwards.
+local FORK_FLAGS_WITH_VALUE = { ["--resume"] = true, ["-r"] = true, ["--session-id"] = true }
+local FORK_FLAGS_STANDALONE = { ["--fork-session"] = true, ["--continue"] = true, ["-c"] = true }
+
+local function shell_quote(word)
+  return "'" .. word:gsub("'", "'\\''") .. "'"
+end
+
+-- Claude's launch command without the flags that pick a session.
+local function claude_launch_args(pid)
+  local result = rex.exec({ "ps", "-o", "args=", "-p", tostring(pid) }, { timeout = 5 })
+  if not (result and result.ok) then
+    return nil
+  end
+
+  local words = {}
+  for word in result.stdout:gmatch("%S+") do
+    table.insert(words, word)
+  end
+
+  local args = {}
+  local skip_next = false
+  for index, word in ipairs(words) do
+    local flag = word:match("^([^=]+)=") or word
+    local takes_value = FORK_FLAGS_WITH_VALUE[word] and words[index + 1] and words[index + 1]:sub(1, 1) ~= "-"
+
+    if skip_next then
+      skip_next = false
+    elseif index == 1 or FORK_FLAGS_STANDALONE[word] or FORK_FLAGS_WITH_VALUE[flag] then
+      skip_next = takes_value or false
+    else
+      table.insert(args, word)
+    end
+  end
+
+  return args
+end
+
+local function claude_session_file(pid)
+  local file = io.open(os.getenv("HOME") .. "/.claude/sessions/" .. pid .. ".json", "r")
+  if not file then
+    return nil
+  end
+
+  local data = file:read("*a")
+  file:close()
+
+  return rex.json.decode(data)
+end
+
+rex.action{
+  name = "fork_claude",
+  title = "Fork Claude Chat",
+  description = "Open a split beside this pane running a fork of its Claude chat.",
+  keywords = "claude fork session split resume",
+  run = function(ctx, args)
+    if not ctx.block_id then
+      error("fork: no focused pane", 0)
+    end
+
+    local process = rex.block.call("com.superlogical.terminal", "process", { block_id = ctx.block_id })
+    local foreground = process and process.foreground or {}
+    local argv0 = (foreground.argv0 or ""):match("[^/]+$") or ""
+    if argv0 ~= "claude" or not foreground.pid then
+      error("fork: no Claude chat in this pane", 0)
+    end
+
+    local session = claude_session_file(foreground.pid) or {}
+    if not session.sessionId then
+      error("fork: no session file for Claude pid " .. foreground.pid, 0)
+    end
+
+    local launch_args = claude_launch_args(foreground.pid)
+    if not launch_args then
+      error("fork: could not read Claude's command line (pid " .. foreground.pid .. ")", 0)
+    end
+
+    local words = { "command", "claude" }
+    for _, word in ipairs(launch_args) do
+      table.insert(words, shell_quote(word))
+    end
+    table.insert(words, "--resume")
+    table.insert(words, shell_quote(session.sessionId))
+    table.insert(words, "--fork-session")
+
+    -- `command` skips a zsh alias for claude that would repeat the flags.
+    local claude = table.concat(words, " ")
+
+    local _, err = rex.session.new_split{
+      anchor_id = ctx.block_id,
+      direction = "horizontal",
+      side = "after",
+      focus = true,
+      layout = rex.layout.block{
+        flavor = "com.superlogical.terminal.shell",
+        options = {
+          cwd = session.cwd or foreground.cwd,
+          command = { "/bin/zsh", "-ic", claude .. "; exec /bin/zsh -l" },
+        },
+      },
+    }
+    if err ~= nil then
+      error(err, 0)
+    end
+  end,
+}
+
+rex.bind("shift+cmd+f", "fork_claude")
